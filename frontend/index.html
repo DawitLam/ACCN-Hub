@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ACCN Hub - Learning Platform</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/student.css">
+    <link rel="stylesheet" href="css/instructor.css">
+</head>
+<body>
+    <!-- Navigation Header -->
+    <header class="main-header">
+        <div class="container">
+            <div class="logo-section">
+                <img src="assets/images/accn-logo.png" alt="ACCN Hub Logo" class="logo">
+                <div class="brand-info">
+                    <h1>ACCN Hub</h1>
+                    <p>Empowering Future Innovators</p>
+                </div>
+            </div>
+            <nav class="main-nav" id="mainNav">
+                <!-- Navigation will be populated based on user role -->
+            </nav>
+            <div class="user-section" id="userSection">
+                <!-- User info will be populated after login -->
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="main-content container">
+        <!-- Login/Register Section (shown when not logged in) -->
+        <section id="auth-section" class="content-section active">
+            <div class="auth-container">
+                <div class="auth-card">
+                    <h2>Welcome to ACCN Hub</h2>
+                    <p>Sign in to access your courses and continue your learning journey</p>
+                    
+                    <div class="auth-tabs">
+                        <button class="tab-btn active" onclick="showAuthTab('login')">Sign In</button>
+                        <button class="tab-btn" onclick="showAuthTab('register')">Create Account</button>
+                    </div>
+
+                    <!-- Login Form -->
+                    <div id="login-form" class="auth-form active">
+                        <form onsubmit="handleLogin(event)">
+                            <div class="form-group">
+                                <label for="login-email">Email Address</label>
+                                <input type="email" id="login-email" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="login-password">Password</label>
+                                <input type="password" id="login-password" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Sign In</button>
+                            <div class="form-footer">
+                                <a href="#" onclick="showForgotPassword()">Forgot password?</a>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Register Form -->
+                    <div id="register-form" class="auth-form">
+                        <form onsubmit="handleRegister(event)">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="register-firstname">First Name</label>
+                                    <input type="text" id="register-firstname" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="register-lastname">Last Name</label>
+                                    <input type="text" id="register-lastname" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="register-email">Email Address</label>
+                                <input type="email" id="register-email" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="register-password">Password</label>
+                                <input type="password" id="register-password" required minlength="6">
+                            </div>
+                            <div class="form-group">
+                                <label for="register-confirm">Confirm Password</label>
+                                <input type="password" id="register-confirm" required minlength="6">
+                            </div>
+                            <div class="form-group">
+                                <label for="register-role">I am a:</label>
+                                <select id="register-role" required>
+                                    <option value="student">Student</option>
+                                    <option value="instructor">Instructor</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Create Account</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Student Dashboard (shown after student login) -->
+        <section id="student-dashboard" class="content-section">
+            <div class="welcome-banner">
+                <h2>Welcome back, <span id="student-name"></span>! 👋</h2>
+                <p>Continue your learning journey</p>
+            </div>
+
+            <div class="dashboard-stats">
+                <div class="stat-card">
+                    <div class="stat-icon">📚</div>
+                    <div class="stat-info">
+                        <h3 id="enrolled-count">0</h3>
+                        <p>Courses Enrolled</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">✅</div>
+                    <div class="stat-info">
+                        <h3 id="completed-count">0</h3>
+                        <p>Lessons Completed</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">⭐</div>
+                    <div class="stat-info">
+                        <h3 id="points-count">0</h3>
+                        <p>Points Earned</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🏆</div>
+                    <div class="stat-info">
+                        <h3 id="achievements-count">0</h3>
+                        <p>Achievements</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="courses-section">
+                <h3>My Courses</h3>
+                <div id="student-courses" class="courses-grid">
+                    <!-- Courses will be populated here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Instructor Dashboard (shown after instructor login) -->
+        <section id="instructor-dashboard" class="content-section">
+            <div class="welcome-banner">
+                <h2>Instructor Dashboard</h2>
+                <p>Manage your courses and track student progress</p>
+            </div>
+
+            <div class="instructor-actions">
+                <button class="btn btn-primary" onclick="showCreateCourse()">➕ Create New Course</button>
+                <button class="btn btn-secondary" onclick="showUploadLesson()">📄 Upload Lesson Content</button>
+            </div>
+
+            <div class="courses-section">
+                <h3>My Courses</h3>
+                <div id="instructor-courses" class="courses-grid">
+                    <!-- Courses will be populated here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Course Browser -->
+        <section id="browse-courses" class="content-section">
+            <h2>Available Courses</h2>
+            <div class="track-filters">
+                <button class="filter-btn active" onclick="filterCourses('all')">All</button>
+                <button class="filter-btn" onclick="filterCourses('Mechanical')">Mechanical</button>
+                <button class="filter-btn" onclick="filterCourses('Electrical')">Electrical</button>
+                <button class="filter-btn" onclick="filterCourses('Coding')">Coding</button>
+                <button class="filter-btn" onclick="filterCourses('CAD')">CAD</button>
+            </div>
+            <div id="all-courses" class="courses-grid">
+                <!-- All courses will be populated here -->
+            </div>
+        </section>
+
+        <!-- Lesson Viewer -->
+        <section id="lesson-viewer" class="content-section">
+            <div class="lesson-container">
+                <button class="btn btn-back" onclick="backToCourse()">← Back to Course</button>
+                <div id="lesson-content">
+                    <!-- Lesson content will be loaded here -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="container">
+            <p>&copy; 2025 ACCN Umoja Robotics Team 7712. All rights reserved.</p>
+            <p>Building the future, one lesson at a time</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/auth.js"></script>
+    <script src="js/student-dashboard.js"></script>
+    <script src="js/instructor-dashboard.js"></script>
+    <script src="js/lesson-viewer.js"></script>
+</body>
+</html>
