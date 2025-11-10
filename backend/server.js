@@ -1,8 +1,8 @@
 const express = require('express');
-const mongoose = require('mongoose');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const path = require('path');
+const connectDB = require('./config/database');
 
 // Load environment variables
 dotenv.config();
@@ -42,20 +42,6 @@ app.get('/api/health', (req, res) => {
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/index.html'));
 });
-
-// Database connection
-const connectDB = async () => {
-  try {
-    await mongoose.connect(process.env.MONGODB_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
-    console.log('✅ Database connected successfully');
-  } catch (error) {
-    console.error('❌ Database connection error:', error.message);
-    process.exit(1);
-  }
-};
 
 // Start server
 const PORT = process.env.PORT || 3000;
