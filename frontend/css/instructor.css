@@ -1,0 +1,368 @@
+/* Instructor Dashboard Styles */
+
+.instructor-actions {
+    display: flex;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-xl);
+    flex-wrap: wrap;
+}
+
+.instructor-actions .btn {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+}
+
+/* Course Management */
+.course-management-card {
+    background: var(--bg-white);
+    border-radius: var(--radius-xl);
+    padding: var(--spacing-lg);
+    box-shadow: var(--shadow-sm);
+    margin-bottom: var(--spacing-lg);
+}
+
+.course-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-md);
+}
+
+.course-stat-item {
+    padding: var(--spacing-md);
+    background: var(--bg-light);
+    border-radius: var(--radius-md);
+    text-align: center;
+}
+
+.course-stat-item h4 {
+    font-size: 2rem;
+    color: var(--primary-color);
+    margin-bottom: 0.25rem;
+}
+
+.course-stat-item p {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+/* Course Editor */
+.course-editor {
+    background: var(--bg-white);
+    border-radius: var(--radius-xl);
+    padding: var(--spacing-xl);
+    box-shadow: var(--shadow-md);
+    margin-top: var(--spacing-lg);
+}
+
+.editor-section {
+    margin-bottom: var(--spacing-xl);
+}
+
+.editor-section h3 {
+    color: var(--primary-color);
+    margin-bottom: var(--spacing-md);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.editor-toolbar {
+    display: flex;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-md);
+    flex-wrap: wrap;
+}
+
+.toolbar-btn {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    background: var(--bg-light);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.toolbar-btn:hover {
+    background: var(--primary-color);
+    color: white;
+}
+
+/* Lesson Content Upload */
+.upload-area {
+    border: 3px dashed var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-xl);
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.upload-area:hover {
+    border-color: var(--primary-color);
+    background: var(--bg-light);
+}
+
+.upload-area.dragging {
+    border-color: var(--success-color);
+    background: rgba(40, 167, 69, 0.1);
+}
+
+.upload-icon {
+    font-size: 4rem;
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-md);
+}
+
+.upload-text {
+    color: var(--text-primary);
+    font-weight: 600;
+    margin-bottom: var(--spacing-xs);
+}
+
+.upload-hint {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.file-input {
+    display: none;
+}
+
+/* Student Progress Tracking */
+.student-list {
+    background: var(--bg-white);
+    border-radius: var(--radius-xl);
+    padding: var(--spacing-lg);
+    box-shadow: var(--shadow-sm);
+}
+
+.student-list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-md);
+}
+
+.student-search {
+    padding: var(--spacing-sm) var(--spacing-md);
+    border: 2px solid var(--border-color);
+    border-radius: var(--radius-md);
+    width: 300px;
+    font-size: 1rem;
+}
+
+.student-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.student-table thead {
+    background: var(--bg-light);
+}
+
+.student-table th {
+    padding: var(--spacing-md);
+    text-align: left;
+    font-weight: 600;
+    color: var(--text-primary);
+    border-bottom: 2px solid var(--border-color);
+}
+
+.student-table td {
+    padding: var(--spacing-md);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.student-table tbody tr:hover {
+    background: var(--bg-light);
+}
+
+.student-name {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.student-avatar-small {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+}
+
+.progress-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.progress-badge.high {
+    background: var(--success-color);
+    color: white;
+}
+
+.progress-badge.medium {
+    background: var(--warning-color);
+    color: var(--text-primary);
+}
+
+.progress-badge.low {
+    background: var(--danger-color);
+    color: white;
+}
+
+/* Lesson Generation Interface */
+.generation-panel {
+    background: var(--bg-white);
+    border-radius: var(--radius-xl);
+    padding: var(--spacing-xl);
+    box-shadow: var(--shadow-md);
+    margin-top: var(--spacing-lg);
+}
+
+.generation-steps {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: var(--spacing-xl);
+}
+
+.step {
+    flex: 1;
+    text-align: center;
+    position: relative;
+}
+
+.step::after {
+    content: '';
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    width: 100%;
+    height: 2px;
+    background: var(--border-color);
+    z-index: -1;
+}
+
+.step:last-child::after {
+    display: none;
+}
+
+.step-number {
+    width: 40px;
+    height: 40px;
+    background: var(--border-color);
+    color: white;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    margin-bottom: var(--spacing-sm);
+}
+
+.step.active .step-number {
+    background: var(--primary-color);
+}
+
+.step.completed .step-number {
+    background: var(--success-color);
+}
+
+.step-label {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.step.active .step-label {
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+.generation-preview {
+    background: var(--bg-light);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    margin-top: var(--spacing-lg);
+}
+
+.preview-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-md);
+}
+
+.preview-actions {
+    display: flex;
+    gap: var(--spacing-sm);
+}
+
+/* Analytics Dashboard */
+.analytics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--spacing-lg);
+    margin-top: var(--spacing-lg);
+}
+
+.analytics-card {
+    background: var(--bg-white);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    box-shadow: var(--shadow-sm);
+}
+
+.analytics-card h4 {
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-md);
+}
+
+.chart-placeholder {
+    width: 100%;
+    height: 200px;
+    background: var(--bg-light);
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-secondary);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .instructor-actions {
+        flex-direction: column;
+    }
+    
+    .instructor-actions .btn {
+        width: 100%;
+    }
+    
+    .student-search {
+        width: 100%;
+    }
+    
+    .student-table {
+        font-size: 0.9rem;
+    }
+    
+    .student-table th,
+    .student-table td {
+        padding: var(--spacing-sm);
+    }
+    
+    .generation-steps {
+        flex-direction: column;
+    }
+    
+    .step::after {
+        display: none;
+    }
+    
+    .analytics-grid {
+        grid-template-columns: 1fr;
+    }
+}
