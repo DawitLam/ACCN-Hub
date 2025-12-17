@@ -4,12 +4,20 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# Environment variables
+# Environment variables (NEVER COMMIT THESE!)
+# Contains sensitive data: database credentials, API keys, secrets
 .env
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
+.env.backup
+*.env.backup
+
+# Configuration files with credentials
+config.json
+secrets.json
+credentials.json
 
 # Uploads and generated files
 uploads/

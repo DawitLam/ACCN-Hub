@@ -86,7 +86,60 @@ const LessonSchema = new mongoose.Schema({
     url: String,
     type: {
       type: String,
-      enum: ['video', 'document', 'link', 'other']
+      enum: ['video', 'document', 'link', 'other', 'colab', 'kaggle', 'interactive']
+    },
+    description: String
+  }],
+  // Coding exercises for hands-on practice
+  codingExercises: [{
+    title: {
+      type: String,
+      required: true
+    },
+    description: String,
+    difficulty: {
+      type: String,
+      enum: ['beginner', 'intermediate', 'advanced'],
+      default: 'beginner'
+    },
+    starterCode: String,
+    solution: {
+      type: String,
+      select: false // Hidden from students
+    },
+    testCases: [{
+      input: String,
+      expectedOutput: String,
+      description: String
+    }],
+    hints: [String],
+    colabNotebookUrl: String,
+    points: {
+      type: Number,
+      default: 20
+    }
+  }],
+  // Interactive tools integration
+  interactiveTools: [{
+    name: {
+      type: String,
+      enum: ['teachable_machine', 'tensorflow_playground', 'kaggle_notebook', 'colab', 'hugging_face', 'other']
+    },
+    url: String,
+    description: String,
+    instructions: String
+  }],
+  activities: [{
+    title: String,
+    description: String,
+    type: {
+      type: String,
+      enum: ['individual', 'group', 'hands-on', 'discussion', 'project']
+    },
+    duration: String,
+    required: {
+      type: Boolean,
+      default: false
     }
   }],
   isLocked: {
@@ -119,19 +172,6 @@ const LessonSchema = new mongoose.Schema({
       default: false
     }
   },
-  activities: [{
-    title: String,
-    description: String,
-    type: {
-      type: String,
-      enum: ['text', 'file_upload', 'link', 'interactive']
-    },
-    required: {
-      type: Boolean,
-      default: false
-    },
-    dueDate: Date
-  }],
   homework: {
     title: String,
     description: String,

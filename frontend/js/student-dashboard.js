@@ -341,7 +341,96 @@ function displayLesson(lesson) {
         });
     }
     
-    // Section 3: Activities
+    // Section 3: Coding Exercises
+    if (lesson.codingExercises && lesson.codingExercises.length > 0) {
+        lessonSections.push({
+            title: 'Coding Practice',
+            content: `
+                <div class="lesson-coding-exercises">
+                    <h3>💻 Hands-On Coding Exercises</h3>
+                    <p style="color: #666; margin-bottom: 20px;">Practice your skills with these interactive coding challenges. Click "Open in Colab" to start coding!</p>
+                    ${lesson.codingExercises.map((exercise, index) => `
+                        <div class="coding-exercise" style="margin: 20px 0; padding: 20px; background: #f8f9fa; border-left: 4px solid #28a745; border-radius: 8px;">
+                            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px;">
+                                <h4 style="margin: 0; color: #28a745;">
+                                    ${index + 1}. ${exercise.title}
+                                    <span style="display: inline-block; padding: 2px 8px; background: ${exercise.difficulty === 'beginner' ? '#28a745' : exercise.difficulty === 'intermediate' ? '#ffc107' : '#dc3545'}; color: white; border-radius: 4px; font-size: 0.75em; margin-left: 10px;">
+                                        ${exercise.difficulty}
+                                    </span>
+                                </h4>
+                                <span style="font-weight: 600; color: #28a745;">+${exercise.points} points</span>
+                            </div>
+                            <p style="margin: 10px 0;">${exercise.description}</p>
+                            
+                            <details style="margin: 15px 0;">
+                                <summary style="cursor: pointer; color: #007bff; font-weight: 500;">💡 View Hints (${exercise.hints ? exercise.hints.length : 0} available)</summary>
+                                <ul style="margin-top: 10px; padding-left: 20px;">
+                                    ${exercise.hints ? exercise.hints.map(hint => `<li>${hint}</li>`).join('') : '<li>No hints available</li>'}
+                                </ul>
+                            </details>
+                            
+                            <details style="margin: 15px 0;">
+                                <summary style="cursor: pointer; color: #007bff; font-weight: 500;">📝 Starter Code</summary>
+                                <pre style="background: #fff; padding: 15px; border-radius: 5px; overflow-x: auto; margin-top: 10px;"><code>${exercise.starterCode || 'No starter code provided'}</code></pre>
+                            </details>
+                            
+                            <div style="display: flex; gap: 10px; margin-top: 15px;">
+                                ${exercise.colabNotebookUrl ? `
+                                    <a href="${exercise.colabNotebookUrl}" target="_blank" class="btn btn-primary" style="text-decoration: none;">
+                                        🚀 Open in Google Colab
+                                    </a>
+                                ` : ''}
+                                <button class="btn btn-secondary" onclick="showExerciseSolution('${index}')">
+                                    👀 Show Solution
+                                </button>
+                            </div>
+                            
+                            <div id="solution-${index}" style="display: none; margin-top: 15px; padding: 15px; background: #fff; border-radius: 5px;">
+                                <h5 style="color: #28a745;">✓ Solution:</h5>
+                                <pre style="background: #f8f9fa; padding: 15px; border-radius: 5px; overflow-x: auto;"><code>${exercise.solution || 'Solution not available yet'}</code></pre>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `
+        });
+    }
+    
+    // Section 4: Interactive Tools
+    if (lesson.interactiveTools && lesson.interactiveTools.length > 0) {
+        lessonSections.push({
+            title: 'Interactive Tools',
+            content: `
+                <div class="lesson-interactive-tools">
+                    <h3>🎮 Hands-On AI Tools</h3>
+                    <p style="color: #666; margin-bottom: 20px;">Experiment with these interactive AI platforms - no coding required!</p>
+                    ${lesson.interactiveTools.map((tool, index) => `
+                        <div class="interactive-tool" style="margin: 20px 0; padding: 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+                            <h4 style="margin: 0 0 10px 0; color: white;">
+                                ${index + 1}. ${tool.name.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                            </h4>
+                            <p style="margin: 10px 0; opacity: 0.95;">${tool.description}</p>
+                            
+                            ${tool.instructions ? `
+                                <details style="margin: 15px 0;">
+                                    <summary style="cursor: pointer; font-weight: 500; opacity: 0.95;">📋 Step-by-Step Instructions</summary>
+                                    <div style="margin-top: 10px; padding: 15px; background: rgba(255,255,255,0.1); border-radius: 8px; white-space: pre-line;">
+                                        ${tool.instructions}
+                                    </div>
+                                </details>
+                            ` : ''}
+                            
+                            <a href="${tool.url}" target="_blank" class="btn" style="background: white; color: #667eea; margin-top: 15px; text-decoration: none; display: inline-block; padding: 10px 20px; border-radius: 6px; font-weight: 600;">
+                                🔗 Launch ${tool.name.replace(/_/g, ' ')}
+                            </a>
+                        </div>
+                    `).join('')}
+                </div>
+            `
+        });
+    }
+    
+    // Section 5: Activities
     if (lesson.activities && lesson.activities.length > 0) {
         lessonSections.push({
             title: 'Activities',
@@ -352,6 +441,7 @@ function displayLesson(lesson) {
                         <div class="activity-item" style="margin: 15px 0; padding: 15px; background: #f8f9fa; border-radius: 8px;">
                             <h4>${index + 1}. ${activity.title} ${activity.required ? '<span style="color: #dc3545; font-size: 0.9em;">(Required)</span>' : ''}</h4>
                             <p>${activity.description}</p>
+                            ${activity.duration ? `<p style="color: #666; font-size: 0.9em;">⏱️ Duration: ${activity.duration}</p>` : ''}
                             <span style="display: inline-block; padding: 4px 12px; background: #007bff; color: white; border-radius: 4px; font-size: 0.85em;">
                                 ${activity.type}
                             </span>
@@ -362,7 +452,7 @@ function displayLesson(lesson) {
         });
     }
     
-    // Section 4: Resources
+    // Section 6: Resources
     if (lesson.resources && lesson.resources.length > 0) {
         lessonSections.push({
             title: 'Resources',
@@ -515,6 +605,18 @@ function updatePageNavigation() {
     if (prevBtn) prevBtn.disabled = currentLessonPage === 0;
     if (nextBtn) nextBtn.disabled = currentLessonPage === lessonSections.length - 1;
     if (pageNum) pageNum.textContent = currentLessonPage + 1;
+}
+
+// Show/hide exercise solution
+function showExerciseSolution(index) {
+    const solutionDiv = document.getElementById(`solution-${index}`);
+    if (solutionDiv) {
+        if (solutionDiv.style.display === 'none') {
+            solutionDiv.style.display = 'block';
+        } else {
+            solutionDiv.style.display = 'none';
+        }
+    }
 }
 
 // Render quiz questions
