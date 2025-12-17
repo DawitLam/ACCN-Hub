@@ -58,7 +58,7 @@ JWT_SECRET=any-random-long-string-here
 PORT=3000
 
 # Optional (for later):
-OPENAI_API_KEY=your-key-here
+CONTENT_API_KEY=your-key-here
 YOUTUBE_API_KEY=your-key-here
 ```
 
@@ -70,8 +70,8 @@ npm run dev
 You should see:
 ```
 ✅ MongoDB Connected: ...
-🚀 ACCN Hub server running on port 3000
-📱 Access the platform at http://localhost:3000
+Server running on port 3000
+Access at http://localhost:3000
 ```
 
 ### Step 5: Create First Accounts

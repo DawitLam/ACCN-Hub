@@ -28,11 +28,50 @@ const ProgressSchema = new mongoose.Schema({
       type: Number,
       default: 0
     },
+    quizHistory: [{
+      attemptedAt: Date,
+      score: Number,
+      timeSpent: Number,
+      answers: [Number]
+    }],
     timeSpent: {
       type: Number,
       default: 0
-    }
+    },
+    videoProgress: {
+      watchedDuration: Number, // seconds
+      totalDuration: Number,
+      watchPercentage: Number,
+      lastPosition: Number,
+      completedAt: Date
+    },
+    activitiesCompleted: [{
+      activityId: String,
+      completedAt: Date,
+      submissionId: mongoose.Schema.Types.ObjectId
+    }],
+    homeworkSubmitted: {
+      type: Boolean,
+      default: false
+    },
+    homeworkScore: Number
   }],
+  attendance: [{
+    date: {
+      type: Date,
+      default: Date.now
+    },
+    present: {
+      type: Boolean,
+      default: true
+    },
+    duration: Number, // minutes
+    lessonsCovered: [String]
+  }],
+  attendancePercentage: {
+    type: Number,
+    default: 0
+  },
   currentLesson: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Lesson'
@@ -62,15 +101,19 @@ const ProgressSchema = new mongoose.Schema({
     type: Number,
     default: 0
   },
-  certificateIssued: {
-    type: Boolean,
-    default: false
+  certificate: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Certificate'
   },
-  certificateUrl: {
-    type: String
+  certificateTier: {
+    type: String,
+    enum: ['AI Literacy', 'AI Practitioner', 'AI Developer', 'Course Completion']
   },
-  certificateIssuedAt: {
-    type: Date
+  finalProject: {
+    submitted: Boolean,
+    submissionId: mongoose.Schema.Types.ObjectId,
+    score: Number,
+    rubricScores: mongoose.Schema.Types.Mixed
   },
   activityLog: [{
     action: {

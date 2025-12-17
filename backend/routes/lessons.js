@@ -8,33 +8,29 @@ const { protect, authorize } = require('../middleware/auth');
 // Get single lesson
 router.get('/:id', protect, async (req, res) => {
   try {
-    const lesson = await Lesson.findById(req.params.id).populate('course');
+    const ActivityLog = require('../models/ActivityLog');
+    
+    // For students, exclude quiz answers and explanations
+    const lesson = req.user.role === 'student' 
+      ? await Lesson.findById(req.params.id)
+          .select('-quiz.correctAnswer -quiz.explanation')
+          .populate('course')
+      : await Lesson.findById(req.params.id).populate('course');
     
     if (!lesson) {
       return res.status(404).json({ message: 'Lesson not found' });
     }
     
-    // Check if student has access (not locked)
-    if (req.user.role === 'student') {
-      const progress = await Progress.findOne({
-        student: req.user.id,
-        course: lesson.course._id
+    // Log lesson view for all users
+    if (req.user.role === 'student' || req.user.role === 'instructor') {
+      await ActivityLog.logActivity({
+        user: req.user.id,
+        activityType: 'lesson_viewed',
+        course: lesson.course._id,
+        lesson: lesson._id,
+        ipAddress: req.ip,
+        userAgent: req.get('user-agent')
       });
-      
-      const course = await Course.findById(lesson.course._id).populate('lessons');
-      const lessonIndex = course.lessons.findIndex(l => l._id.toString() === lesson._id.toString());
-      
-      // Check if lesson is locked
-      if (lessonIndex > 0) {
-        const previousLesson = course.lessons[lessonIndex - 1];
-        const isPreviousCompleted = progress?.completedLessons.some(
-          cl => cl.lesson.toString() === previousLesson._id.toString()
-        );
-        
-        if (!isPreviousCompleted) {
-          return res.status(403).json({ message: 'Complete previous lesson first' });
-        }
-      }
     }
     
     res.json(lesson);
@@ -142,8 +138,12 @@ router.delete('/:id', protect, authorize('instructor', 'admin'), async (req, res
 // Submit quiz for lesson
 router.post('/:id/quiz', protect, authorize('student'), async (req, res) => {
   try {
-    const { answers } = req.body;
-    const lesson = await Lesson.findById(req.params.id);
+    const { answers, timeSpent } = req.body;
+    const ActivityLog = require('../models/ActivityLog');
+    
+    // Get lesson with correct answers (only for grading)
+    const lesson = await Lesson.findById(req.params.id)
+      .select('+quiz.correctAnswer +quiz.explanation');
     
     if (!lesson) {
       return res.status(404).json({ message: 'Lesson not found' });
@@ -153,55 +153,121 @@ router.post('/:id/quiz', protect, authorize('student'), async (req, res) => {
       return res.status(400).json({ message: 'This lesson has no quiz' });
     }
     
-    // Calculate score
-    let correctAnswers = 0;
-    lesson.quiz.forEach((question, index) => {
-      if (answers[index] === question.correctAnswer) {
-        correctAnswers++;
-      }
-    });
-    
-    const score = Math.round((correctAnswers / lesson.quiz.length) * 100);
-    const passed = score >= (lesson.requiredCompletion.minimumScore || 70);
-    
-    // Update progress
+    // Get progress and check attempts
     const progress = await Progress.findOne({
       student: req.user.id,
       course: lesson.course
     });
     
-    if (progress) {
-      const lessonProgress = progress.completedLessons.find(
-        cl => cl.lesson.toString() === lesson._id.toString()
-      );
-      
-      if (lessonProgress) {
-        lessonProgress.quizScore = score;
-        lessonProgress.quizAttempts += 1;
-      } else {
-        progress.completedLessons.push({
-          lesson: lesson._id,
-          quizScore: score,
-          quizAttempts: 1
-        });
-      }
-      
-      await progress.save();
-      
-      // Log activity
-      progress.activityLog.push({
-        action: 'quiz_submitted',
-        details: { lessonId: lesson._id, score, passed }
-      });
-      await progress.save();
+    if (!progress) {
+      return res.status(404).json({ message: 'Progress record not found' });
     }
+    
+    const lessonProgress = progress.completedLessons.find(
+      cl => cl.lesson.toString() === lesson._id.toString()
+    );
+    
+    const currentAttempts = lessonProgress?.quizAttempts || 0;
+    const maxAttempts = lesson.quizSettings?.maxAttempts || 3;
+    
+    // Check attempt limit
+    if (currentAttempts >= maxAttempts) {
+      await ActivityLog.logActivity({
+        user: req.user.id,
+        activityType: 'permission_denied',
+        course: lesson.course,
+        lesson: lesson._id,
+        details: { reason: 'Max quiz attempts exceeded', attempts: currentAttempts },
+        ipAddress: req.ip,
+        userAgent: req.get('user-agent')
+      });
+      
+      return res.status(403).json({ 
+        message: `Maximum quiz attempts (${maxAttempts}) exceeded`,
+        attemptsRemaining: 0
+      });
+    }
+    
+    // Calculate score
+    let correctAnswers = 0;
+    const results = [];
+    
+    lesson.quiz.forEach((question, index) => {
+      const isCorrect = answers[index] === question.correctAnswer;
+      if (isCorrect) correctAnswers++;
+      
+      results.push({
+        questionNumber: index + 1,
+        correct: isCorrect,
+        userAnswer: answers[index],
+        correctAnswer: lesson.quizSettings?.showCorrectAnswers ? question.correctAnswer : undefined,
+        explanation: (lesson.quizSettings?.showCorrectAnswers && question.explanation) ? question.explanation : undefined
+      });
+    });
+    
+    const score = Math.round((correctAnswers / lesson.quiz.length) * 100);
+    const passingScore = lesson.quizSettings?.passingScore || lesson.requiredCompletion?.minimumScore || 70;
+    const passed = score >= passingScore;
+    
+    // Update progress
+    if (lessonProgress) {
+      lessonProgress.quizScore = Math.max(lessonProgress.quizScore || 0, score);
+      lessonProgress.quizAttempts = currentAttempts + 1;
+      lessonProgress.quizHistory = lessonProgress.quizHistory || [];
+      lessonProgress.quizHistory.push({
+        attemptedAt: new Date(),
+        score,
+        timeSpent,
+        answers
+      });
+    } else {
+      progress.completedLessons.push({
+        lesson: lesson._id,
+        quizScore: score,
+        quizAttempts: 1,
+        quizHistory: [{
+          attemptedAt: new Date(),
+          score,
+          timeSpent,
+          answers
+        }]
+      });
+    }
+    
+    await progress.save();
+    
+    // Log activity
+    await ActivityLog.logActivity({
+      user: req.user.id,
+      activityType: passed ? 'quiz_passed' : 'quiz_failed',
+      course: lesson.course,
+      lesson: lesson._id,
+      details: { 
+        score, 
+        passed, 
+        attempt: currentAttempts + 1,
+        timeSpent,
+        correctAnswers,
+        totalQuestions: lesson.quiz.length
+      },
+      ipAddress: req.ip,
+      userAgent: req.get('user-agent'),
+      duration: timeSpent
+    });
     
     res.json({
       success: true,
       score,
       passed,
       correctAnswers,
-      totalQuestions: lesson.quiz.length
+      totalQuestions: lesson.quiz.length,
+      passingScore,
+      attemptsUsed: currentAttempts + 1,
+      attemptsRemaining: maxAttempts - (currentAttempts + 1),
+      results: lesson.quizSettings?.showCorrectAnswers ? results : results.map(r => ({
+        questionNumber: r.questionNumber,
+        correct: r.correct
+      }))
     });
   } catch (error) {
     res.status(500).json({ message: 'Error submitting quiz', error: error.message });
@@ -214,8 +280,8 @@ router.get('/course/:courseId', protect, async (req, res) => {
     const lessons = await Lesson.find({ course: req.params.courseId })
       .sort({ order: 1 });
     
-    // If student, check which lessons are locked
-    if (req.user.role === 'student') {
+    // If student or instructor, add completion status (all unlocked)
+    if (req.user.role === 'student' || req.user.role === 'instructor') {
       const progress = await Progress.findOne({
         student: req.user.id,
         course: req.params.courseId
@@ -226,15 +292,9 @@ router.get('/course/:courseId', protect, async (req, res) => {
           cl => cl.lesson.toString() === lesson._id.toString()
         );
         
-        // First lesson is always unlocked
-        const isLocked = index === 0 ? false : 
-          !progress?.completedLessons.some(
-            cl => cl.lesson.toString() === lessons[index - 1]._id.toString()
-          );
-        
         return {
           ...lesson.toObject(),
-          isLocked,
+          isLocked: false,  // All lessons are accessible
           completed: isCompleted
         };
       });

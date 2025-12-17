@@ -1,7 +1,7 @@
 # ACCN Hub - Advanced Learning Management System
 
 ## Overview
-ACCN Hub is a comprehensive Learning Management System designed for Umoja Robotics and future educational programs. The platform features AI-powered lesson generation, automated progress tracking, and certificate generation.
+ACCN Hub is a comprehensive Learning Management System designed for Umoja Robotics and future educational programs. The platform features intelligent lesson generation, automated progress tracking, and certificate generation.
 
 ## Features
 
@@ -14,12 +14,12 @@ ACCN Hub is a comprehensive Learning Management System designed for Umoja Roboti
 - 📊 Personal progress dashboard
 
 ### For Instructors:
-- 🤖 AI-powered lesson generation from Word documents
+- 📄 Lesson generation from Word documents
 - ✏️ Easy content editing and management
 - 👥 Student progress monitoring
 - 📈 Activity and engagement analytics
-- 🎥 Automatic video content suggestions
-- ❓ AI-generated quiz questions
+- 🎥 Video content recommendations
+- ❓ Quiz question generation
 
 ### Technical Features:
 - 🔐 JWT-based authentication
@@ -42,8 +42,8 @@ ACCN Hub is a comprehensive Learning Management System designed for Umoja Roboti
 - JWT for authentication
 - Bcrypt for password hashing
 
-### AI Integration:
-- OpenAI GPT-4 API for content generation
+### Content Generation:
+- Advanced language model for content processing
 - Mammoth.js for Word document parsing
 - YouTube Data API for video recommendations
 
@@ -70,7 +70,7 @@ ACCN-Hub/
 ### Prerequisites:
 - Node.js (v16 or higher)
 - MongoDB (local or Atlas)
-- OpenAI API key (for AI features)
+- API key for content generation features (optional)
 
 ### Installation:
 
@@ -120,11 +120,11 @@ http://localhost:3000
 - [ ] Quiz system
 - [ ] Certificate generation
 
-### Phase 2: AI Lesson Generator (Weeks 7-11)
+### Phase 2: Content Generator (Weeks 7-11)
 - [ ] Word document parser
-- [ ] AI content analyzer
+- [ ] Content analyzer
 - [ ] Lesson template generator
-- [ ] Automatic question generation
+- [ ] Question generation
 - [ ] Video content matcher
 - [ ] Gamification engine
 - [ ] Instructor review interface

@@ -96,27 +96,21 @@ router.get('/:id', protect, async (req, res) => {
     }
     
     // If student, check enrollment and get progress
-    if (req.user.role === 'student') {
+    if (req.user.role === 'student' || req.user.role === 'instructor') {
       const progress = await Progress.findOne({
         student: req.user.id,
         course: course._id
       });
       
-      // Mark lessons as locked/unlocked based on progress
+      // Mark lessons completion status (all unlocked)
       const lessonsWithStatus = course.lessons.map((lesson, index) => {
         const isCompleted = progress?.completedLessons.some(
           cl => cl.lesson.toString() === lesson._id.toString()
         );
         
-        // First lesson is always unlocked
-        const isLocked = index === 0 ? false : 
-          !progress?.completedLessons.some(
-            cl => cl.lesson.toString() === course.lessons[index - 1]._id.toString()
-          );
-        
         return {
           ...lesson.toObject(),
-          isLocked,
+          isLocked: false,  // All lessons are accessible
           completed: isCompleted
         };
       });
@@ -214,8 +208,8 @@ router.delete('/:id', protect, authorize('instructor', 'admin'), async (req, res
   }
 });
 
-// Enroll in course
-router.post('/:id/enroll', protect, authorize('student'), async (req, res) => {
+// Enroll in course (allow both students and instructors to enroll)
+router.post('/:id/enroll', protect, async (req, res) => {
   try {
     const course = await Course.findById(req.params.id);
     

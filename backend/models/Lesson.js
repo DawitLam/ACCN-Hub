@@ -43,16 +43,44 @@ const LessonSchema = new mongoose.Schema({
     }],
     correctAnswer: {
       type: Number,
-      required: true
+      required: true,
+      select: false // Hide from default queries
     },
     explanation: {
-      type: String
+      type: String,
+      select: false // Only show after submission
     },
     points: {
       type: Number,
       default: 10
     }
   }],
+  quizSettings: {
+    maxAttempts: {
+      type: Number,
+      default: 3
+    },
+    timeLimit: {
+      type: Number, // in minutes
+      default: null
+    },
+    shuffleQuestions: {
+      type: Boolean,
+      default: false
+    },
+    shuffleOptions: {
+      type: Boolean,
+      default: true
+    },
+    showCorrectAnswers: {
+      type: Boolean,
+      default: true // Show after submission
+    },
+    passingScore: {
+      type: Number,
+      default: 70
+    }
+  },
   resources: [{
     title: String,
     url: String,
@@ -74,6 +102,10 @@ const LessonSchema = new mongoose.Schema({
       type: Boolean,
       default: false
     },
+    watchPercentage: {
+      type: Number,
+      default: 80 // % of video to watch
+    },
     passQuiz: {
       type: Boolean,
       default: true
@@ -81,6 +113,33 @@ const LessonSchema = new mongoose.Schema({
     minimumScore: {
       type: Number,
       default: 70
+    },
+    completeActivities: {
+      type: Boolean,
+      default: false
+    }
+  },
+  activities: [{
+    title: String,
+    description: String,
+    type: {
+      type: String,
+      enum: ['text', 'file_upload', 'link', 'interactive']
+    },
+    required: {
+      type: Boolean,
+      default: false
+    },
+    dueDate: Date
+  }],
+  homework: {
+    title: String,
+    description: String,
+    required: Boolean,
+    dueDate: Date,
+    submissionType: {
+      type: String,
+      enum: ['text', 'file', 'link', 'code']
     }
   },
   points: {

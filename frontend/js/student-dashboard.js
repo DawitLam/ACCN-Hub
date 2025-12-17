@@ -1,5 +1,11 @@
 // Student Dashboard Functions
 
+// Track current view state
+let currentViewState = {
+    course: null,
+    lesson: null
+};
+
 // Load student dashboard data
 async function loadStudentDashboard() {
     try {
@@ -116,6 +122,9 @@ async function viewCourse(courseId) {
 
 // Display course view with lessons
 function displayCourseView(course) {
+    // Store course in current view state for navigation
+    currentViewState.course = course;
+    
     const lessonViewer = document.getElementById('lesson-viewer');
     const lessonContent = document.getElementById('lesson-content');
     
@@ -181,63 +190,331 @@ async function openLesson(lessonId) {
     }
 }
 
-// Display lesson content
+// Convert YouTube URL to embed format
+function getEmbedUrl(videoUrl) {
+    if (!videoUrl) return null;
+    
+    // Already embed format
+    if (videoUrl.includes('/embed/')) {
+        return videoUrl;
+    }
+    
+    // Extract video ID from various YouTube URL formats
+    let videoId = null;
+    
+    // Format: https://www.youtube.com/watch?v=VIDEO_ID
+    if (videoUrl.includes('youtube.com/watch')) {
+        const match = videoUrl.match(/[?&]v=([^&]+)/);
+        if (match) videoId = match[1];
+    }
+    // Format: https://youtu.be/VIDEO_ID
+    else if (videoUrl.includes('youtu.be/')) {
+        const match = videoUrl.match(/youtu\.be\/([^?]+)/);
+        if (match) videoId = match[1];
+    }
+    
+    return videoId ? `https://www.youtube-nocookie.com/embed/${videoId}` : videoUrl;
+}
+
+// Simple markdown to HTML converter (fallback if marked.js fails)
+function simpleMarkdownToHtml(markdown) {
+    let html = markdown;
+    
+    // Replace --- separators
+    html = html.replace(/\s*---\s*/g, '<br><br>');
+    
+    // Convert headers (must be done in order from most # to least)
+    html = html.replace(/####\s+(.+?)(?=\n|$)/g, '<h4>$1</h4>');
+    html = html.replace(/###\s+(.+?)(?=\n|$)/g, '<h3>$1</h3>');
+    html = html.replace(/##\s+(.+?)(?=\n|$)/g, '<h2>$1</h2>');
+    html = html.replace(/#\s+(.+?)(?=\n|$)/g, '<h1>$1</h1>');
+    
+    // Convert bold text
+    html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+    
+    // Convert italic text
+    html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
+    
+    // Convert line breaks to paragraphs
+    html = html.split('\n\n').map(para => {
+        para = para.trim();
+        if (!para) return '';
+        if (para.startsWith('<h') || para.startsWith('<br')) return para;
+        return `<p>${para}</p>`;
+    }).join('\n');
+    
+    // Convert single line breaks to <br>
+    html = html.replace(/\n/g, '<br>');
+    
+    return html;
+}
+
+// Current lesson page state
+let currentLessonPage = 0;
+let lessonSections = [];
+let currentLesson = null;
+
+// Display lesson content with pagination
 function displayLesson(lesson) {
     const lessonContent = document.getElementById('lesson-content');
+    currentLesson = lesson;
+    currentLessonPage = 0;
     
-    lessonContent.innerHTML = `
-        <div class="lesson-view">
-            <h2>${lesson.title}</h2>
-            
-            ${lesson.videoUrl ? `
-                <div class="lesson-video">
-                    <iframe width="100%" height="450" 
-                            src="${lesson.videoUrl}" 
-                            frameborder="0" allowfullscreen></iframe>
+    // Convert video URL to embed format
+    const embedUrl = getEmbedUrl(lesson.videoUrl);
+    
+    // Build lesson sections for pagination
+    lessonSections = [];
+    
+    // Section 1: Video & Overview
+    if (embedUrl || lesson.objectives) {
+        lessonSections.push({
+            title: 'Overview',
+            content: `
+                ${embedUrl ? `
+                    <div class="lesson-video">
+                        <iframe width="100%" height="450" 
+                                src="${embedUrl}" 
+                                frameborder="0" 
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                allowfullscreen></iframe>
+                    </div>
+                ` : ''}
+                ${lesson.objectives && lesson.objectives.length > 0 ? `
+                    <div class="lesson-objectives">
+                        <h3>Learning Objectives</h3>
+                        <ul>
+                            ${lesson.objectives.map(obj => `<li>${obj}</li>`).join('')}
+                        </ul>
+                    </div>
+                ` : ''}
+            `
+        });
+    }
+    
+    // Section 2: Main Content
+    if (lesson.content) {
+        // Preprocess markdown content to ensure proper formatting
+        let formattedContent = lesson.content;
+        
+        // Replace --- separators with double line breaks
+        formattedContent = formattedContent.replace(/\s*---\s*/g, '\n\n');
+        
+        // Add line breaks before all # headers
+        formattedContent = formattedContent.replace(/\s*(#{1,6})\s+/g, '\n\n$1 ');
+        
+        // Add line breaks before #### markers (used as section dividers)
+        formattedContent = formattedContent.replace(/\s*(####)\s+/g, '\n\n$1 ');
+        
+        // Fix bold text - ensure proper spacing around **text**
+        formattedContent = formattedContent.replace(/\*\*([^*]+)\*\*/g, '**$1**');
+        
+        // Add line breaks after sentences (period followed by space and capital letter/number)
+        formattedContent = formattedContent.replace(/\.\s+(?=[A-Z#])/g, '.\n\n');
+        
+        // Clean up multiple consecutive line breaks
+        formattedContent = formattedContent.replace(/\n{3,}/g, '\n\n');
+        
+        // Trim and parse
+        formattedContent = formattedContent.trim();
+        
+        // Use marked.js if available, otherwise use simple converter
+        let htmlContent;
+        if (typeof marked !== 'undefined') {
+            try {
+                htmlContent = marked.parse(formattedContent);
+            } catch (e) {
+                console.warn('Marked.js failed, using fallback converter', e);
+                htmlContent = simpleMarkdownToHtml(formattedContent);
+            }
+        } else {
+            htmlContent = simpleMarkdownToHtml(formattedContent);
+        }
+        
+        lessonSections.push({
+            title: 'Content',
+            content: `
+                <div class="lesson-body">
+                    ${htmlContent}
                 </div>
-            ` : ''}
-            
-            <div class="lesson-body">
-                ${lesson.content}
-            </div>
-            
-            ${lesson.objectives && lesson.objectives.length > 0 ? `
-                <div class="lesson-objectives">
-                    <h3>Learning Objectives</h3>
+            `
+        });
+    }
+    
+    // Section 3: Activities
+    if (lesson.activities && lesson.activities.length > 0) {
+        lessonSections.push({
+            title: 'Activities',
+            content: `
+                <div class="lesson-activities">
+                    <h3>Activities</h3>
+                    ${lesson.activities.map((activity, index) => `
+                        <div class="activity-item" style="margin: 15px 0; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                            <h4>${index + 1}. ${activity.title} ${activity.required ? '<span style="color: #dc3545; font-size: 0.9em;">(Required)</span>' : ''}</h4>
+                            <p>${activity.description}</p>
+                            <span style="display: inline-block; padding: 4px 12px; background: #007bff; color: white; border-radius: 4px; font-size: 0.85em;">
+                                ${activity.type}
+                            </span>
+                        </div>
+                    `).join('')}
+                </div>
+            `
+        });
+    }
+    
+    // Section 4: Resources
+    if (lesson.resources && lesson.resources.length > 0) {
+        lessonSections.push({
+            title: 'Resources',
+            content: `
+                <div class="lesson-resources">
+                    <h3>Additional Resources</h3>
                     <ul>
-                        ${lesson.objectives.map(obj => `<li>${obj}</li>`).join('')}
+                        ${lesson.resources.map(res => `
+                            <li><a href="${res.url}" target="_blank">${res.title} (${res.type})</a></li>
+                        `).join('')}
                     </ul>
                 </div>
-            ` : ''}
-            
-            ${lesson.materials && lesson.materials.length > 0 ? `
-                <div class="lesson-materials">
-                    <h3>Required Materials</h3>
-                    <ul>
-                        ${lesson.materials.map(mat => `<li>${mat}</li>`).join('')}
-                    </ul>
-                </div>
-            ` : ''}
-            
-            ${lesson.quiz && lesson.quiz.length > 0 ? `
+            `
+        });
+    }
+    
+    // Section 5: Quiz
+    if (lesson.quiz && lesson.quiz.length > 0) {
+        lessonSections.push({
+            title: 'Knowledge Check',
+            content: `
                 <div class="lesson-quiz">
                     <h3>Knowledge Check</h3>
                     <div id="quiz-container">
                         ${renderQuiz(lesson.quiz, lesson._id)}
                     </div>
                 </div>
-            ` : ''}
+            `
+        });
+    }
+    
+    // Get lesson navigation context
+    let prevLesson = null;
+    let nextLesson = null;
+    
+    if (currentViewState.course && currentViewState.course.lessons) {
+        const lessons = currentViewState.course.lessons;
+        const currentIndex = lessons.findIndex(l => l._id === lesson._id);
+        
+        if (currentIndex > 0) {
+            prevLesson = lessons[currentIndex - 1];
+        }
+        if (currentIndex >= 0 && currentIndex < lessons.length - 1) {
+            nextLesson = lessons[currentIndex + 1];
+        }
+    }
+    
+    // Build the complete layout with sidebar and content
+    lessonContent.innerHTML = `
+        <div class="lesson-viewer">
+            <div class="lesson-sidebar">
+                <h3 style="padding: 15px; margin: 0; border-bottom: 2px solid #e9ecef; font-size: 1.1rem;">
+                    ${lesson.title}
+                </h3>
+                <p style="padding: 10px 15px; color: #666; border-bottom: 1px solid #e9ecef; margin: 0; font-size: 0.9rem;">
+                    Duration: ${lesson.duration || 'N/A'}
+                </p>
+                <nav class="lesson-nav">
+                    ${lessonSections.map((section, index) => `
+                        <a href="#" 
+                           class="lesson-nav-item ${index === 0 ? 'active' : ''}" 
+                           data-page="${index}"
+                           onclick="navigateToPage(${index}); return false;">
+                            <span class="nav-number">${index + 1}</span>
+                            <span class="nav-title">${section.title}</span>
+                            <span class="nav-check">✓</span>
+                        </a>
+                    `).join('')}
+                </nav>
+                <div style="padding: 15px; border-top: 1px solid #e9ecef; margin-top: auto;">
+                    ${prevLesson ? `
+                        <button class="btn btn-secondary btn-sm" onclick="openLesson('${prevLesson._id}')" style="width: 100%; margin-bottom: 8px;">
+                            ← Previous Lesson
+                        </button>
+                    ` : ''}
+                    ${nextLesson ? `
+                        <button class="btn btn-primary btn-sm" onclick="openLesson('${nextLesson._id}')" style="width: 100%;">
+                            Next Lesson →
+                        </button>
+                    ` : ''}
+                </div>
+            </div>
             
-            <div class="lesson-actions">
-                <button class="btn btn-primary" onclick="completeLesson('${lesson._id}')">
-                    Mark as Complete
-                </button>
+            <div class="lesson-main-content">
+                <div class="lesson-page-content" id="lessonPageContent">
+                    ${lessonSections[0].content}
+                </div>
+                
+                <div class="lesson-page-navigation">
+                    <button class="btn btn-secondary" id="prevPageBtn" onclick="navigatePage(-1)" disabled>
+                        ← Previous
+                    </button>
+                    <span class="page-indicator">
+                        <span id="currentPageNum">1</span> of ${lessonSections.length}
+                    </span>
+                    <button class="btn btn-primary" id="nextPageBtn" onclick="navigatePage(1)">
+                        Next →
+                    </button>
+                </div>
+                
+                <div class="lesson-complete-section" style="text-align: center; margin-top: 30px; padding-top: 30px; border-top: 2px solid #e9ecef;">
+                    <button class="btn btn-success" onclick="completeLesson('${lesson._id}')" style="min-width: 200px;">
+                        ✓ Mark as Complete
+                    </button>
+                </div>
             </div>
         </div>
     `;
     
     // Log activity
     logActivity('lesson_view', { lessonId: lesson._id });
+    updatePageNavigation();
+}
+
+// Navigate to specific page
+function navigateToPage(pageIndex) {
+    if (pageIndex < 0 || pageIndex >= lessonSections.length) return;
+    
+    currentLessonPage = pageIndex;
+    const contentDiv = document.getElementById('lessonPageContent');
+    contentDiv.innerHTML = lessonSections[pageIndex].content;
+    
+    // Update sidebar active state
+    document.querySelectorAll('.lesson-nav-item').forEach((item, index) => {
+        if (index === pageIndex) {
+            item.classList.add('active');
+        } else {
+            item.classList.remove('active');
+        }
+    });
+    
+    updatePageNavigation();
+    
+    // Scroll to top of content
+    contentDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// Navigate by offset (-1 or +1)
+function navigatePage(offset) {
+    const newPage = currentLessonPage + offset;
+    navigateToPage(newPage);
+}
+
+// Update page navigation buttons
+function updatePageNavigation() {
+    const prevBtn = document.getElementById('prevPageBtn');
+    const nextBtn = document.getElementById('nextPageBtn');
+    const pageNum = document.getElementById('currentPageNum');
+    
+    if (prevBtn) prevBtn.disabled = currentLessonPage === 0;
+    if (nextBtn) nextBtn.disabled = currentLessonPage === lessonSections.length - 1;
+    if (pageNum) pageNum.textContent = currentLessonPage + 1;
 }
 
 // Render quiz questions
@@ -360,7 +637,116 @@ function showEmptyState(containerId, title, message) {
             <div class="empty-state-icon">📚</div>
             <h3>${title}</h3>
             <p>${message}</p>
-            <button class="btn btn-primary" onclick="showSection('browse-courses')">Browse Courses</button>
+            <button class="btn btn-primary" onclick="showSection('browse-courses'); loadAllCourses();">Browse Courses</button>
         </div>
     `;
+}
+
+// Load all available courses
+async function loadAllCourses() {
+    try {
+        const response = await fetch(`${API_URL}/courses`, {
+            headers: {
+                'Authorization': `Bearer ${authToken}`
+            }
+        });
+        
+        if (response.ok) {
+            const courses = await response.json();
+            displayBrowseCourses(courses);
+        } else {
+            showMessage('Error loading courses', 'error');
+        }
+    } catch (error) {
+        console.error('Error loading all courses:', error);
+        showMessage('Error loading courses', 'error');
+    }
+}
+
+// Display courses in browse section
+function displayBrowseCourses(courses) {
+    const container = document.getElementById('all-courses');
+    
+    if (!courses || courses.length === 0) {
+        container.innerHTML = `
+            <div class="empty-state">
+                <h3>No courses available</h3>
+                <p>Check back later for new courses!</p>
+            </div>
+        `;
+        return;
+    }
+    
+    container.innerHTML = courses.map(course => `
+        <div class="course-card">
+            <img src="${course.thumbnail || '/assets/images/default-course.png'}" 
+                 alt="${course.title}" 
+                 class="course-thumbnail">
+            <div class="course-content">
+                <div class="course-header">
+                    <span class="course-track">${course.track || 'General'}</span>
+                    <span class="course-difficulty">${course.difficulty || 'Beginner'}</span>
+                </div>
+                <h4 class="course-title">${course.title}</h4>
+                <p class="course-description">${course.description}</p>
+                <div class="course-meta">
+                    <span>📚 ${course.lessons ? course.lessons.length : 0} Lessons</span>
+                    <span>⏱️ ${course.duration || 'Self-paced'}</span>
+                </div>
+                <div class="course-instructor">
+                    <span>👨‍🏫 ${course.instructor ? course.instructor.firstName + ' ' + course.instructor.lastName : 'ACCN Hub'}</span>
+                </div>
+                <button class="btn btn-primary" onclick="enrollInCourse('${course._id}')">
+                    Enroll Now
+                </button>
+            </div>
+        </div>
+    `).join('');
+}
+
+// Enroll in a course
+async function enrollInCourse(courseId) {
+    try {
+        const response = await fetch(`${API_URL}/courses/${courseId}/enroll`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${authToken}`,
+                'Content-Type': 'application/json'
+            }
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+            showMessage('Successfully enrolled in course!', 'success');
+            // Reload dashboard
+            showSection('student-dashboard');
+            loadStudentDashboard();
+        } else if (response.status === 400 && data.message.includes('Already enrolled')) {
+            // User is already enrolled, just view the course
+            showMessage('You are already enrolled in this course', 'info');
+            viewCourse(courseId);
+        } else {
+            showMessage(data.message || 'Enrollment failed', 'error');
+        }
+    } catch (error) {
+        console.error('Error enrolling:', error);
+        showMessage('Error enrolling in course', 'error');
+    }
+}
+
+// Filter courses by track
+function filterCourses(track) {
+    const buttons = document.querySelectorAll('.filter-btn');
+    buttons.forEach(btn => btn.classList.remove('active'));
+    event.target.classList.add('active');
+    
+    const cards = document.querySelectorAll('.course-card');
+    cards.forEach(card => {
+        if (track === 'all' || card.querySelector('.course-track').textContent === track) {
+            card.style.display = 'block';
+        } else {
+            card.style.display = 'none';
+        }
+    });
 }

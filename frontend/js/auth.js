@@ -131,7 +131,22 @@ function showDashboard() {
 
 // Update user info in header
 function updateUserSection() {
+    const mainNav = document.getElementById('mainNav');
     const userSection = document.getElementById('userSection');
+    
+    // Add navigation based on role
+    if (currentUser.role === 'student') {
+        mainNav.innerHTML = `
+            <a href="#" onclick="showSection('student-dashboard'); loadStudentDashboard(); return false;" class="nav-link">Dashboard</a>
+            <a href="#" onclick="showSection('browse-courses'); loadAllCourses(); return false;" class="nav-link">Browse Courses</a>
+        `;
+    } else if (currentUser.role === 'instructor') {
+        mainNav.innerHTML = `
+            <a href="#" onclick="showSection('instructor-dashboard'); loadInstructorDashboard(); return false;" class="nav-link">Dashboard</a>
+            <a href="#" onclick="showSection('browse-courses'); loadAllCourses(); return false;" class="nav-link">All Courses</a>
+        `;
+    }
+    
     userSection.innerHTML = `
         <div class="user-info">
             <img src="${currentUser.profileImage || '/assets/images/default-avatar.png'}" alt="Profile" class="user-avatar">

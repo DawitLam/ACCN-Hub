@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ACCN Hub - Learning Management System</title>
+    <link rel="stylesheet" href="/css/framework.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Top Navigation Bar -->
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <img src="/assets/images/logo.png" alt="ACCN Hub" class="logo">
+            <span class="brand-name">ACCN Hub LMS</span>
+        </div>
+        
+        <div class="navbar-menu">
+            <button class="nav-btn" onclick="navigateTo('dashboard')">
+                <i class="fas fa-home"></i> Dashboard
+            </button>
+            <button class="nav-btn" onclick="navigateTo('courses')">
+                <i class="fas fa-book"></i> Courses
+            </button>
+            <button class="nav-btn" onclick="navigateTo('calendar')">
+                <i class="fas fa-calendar"></i> Calendar
+            </button>
+            <button class="nav-btn" onclick="navigateTo('grades')">
+                <i class="fas fa-chart-line"></i> Grades
+            </button>
+        </div>
+        
+        <div class="navbar-user">
+            <button class="notification-btn" onclick="toggleNotifications()">
+                <i class="fas fa-bell"></i>
+                <span class="badge" id="notification-count">0</span>
+            </button>
+            <div class="user-menu">
+                <img src="/assets/images/default-avatar.png" alt="User" class="user-avatar" id="user-avatar">
+                <span class="user-name" id="user-name">User</span>
+                <button class="dropdown-toggle" onclick="toggleUserMenu()">
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="dropdown-menu" id="user-dropdown">
+                    <a href="#" onclick="navigateTo('profile')"><i class="fas fa-user"></i> Profile</a>
+                    <a href="#" onclick="navigateTo('settings')"><i class="fas fa-cog"></i> Settings</a>
+                    <a href="#" onclick="navigateTo('help')"><i class="fas fa-question-circle"></i> Help</a>
+                    <hr>
+                    <a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-section">
+                <h3 class="sidebar-title">Navigation</h3>
+                <ul class="sidebar-menu">
+                    <li><a href="#" onclick="navigateTo('dashboard')" class="active"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                    <li><a href="#" onclick="navigateTo('courses')"><i class="fas fa-book-open"></i> My Courses</a></li>
+                    <li><a href="#" onclick="navigateTo('calendar')"><i class="fas fa-calendar-alt"></i> Calendar</a></li>
+                    <li><a href="#" onclick="navigateTo('assignments')"><i class="fas fa-tasks"></i> Assignments</a></li>
+                    <li><a href="#" onclick="navigateTo('discussions')"><i class="fas fa-comments"></i> Discussions</a></li>
+                    <li><a href="#" onclick="navigateTo('grades')"><i class="fas fa-graduation-cap"></i> Grades</a></li>
+                </ul>
+            </div>
+            
+            <div class="sidebar-section" id="course-list-sidebar">
+                <h3 class="sidebar-title">My Courses</h3>
+                <div id="sidebar-courses" class="sidebar-courses">
+                    <!-- Dynamic course list -->
+                </div>
+            </div>
+        </aside>
+
+        <!-- Content Area -->
+        <main class="content-area" id="content-area">
+            <!-- Dashboard View -->
+            <div id="dashboard-view" class="view active">
+                <div class="page-header">
+                    <h1>Dashboard</h1>
+                    <p class="subtitle">Welcome back! Here's what's happening with your courses.</p>
+                </div>
+                
+                <!-- Stats Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon blue">
+                            <i class="fas fa-book"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="enrolled-courses-count">0</h3>
+                            <p>Enrolled Courses</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon green">
+                            <i class="fas fa-tasks"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="pending-assignments-count">0</h3>
+                            <p>Pending Assignments</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon yellow">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="average-grade">--</h3>
+                            <p>Average Grade</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon purple">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="hours-learned">0</h3>
+                            <p>Hours Learned</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Recent Activity & Upcoming -->
+                <div class="dashboard-grid">
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <h2><i class="fas fa-bell"></i> Recent Announcements</h2>
+                            <a href="#" onclick="navigateTo('announcements')">View All</a>
+                        </div>
+                        <div class="card-content" id="recent-announcements">
+                            <!-- Dynamic content -->
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <h2><i class="fas fa-calendar-check"></i> Upcoming Assignments</h2>
+                            <a href="#" onclick="navigateTo('assignments')">View All</a>
+                        </div>
+                        <div class="card-content" id="upcoming-assignments">
+                            <!-- Dynamic content -->
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Course Progress -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-chart-pie"></i> Course Progress</h2>
+                    </div>
+                    <div class="card-content" id="course-progress">
+                        <!-- Dynamic content -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Courses View -->
+            <div id="courses-view" class="view">
+                <div class="page-header">
+                    <h1>My Courses</h1>
+                    <button class="btn btn-primary" onclick="navigateTo('browse-courses')">
+                        <i class="fas fa-plus"></i> Browse Courses
+                    </button>
+                </div>
+                
+                <div class="courses-grid" id="my-courses-grid">
+                    <!-- Dynamic course cards -->
+                </div>
+            </div>
+
+            <!-- Course Detail View -->
+            <div id="course-detail-view" class="view">
+                <div id="course-detail-content">
+                    <!-- Dynamic course content -->
+                </div>
+            </div>
+
+            <!-- Assignments View -->
+            <div id="assignments-view" class="view">
+                <div class="page-header">
+                    <h1>Assignments</h1>
+                    <div class="filter-tabs">
+                        <button class="tab active" onclick="filterAssignments('all')">All</button>
+                        <button class="tab" onclick="filterAssignments('pending')">Pending</button>
+                        <button class="tab" onclick="filterAssignments('submitted')">Submitted</button>
+                        <button class="tab" onclick="filterAssignments('graded')">Graded</button>
+                    </div>
+                </div>
+                
+                <div class="assignments-list" id="assignments-list">
+                    <!-- Dynamic assignments -->
+                </div>
+            </div>
+
+            <!-- Grades View -->
+            <div id="grades-view" class="view">
+                <div class="page-header">
+                    <h1>Grades</h1>
+                </div>
+                
+                <div class="grades-summary" id="grades-summary">
+                    <!-- Overall GPA card -->
+                </div>
+                
+                <div class="grades-by-course" id="grades-by-course">
+                    <!-- Course grades -->
+                </div>
+            </div>
+
+            <!-- Discussions View -->
+            <div id="discussions-view" class="view">
+                <div class="page-header">
+                    <h1>Discussions</h1>
+                </div>
+                
+                <div class="discussions-list" id="discussions-list">
+                    <!-- Dynamic discussions -->
+                </div>
+            </div>
+
+            <!-- Calendar View -->
+            <div id="calendar-view" class="view">
+                <div class="page-header">
+                    <h1>Calendar</h1>
+                    <div class="calendar-controls">
+                        <button class="btn" onclick="previousMonth()"><i class="fas fa-chevron-left"></i></button>
+                        <span id="current-month-year">Month Year</span>
+                        <button class="btn" onclick="nextMonth()"><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                </div>
+                
+                <div class="calendar-grid" id="calendar-grid">
+                    <!-- Dynamic calendar -->
+                </div>
+                
+                <div class="calendar-events" id="calendar-events">
+                    <!-- Event list -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="/js/config.js"></script>
+    <script src="/js/framework.js"></script>
+</body>
+</html>
