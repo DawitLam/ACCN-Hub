@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Editor Test</title>
+    <link rel="stylesheet" href="css/code-editor.css">
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.24.1/full/pyodide.js"></script>
+</head>
+<body style="padding: 20px; font-family: Arial, sans-serif;">
+    <h1>🧪 Code Editor Test Page</h1>
+    <p>This page tests if the code editor loads and executes Python correctly.</p>
+    
+    <div id="test-container"></div>
+
+    <script src="js/code-editor.js"></script>
+    <script>
+        // Test the code editor
+        console.log('Code editor object:', codeEditor);
+        console.log('Is codeEditor defined?', typeof codeEditor !== 'undefined');
+        
+        // Create a test editor
+        const testCode = `# Simple Python test
+name = "World"
+print(f"Hello, {name}!")
+print("2 + 2 =", 2 + 2)`;
+
+        const testHints = [
+            "Try printing different messages",
+            "You can use f-strings for formatting",
+            "Math operations work as expected"
+        ];
+
+        const testSolution = `# Solution
+name = input("What's your name? ")
+print(f"Hello, {name}!")
+for i in range(1, 11):
+    print(f"{i} squared is {i**2}")`;
+
+        const editorHtml = codeEditor.createEditor(
+            'test-exercise-1',
+            testCode,
+            testHints,
+            testSolution
+        );
+
+        document.getElementById('test-container').innerHTML = editorHtml;
+        
+        console.log('✅ Editor HTML inserted into page');
+        console.log('Check if editor appears above. Try clicking the Run button!');
+    </script>
+</body>
+</html>

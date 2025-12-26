@@ -1,5 +1,10 @@
 // Student Dashboard Functions
 
+// Ensure code editor is available
+if (typeof codeEditor === 'undefined') {
+    console.error('Code editor not loaded! Check if code-editor.js is included before this script.');
+}
+
 // Track current view state
 let currentViewState = {
     course: null,
@@ -219,6 +224,21 @@ function getEmbedUrl(videoUrl) {
 // Simple markdown to HTML converter (fallback if marked.js fails)
 function simpleMarkdownToHtml(markdown) {
     let html = markdown;
+    const escapeHtml = (str) => str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+
+    // Convert fenced code blocks ```lang
+    html = html.replace(/```(\w+)?\n([\s\S]*?)```/g, (match, lang, code) => {
+        const languageClass = lang ? `language-${lang}` : 'language-text';
+        return `<pre><code class="${languageClass}">${escapeHtml(code.trim())}</code></pre>`;
+    });
+
+    // Convert inline code `code`
+    html = html.replace(/`([^`]+)`/g, (_, code) => `<code>${escapeHtml(code)}</code>`);
     
     // Replace --- separators
     html = html.replace(/\s*---\s*/g, '<br><br>');
@@ -239,7 +259,9 @@ function simpleMarkdownToHtml(markdown) {
     html = html.split('\n\n').map(para => {
         para = para.trim();
         if (!para) return '';
-        if (para.startsWith('<h') || para.startsWith('<br')) return para;
+        if (para.startsWith('<h') || para.startsWith('<br') || para.startsWith('<pre') || para.startsWith('<ul') || para.startsWith('<ol')) {
+            return para;
+        }
         return `<p>${para}</p>`;
     }).join('\n');
     
@@ -347,50 +369,33 @@ function displayLesson(lesson) {
             title: 'Coding Practice',
             content: `
                 <div class="lesson-coding-exercises">
-                    <h3>💻 Hands-On Coding Exercises</h3>
-                    <p style="color: #666; margin-bottom: 20px;">Practice your skills with these interactive coding challenges. Click "Open in Colab" to start coding!</p>
-                    ${lesson.codingExercises.map((exercise, index) => `
-                        <div class="coding-exercise" style="margin: 20px 0; padding: 20px; background: #f8f9fa; border-left: 4px solid #28a745; border-radius: 8px;">
-                            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px;">
+                    <h3>💻 Interactive Coding Exercises</h3>
+                    <p style="color: #666; margin-bottom: 20px;">Practice Python directly in your browser - no setup required! Write code, run it, and see results instantly.</p>
+                    ${lesson.codingExercises.map((exercise, index) => {
+                        const exerciseId = `lesson${lesson.sessionNumber || index}-exercise${index}`;
+                        const editorHtml = codeEditor.createEditor(
+                            exerciseId,
+                            exercise.starterCode || '# Write your Python code here\nprint("Hello, World!")\n',
+                            exercise.hints || [],
+                            exercise.solution || ''
+                        );
+                        return `
+                        <div class="coding-exercise" style="margin: 30px 0; padding: 20px; background: #f8f9fa; border-left: 4px solid #28a745; border-radius: 8px;">
+                            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 15px;">
                                 <h4 style="margin: 0; color: #28a745;">
-                                    ${index + 1}. ${exercise.title}
-                                    <span style="display: inline-block; padding: 2px 8px; background: ${exercise.difficulty === 'beginner' ? '#28a745' : exercise.difficulty === 'intermediate' ? '#ffc107' : '#dc3545'}; color: white; border-radius: 4px; font-size: 0.75em; margin-left: 10px;">
+                                    Exercise ${index + 1}: ${exercise.title}
+                                    <span style="display: inline-block; padding: 4px 10px; background: ${exercise.difficulty === 'beginner' ? '#28a745' : exercise.difficulty === 'intermediate' ? '#ffc107' : '#dc3545'}; color: white; border-radius: 4px; font-size: 0.75em; margin-left: 10px; text-transform: uppercase;">
                                         ${exercise.difficulty}
                                     </span>
                                 </h4>
-                                <span style="font-weight: 600; color: #28a745;">+${exercise.points} points</span>
+                                <span style="font-weight: 700; color: #28a745; font-size: 1.1em;">⭐ ${exercise.points} points</span>
                             </div>
-                            <p style="margin: 10px 0;">${exercise.description}</p>
+                            <p style="margin: 10px 0; line-height: 1.6; color: #555;">${exercise.description}</p>
                             
-                            <details style="margin: 15px 0;">
-                                <summary style="cursor: pointer; color: #007bff; font-weight: 500;">💡 View Hints (${exercise.hints ? exercise.hints.length : 0} available)</summary>
-                                <ul style="margin-top: 10px; padding-left: 20px;">
-                                    ${exercise.hints ? exercise.hints.map(hint => `<li>${hint}</li>`).join('') : '<li>No hints available</li>'}
-                                </ul>
-                            </details>
-                            
-                            <details style="margin: 15px 0;">
-                                <summary style="cursor: pointer; color: #007bff; font-weight: 500;">📝 Starter Code</summary>
-                                <pre style="background: #fff; padding: 15px; border-radius: 5px; overflow-x: auto; margin-top: 10px;"><code>${exercise.starterCode || 'No starter code provided'}</code></pre>
-                            </details>
-                            
-                            <div style="display: flex; gap: 10px; margin-top: 15px;">
-                                ${exercise.colabNotebookUrl ? `
-                                    <a href="${exercise.colabNotebookUrl}" target="_blank" class="btn btn-primary" style="text-decoration: none;">
-                                        🚀 Open in Google Colab
-                                    </a>
-                                ` : ''}
-                                <button class="btn btn-secondary" onclick="showExerciseSolution('${index}')">
-                                    👀 Show Solution
-                                </button>
-                            </div>
-                            
-                            <div id="solution-${index}" style="display: none; margin-top: 15px; padding: 15px; background: #fff; border-radius: 5px;">
-                                <h5 style="color: #28a745;">✓ Solution:</h5>
-                                <pre style="background: #f8f9fa; padding: 15px; border-radius: 5px; overflow-x: auto;"><code>${exercise.solution || 'Solution not available yet'}</code></pre>
-                            </div>
+                            ${editorHtml}
                         </div>
-                    `).join('')}
+                        `;
+                    }).join('')}
                 </div>
             `
         });
