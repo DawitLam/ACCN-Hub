@@ -1,0 +1,1825 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Certification Curriculum Viewer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-purple: #6b46c1;
+            --secondary-purple: #9333ea;
+            --light-purple: #c084fc;
+            --dark-purple: #4c1d95;
+            --accent-purple: #a855f7;
+            --bg-gradient-start: #1e1b4b;
+            --bg-gradient-end: #312e81;
+            --text-primary: #ffffff;
+            --text-secondary: #e0e7ff;
+            --text-muted: #a5b4fc;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --card-border: rgba(168, 85, 247, 0.2);
+            --hover-bg: rgba(168, 85, 247, 0.1);
+            --success-green: #10b981;
+            --warning-yellow: #f59e0b;
+            --info-blue: #3b82f6;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 320px;
+            background: rgba(30, 27, 75, 0.8);
+            backdrop-filter: blur(10px);
+            border-right: 1px solid var(--card-border);
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-header {
+            padding: 1.5rem;
+            background: linear-gradient(135deg, var(--primary-purple), var(--secondary-purple));
+            border-bottom: 1px solid var(--card-border);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .sidebar-header h1 {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-header p {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+
+        .progress-summary {
+            padding: 1rem 1.5rem;
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(168, 85, 247, 0.2);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 0.5rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--light-purple), var(--accent-purple));
+            transition: width 0.3s ease;
+            border-radius: 4px;
+        }
+
+        .progress-text {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+        }
+
+        .course-overview-btn {
+            margin: 1rem 1.5rem;
+            padding: 0.75rem 1rem;
+            background: linear-gradient(135deg, var(--primary-purple), var(--secondary-purple));
+            color: var(--text-primary);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .course-overview-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(168, 85, 247, 0.4);
+        }
+
+        .course-overview-btn.active {
+            background: linear-gradient(135deg, var(--accent-purple), var(--light-purple));
+        }
+
+        .curriculum-list {
+            padding: 0.5rem 0;
+            flex: 1;
+        }
+
+        .day-group {
+            margin-bottom: 0.5rem;
+        }
+
+        .day-header {
+            padding: 0.75rem 1.5rem;
+            background: var(--card-bg);
+            cursor: pointer;
+            border-left: 3px solid transparent;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .day-header:hover {
+            background: var(--hover-bg);
+            border-left-color: var(--accent-purple);
+        }
+
+        .day-header.expanded {
+            border-left-color: var(--accent-purple);
+            background: var(--hover-bg);
+        }
+
+        .day-title {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .day-arrow {
+            transition: transform 0.3s ease;
+            font-size: 0.75rem;
+        }
+
+        .day-header.expanded .day-arrow {
+            transform: rotate(90deg);
+        }
+
+        .session-list {
+            display: none;
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .session-list.expanded {
+            display: block;
+        }
+
+        .session-item {
+            padding: 0.75rem 1.5rem 0.75rem 2.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .session-item:hover {
+            background: var(--hover-bg);
+            border-left-color: var(--light-purple);
+        }
+
+        .session-item.active {
+            background: var(--hover-bg);
+            border-left-color: var(--accent-purple);
+            font-weight: 600;
+        }
+
+        .session-name {
+            font-size: 0.875rem;
+            flex: 1;
+        }
+
+        .completion-badge {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid var(--text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            margin-left: 0.5rem;
+        }
+
+        .completion-badge.completed {
+            background: var(--success-green);
+            border-color: var(--success-green);
+        }
+
+        .completion-badge.completed::after {
+            content: '✓';
+            color: white;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 2rem;
+        }
+
+        .content-wrapper {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* Overview Styles */
+        .overview-section {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .overview-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .overview-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--light-purple), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .overview-header p {
+            color: var(--text-muted);
+            font-size: 1.125rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(168, 85, 247, 0.1);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--accent-purple);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .overview-progress {
+            margin: 2rem 0;
+        }
+
+        .overview-progress h3 {
+            margin-bottom: 1rem;
+            color: var(--text-secondary);
+        }
+
+        .large-progress-bar {
+            width: 100%;
+            height: 20px;
+            background: rgba(168, 85, 247, 0.2);
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .large-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-purple), var(--accent-purple));
+            transition: width 0.5s ease;
+            border-radius: 10px;
+        }
+
+        .large-progress-text {
+            text-align: center;
+            margin-top: 0.5rem;
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .overview-description {
+            margin-top: 2rem;
+            line-height: 1.8;
+            color: var(--text-secondary);
+        }
+
+        .overview-description h2 {
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .overview-description ul {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .overview-description li {
+            margin-bottom: 0.5rem;
+        }
+
+        /* Session Content Styles */
+        .session-header {
+            margin-bottom: 2rem;
+        }
+
+        .session-header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .session-meta {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .lesson-section {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--card-border);
+        }
+
+        .section-icon {
+            font-size: 1.5rem;
+            margin-right: 0.75rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .section-content {
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        .section-content h3 {
+            color: var(--text-primary);
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+            font-size: 1.25rem;
+        }
+
+        .section-content h4 {
+            color: var(--text-secondary);
+            margin-top: 1.25rem;
+            margin-bottom: 0.75rem;
+            font-size: 1.1rem;
+        }
+
+        .section-content p {
+            margin-bottom: 1rem;
+        }
+
+        .section-content ul, .section-content ol {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .section-content li {
+            margin-bottom: 0.5rem;
+        }
+
+        .section-content code {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            color: var(--light-purple);
+        }
+
+        .section-content pre {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 1rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin-bottom: 1rem;
+            border: 1px solid var(--card-border);
+        }
+
+        .section-content pre code {
+            background: none;
+            padding: 0;
+            color: var(--text-secondary);
+        }
+
+        .section-content a {
+            color: var(--accent-purple);
+            text-decoration: none;
+            border-bottom: 1px solid transparent;
+            transition: border-color 0.3s ease;
+        }
+
+        .section-content a:hover {
+            border-bottom-color: var(--accent-purple);
+        }
+
+        .section-content blockquote {
+            border-left: 4px solid var(--accent-purple);
+            padding-left: 1rem;
+            margin-left: 0;
+            margin-bottom: 1rem;
+            font-style: italic;
+            color: var(--text-muted);
+        }
+
+        /* Video Styles */
+        .videos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .video-card {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .video-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px rgba(168, 85, 247, 0.3);
+        }
+
+        .video-embed {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+        }
+
+        .video-embed iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .video-title {
+            padding: 1rem;
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+        }
+
+        /* Activity Styles */
+        .activity-item {
+            background: rgba(168, 85, 247, 0.1);
+            border-left: 4px solid var(--accent-purple);
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border-radius: 8px;
+        }
+
+        .activity-item h4 {
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
+            font-size: 1.1rem;
+        }
+
+        .activity-item p {
+            color: var(--text-secondary);
+        }
+
+        .activity-type {
+            display: inline-block;
+            background: var(--primary-purple);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Discussion Styles */
+        .discussion-topic {
+            background: rgba(59, 130, 246, 0.1);
+            border-left: 4px solid var(--info-blue);
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border-radius: 8px;
+        }
+
+        .discussion-topic h4 {
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
+        }
+
+        .discussion-topic p {
+            color: var(--text-secondary);
+        }
+
+        /* Resource Styles */
+        .resource-item {
+            background: rgba(16, 185, 129, 0.1);
+            border-left: 4px solid var(--success-green);
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border-radius: 8px;
+        }
+
+        .resource-item h4 {
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
+        }
+
+        .resource-item a {
+            color: var(--success-green);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .resource-item a:hover {
+            text-decoration: underline;
+        }
+
+        /* Key Takeaways Styles */
+        .takeaway-list {
+            list-style: none;
+            margin-left: 0;
+        }
+
+        .takeaway-list li {
+            background: rgba(245, 158, 11, 0.1);
+            border-left: 4px solid var(--warning-yellow);
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            border-radius: 8px;
+        }
+
+        .takeaway-list li::before {
+            content: '💡';
+            margin-right: 0.5rem;
+        }
+
+        /* Navigation Styles */
+        .navigation-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 2px solid var(--card-border);
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        /* Inner Section Navigation (within a session) */
+        .inner-navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(168, 85, 247, 0.1);
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--card-border);
+        }
+
+        .inner-nav-btn {
+            padding: 0.6rem 1.2rem;
+            background: linear-gradient(135deg, var(--primary-purple), var(--secondary-purple));
+            color: var(--text-primary);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .inner-nav-btn:hover:not(:disabled) {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(168, 85, 247, 0.4);
+        }
+
+        .inner-nav-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .section-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(168, 85, 247, 0.3);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .section-dot:hover {
+            background: rgba(168, 85, 247, 0.6);
+        }
+
+        .section-dot.active {
+            background: var(--accent-purple);
+            width: 12px;
+            height: 12px;
+            box-shadow: 0 0 8px var(--accent-purple);
+        }
+
+        .section-counter {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        /* Single Section Display */
+        .section-slide {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .section-slide.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .nav-button {
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(135deg, var(--primary-purple), var(--secondary-purple));
+            color: var(--text-primary);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(168, 85, 247, 0.4);
+        }
+
+        .nav-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .complete-button {
+            background: linear-gradient(135deg, var(--success-green), #059669);
+        }
+
+        .complete-button.completed {
+            background: linear-gradient(135deg, #6b7280, #4b5563);
+        }
+
+        .complete-button:hover:not(:disabled) {
+            box-shadow: 0 6px 12px rgba(16, 185, 129, 0.4);
+        }
+
+        /* Loading and Error States */
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            font-size: 1.25rem;
+            color: var(--text-muted);
+        }
+
+        .error {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid #dc2626;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            color: #fca5a5;
+        }
+
+        .error h3 {
+            color: #ef4444;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Scrollbar Styles */
+        .sidebar::-webkit-scrollbar,
+        .main-content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .sidebar::-webkit-scrollbar-track,
+        .main-content::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .sidebar::-webkit-scrollbar-thumb,
+        .main-content::-webkit-scrollbar-thumb {
+            background: var(--accent-purple);
+            border-radius: 4px;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb:hover,
+        .main-content::-webkit-scrollbar-thumb:hover {
+            background: var(--light-purple);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                height: auto;
+                max-height: 40vh;
+            }
+
+            .main-content {
+                padding: 1rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .navigation-controls {
+                flex-direction: column;
+            }
+
+            .nav-button {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        /* Utility Classes */
+        .hidden {
+            display: none !important;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .mb-1 {
+            margin-bottom: 0.5rem;
+        }
+
+        .mb-2 {
+            margin-bottom: 1rem;
+        }
+
+        .mb-3 {
+            margin-bottom: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h1>AI Certification</h1>
+                <p>Complete Curriculum</p>
+            </div>
+
+            <div class="progress-summary">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="sidebarProgressFill"></div>
+                </div>
+                <div class="progress-text" id="sidebarProgressText">0 of 0 sessions completed</div>
+            </div>
+
+            <button class="course-overview-btn" id="overviewBtn" onclick="showOverview()">
+                📚 Course Overview
+            </button>
+
+            <div class="curriculum-list" id="curriculumList">
+                <!-- Day groups will be inserted here -->
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="content-wrapper" id="contentWrapper">
+                <div class="loading">Loading curriculum...</div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Global state
+        let curriculumData = null;
+        let sessionsList = [];
+        let currentSessionIndex = -1;
+        let progress = {};
+
+        // Initialize the application
+        async function init() {
+            loadProgress();
+            await loadCurriculum();
+            buildSessionList();
+            renderSidebar();
+            showOverview();
+        }
+
+        // Load curriculum from markdown file
+        async function loadCurriculum() {
+            try {
+                const response = await fetch('/curriculum/AI_CERTIFICATION_CURRICULUM.md');
+                if (!response.ok) {
+                    throw new Error(`Failed to load curriculum: ${response.status}`);
+                }
+                const markdown = await response.text();
+                curriculumData = parseMarkdown(markdown);
+            } catch (error) {
+                console.error('Error loading curriculum:', error);
+                document.getElementById('contentWrapper').innerHTML = `
+                    <div class="error">
+                        <h3>Error Loading Curriculum</h3>
+                        <p>${error.message}</p>
+                        <p>Please ensure the curriculum file exists at /curriculum/AI_CERTIFICATION_CURRICULUM.md</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Parse markdown into structured data
+        function parseMarkdown(markdown) {
+            const lines = markdown.split('\n');
+            const curriculum = {
+                title: '',
+                description: '',
+                days: []
+            };
+            
+            let currentDay = null;
+            let currentSession = null;
+            let currentSection = null;
+            let contentBuffer = [];
+
+            function saveContentBuffer() {
+                if (contentBuffer.length > 0 && currentSection) {
+                    currentSection.content = contentBuffer.join('\n').trim();
+                    contentBuffer = [];
+                }
+            }
+
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i];
+
+                // Main title (# AI Certification Curriculum)
+                if (line.startsWith('# ') && !line.match(/# DAY \d+/i)) {
+                    curriculum.title = line.substring(2).trim();
+                    continue;
+                }
+
+                // Day headers (# DAY X: Title)
+                const dayMatch = line.match(/^# DAY (\d+):\s*(.+)/i);
+                if (dayMatch) {
+                    saveContentBuffer();
+                    if (currentSession && currentDay) {
+                        currentDay.sessions.push(currentSession);
+                    }
+                    if (currentDay) {
+                        curriculum.days.push(currentDay);
+                    }
+                    currentDay = {
+                        number: parseInt(dayMatch[1]),
+                        title: dayMatch[2].trim(),
+                        sessions: []
+                    };
+                    currentSession = null;
+                    currentSection = null;
+                    continue;
+                }
+
+                // Session headers (## Session X.Y: Title)
+                const sessionMatch = line.match(/^## Session ([\d.]+):\s*(.+)/i);
+                if (sessionMatch) {
+                    saveContentBuffer();
+                    if (currentSession && currentDay) {
+                        currentDay.sessions.push(currentSession);
+                    }
+                    currentSession = {
+                        number: sessionMatch[1],
+                        title: sessionMatch[2].trim(),
+                        sections: {}
+                    };
+                    currentSection = null;
+                    continue;
+                }
+
+                // Section headers (### Learning Objectives, etc.)
+                if (line.startsWith('### ')) {
+                    saveContentBuffer();
+                    const sectionTitle = line.substring(4).trim();
+                    const sectionKey = sectionTitle.toLowerCase().replace(/[^a-z0-9]+/g, '_');
+                    currentSection = {
+                        title: sectionTitle,
+                        content: ''
+                    };
+                    if (currentSession) {
+                        currentSession.sections[sectionKey] = currentSection;
+                    }
+                    continue;
+                }
+
+                // Collect content
+                if (currentSection) {
+                    contentBuffer.push(line);
+                } else if (currentSession && !currentSection && line.trim()) {
+                    // Content before any section (description)
+                    if (!currentSession.description) {
+                        currentSession.description = line.trim();
+                    } else {
+                        currentSession.description += '\n' + line;
+                    }
+                } else if (!currentDay && !currentSession && line.trim()) {
+                    // Course description
+                    curriculum.description += line + '\n';
+                }
+            }
+
+            // Save final buffers
+            saveContentBuffer();
+            if (currentSession && currentDay) {
+                currentDay.sessions.push(currentSession);
+            }
+            if (currentDay) {
+                curriculum.days.push(currentDay);
+            }
+
+            return curriculum;
+        }
+
+        // Build flat list of all sessions
+        function buildSessionList() {
+            sessionsList = [];
+            if (!curriculumData) return;
+
+            curriculumData.days.forEach(day => {
+                day.sessions.forEach(session => {
+                    sessionsList.push({
+                        dayNumber: day.number,
+                        dayTitle: day.title,
+                        sessionNumber: session.number,
+                        sessionTitle: session.title,
+                        session: session
+                    });
+                });
+            });
+        }
+
+        // Render the sidebar navigation
+        function renderSidebar() {
+            if (!curriculumData) return;
+
+            const listContainer = document.getElementById('curriculumList');
+            listContainer.innerHTML = '';
+
+            curriculumData.days.forEach((day, dayIndex) => {
+                const dayGroup = document.createElement('div');
+                dayGroup.className = 'day-group';
+
+                const dayHeader = document.createElement('div');
+                dayHeader.className = 'day-header';
+                dayHeader.innerHTML = `
+                    <span class="day-title">Day ${day.number}: ${day.title}</span>
+                    <span class="day-arrow">▶</span>
+                `;
+                dayHeader.onclick = () => toggleDay(dayIndex);
+
+                const sessionList = document.createElement('div');
+                sessionList.className = 'session-list';
+                sessionList.id = `day-${dayIndex}-sessions`;
+
+                day.sessions.forEach((session, sessionIndex) => {
+                    const globalIndex = sessionsList.findIndex(
+                        s => s.dayNumber === day.number && s.sessionNumber === session.number
+                    );
+                    const sessionItem = document.createElement('div');
+                    sessionItem.className = 'session-item';
+                    sessionItem.innerHTML = `
+                        <span class="session-name">Session ${session.number}: ${session.title}</span>
+                        <span class="completion-badge ${progress[globalIndex] ? 'completed' : ''}"></span>
+                    `;
+                    sessionItem.onclick = () => showSession(globalIndex);
+                    sessionList.appendChild(sessionItem);
+                });
+
+                dayGroup.appendChild(dayHeader);
+                dayGroup.appendChild(sessionList);
+                listContainer.appendChild(dayGroup);
+            });
+
+            updateProgressDisplay();
+        }
+
+        // Toggle day expansion
+        function toggleDay(dayIndex) {
+            const dayHeader = document.querySelectorAll('.day-header')[dayIndex];
+            const sessionList = document.getElementById(`day-${dayIndex}-sessions`);
+            
+            dayHeader.classList.toggle('expanded');
+            sessionList.classList.toggle('expanded');
+        }
+
+        // Show course overview
+        function showOverview() {
+            currentSessionIndex = -1;
+            updateActiveStates();
+
+            const totalSessions = sessionsList.length;
+            const completedSessions = Object.keys(progress).filter(k => progress[k]).length;
+            const progressPercentage = totalSessions > 0 ? (completedSessions / totalSessions * 100).toFixed(0) : 0;
+            const totalDays = curriculumData ? curriculumData.days.length : 0;
+
+            const contentWrapper = document.getElementById('contentWrapper');
+            contentWrapper.innerHTML = `
+                <div class="overview-section">
+                    <div class="overview-header">
+                        <h1>🎓 ${curriculumData.title || 'AI Certification Curriculum'}</h1>
+                        <p>Master Artificial Intelligence from Fundamentals to Advanced Applications</p>
+                    </div>
+
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-value">${totalDays}</div>
+                            <div class="stat-label">Days</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">${totalSessions}</div>
+                            <div class="stat-label">Sessions</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">${completedSessions}</div>
+                            <div class="stat-label">Completed</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">${progressPercentage}%</div>
+                            <div class="stat-label">Progress</div>
+                        </div>
+                    </div>
+
+                    <div class="overview-progress">
+                        <h3>Your Progress</h3>
+                        <div class="large-progress-bar">
+                            <div class="large-progress-fill" style="width: ${progressPercentage}%"></div>
+                        </div>
+                        <div class="large-progress-text">${completedSessions} of ${totalSessions} sessions completed</div>
+                    </div>
+
+                    <div class="overview-description">
+                        ${markdownToHtml(curriculumData.description || 'Welcome to the AI Certification Curriculum. Begin your journey by selecting a session from the sidebar.')}
+                        
+                        <h2>📚 Course Structure</h2>
+                        <p>This comprehensive curriculum is designed to take you from AI fundamentals to advanced practical applications:</p>
+                        <ul>
+                            ${curriculumData.days.map(day => `
+                                <li><strong>Day ${day.number}: ${day.title}</strong> - ${day.sessions.length} sessions</li>
+                            `).join('')}
+                        </ul>
+
+                        <h2>🎯 Learning Approach</h2>
+                        <ul>
+                            <li>📖 <strong>Structured Content:</strong> Each session builds upon previous concepts</li>
+                            <li>🎥 <strong>Video Resources:</strong> Curated educational videos for visual learning</li>
+                            <li>💡 <strong>Hands-on Activities:</strong> Practical exercises to reinforce learning</li>
+                            <li>💬 <strong>Discussion Topics:</strong> Engage with concepts through reflection</li>
+                            <li>📚 <strong>Additional Resources:</strong> Supplementary materials for deeper understanding</li>
+                        </ul>
+
+                        <h2>🚀 Get Started</h2>
+                        <p>Select a session from the sidebar to begin your learning journey. Track your progress by marking sessions as complete!</p>
+                    </div>
+                </div>
+            `;
+
+            contentWrapper.scrollTop = 0;
+        }
+
+        // Show a specific session
+        function showSession(sessionIndex) {
+            if (sessionIndex < 0 || sessionIndex >= sessionsList.length) return;
+
+            currentSessionIndex = sessionIndex;
+            updateActiveStates();
+
+            const sessionData = sessionsList[sessionIndex];
+            const session = sessionData.session;
+
+            const contentWrapper = document.getElementById('contentWrapper');
+            
+            // Determine lesson type and render accordingly
+            const hasLegacySections = session.sections.learning_objectives || 
+                                      session.sections.main_content ||
+                                      session.sections.videos;
+            
+            if (hasLegacySections) {
+                contentWrapper.innerHTML = renderLegacyLesson(sessionData);
+            } else {
+                contentWrapper.innerHTML = renderAcademicLesson(sessionData);
+            }
+
+            contentWrapper.scrollTop = 0;
+        }
+
+        // Track current inner section index
+        let currentInnerSection = 0;
+        let totalInnerSections = 0;
+
+        // Render legacy lesson format (with defined sections) - Now with inner navigation
+        function renderLegacyLesson(sessionData) {
+            const { dayNumber, dayTitle, sessionNumber, sessionTitle, session } = sessionData;
+            const isCompleted = progress[currentSessionIndex] || false;
+
+            // Get icon for section based on key name
+            function getSectionIcon(key) {
+                if (key.includes('learning') || key.includes('objective')) return '🎯';
+                if (key.includes('content') || key.includes('delivery')) return '📖';
+                if (key.includes('video')) return '🎥';
+                if (key.includes('activit') || key.includes('hands') || key.includes('interactive') || key.includes('scavenger') || key.includes('timeline')) return '💡';
+                if (key.includes('quiz') || key.includes('knowledge') || key.includes('check')) return '📝';
+                if (key.includes('discussion') || key.includes('debate')) return '💬';
+                if (key.includes('resource') || key.includes('reading')) return '📚';
+                if (key.includes('takeaway') || key.includes('summary')) return '⭐';
+                if (key.includes('assignment') || key.includes('homework')) return '📋';
+                return '📌';
+            }
+
+            // Collect all sections
+            const sections = [];
+            Object.entries(session.sections).forEach(([key, section]) => {
+                if (!section || !section.content) return;
+                const icon = getSectionIcon(key);
+                const title = section.title || key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                sections.push({ key, icon, title, content: section.content });
+            });
+
+            totalInnerSections = sections.length;
+            currentInnerSection = 0; // Reset to first section
+
+            let html = `
+                <div class="session-header">
+                    <h1>Session ${sessionNumber}: ${sessionTitle}</h1>
+                    <div class="session-meta">Day ${dayNumber}: ${dayTitle}</div>
+                </div>
+            `;
+
+            // Inner navigation bar
+            html += `
+                <div class="inner-navigation">
+                    <button class="inner-nav-btn" onclick="navigateInnerSection(-1)" id="innerPrevBtn" disabled>
+                        ◀ Prev Section
+                    </button>
+                    <div class="section-indicator">
+                        ${sections.map((s, i) => `
+                            <div class="section-dot ${i === 0 ? 'active' : ''}" 
+                                 onclick="jumpToInnerSection(${i})" 
+                                 title="${s.title}"></div>
+                        `).join('')}
+                    </div>
+                    <span class="section-counter" id="sectionCounter">1 / ${sections.length}</span>
+                    <button class="inner-nav-btn" onclick="navigateInnerSection(1)" id="innerNextBtn" ${sections.length <= 1 ? 'disabled' : ''}>
+                        Next Section ▶
+                    </button>
+                </div>
+            `;
+
+            // Render each section as a slide
+            html += '<div id="sectionsContainer">';
+            sections.forEach((section, index) => {
+                html += `
+                    <div class="section-slide ${index === 0 ? 'active' : ''}" data-section-index="${index}">
+                        ${renderSectionHTML(section.icon, section.title, section.content)}
+                    </div>
+                `;
+            });
+            html += '</div>';
+
+            // Session navigation (between sessions) - Hidden until last section
+            const isLastSection = sections.length <= 1;
+            html += `
+                <div class="navigation-controls" id="sessionNavigation" style="${isLastSection ? '' : 'display: none;'}">
+                    <button class="nav-button" onclick="moveToNextSession(-1)" ${currentSessionIndex === 0 ? 'disabled' : ''}>
+                        ◀ Previous Session
+                    </button>
+                    <button class="nav-button complete-button ${isCompleted ? 'completed' : ''}" onclick="toggleComplete()">
+                        ${isCompleted ? '✓ Completed' : 'Mark Complete'}
+                    </button>
+                    <button class="nav-button" onclick="moveToNextSession(1)" ${currentSessionIndex === sessionsList.length - 1 ? 'disabled' : ''}>
+                        Next Session ▶
+                    </button>
+                </div>
+            `;
+
+            return html;
+        }
+
+        // Navigate between inner sections
+        function navigateInnerSection(direction) {
+            const newIndex = currentInnerSection + direction;
+            if (newIndex >= 0 && newIndex < totalInnerSections) {
+                jumpToInnerSection(newIndex);
+            }
+        }
+
+        // Jump to a specific inner section
+        function jumpToInnerSection(index) {
+            currentInnerSection = index;
+            
+            // Update slides visibility
+            document.querySelectorAll('.section-slide').forEach((slide, i) => {
+                slide.classList.toggle('active', i === index);
+            });
+            
+            // Update dots
+            document.querySelectorAll('.section-dot').forEach((dot, i) => {
+                dot.classList.toggle('active', i === index);
+            });
+            
+            // Update counter
+            document.getElementById('sectionCounter').textContent = `${index + 1} / ${totalInnerSections}`;
+            
+            // Update buttons
+            document.getElementById('innerPrevBtn').disabled = (index === 0);
+            document.getElementById('innerNextBtn').disabled = (index === totalInnerSections - 1);
+            
+            // Show/hide session navigation based on whether we're at the last section
+            const sessionNav = document.getElementById('sessionNavigation');
+            if (sessionNav) {
+                if (index === totalInnerSections - 1) {
+                    sessionNav.style.display = 'flex';
+                } else {
+                    sessionNav.style.display = 'none';
+                }
+            }
+            
+            // Scroll to top of content
+            document.getElementById('contentWrapper').scrollTop = 0;
+        }
+
+        // Helper to render section HTML (used by both render functions)
+        function renderSectionHTML(icon, title, content) {
+            const parsedContent = parseSessionContent(content);
+            
+            // Check if this section should have special rendering
+            if (title.toLowerCase().includes('video') || title.toLowerCase().includes('content delivery')) {
+                return `
+                    <div class="lesson-section">
+                        <div class="section-header">
+                            <span class="section-icon">${icon}</span>
+                            <h2 class="section-title">${title}</h2>
+                        </div>
+                        <div class="section-content">
+                            ${parsedContent.videos || markdownToHtml(content)}
+                        </div>
+                    </div>
+                `;
+            } else {
+                return `
+                    <div class="lesson-section">
+                        <div class="section-header">
+                            <span class="section-icon">${icon}</span>
+                            <h2 class="section-title">${title}</h2>
+                        </div>
+                        <div class="section-content">
+                            ${markdownToHtml(content)}
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        // Render academic lesson format (all sections as-is)
+        function renderAcademicLesson(sessionData) {
+            const { dayNumber, dayTitle, sessionNumber, sessionTitle, session } = sessionData;
+            const isCompleted = progress[currentSessionIndex] || false;
+
+            let html = `
+                <div class="session-header">
+                    <h1>Session ${sessionNumber}: ${sessionTitle}</h1>
+                    <div class="session-meta">Day ${dayNumber}: ${dayTitle}</div>
+                </div>
+            `;
+
+            // Description if exists
+            if (session.description) {
+                html += `
+                    <div class="lesson-section">
+                        <div class="section-content">
+                            ${markdownToHtml(session.description)}
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Render all sections
+            const iconMap = {
+                'learning_objectives': '🎯',
+                'objectives': '🎯',
+                'main_content': '📖',
+                'content': '📖',
+                'videos': '🎥',
+                'video_resources': '🎥',
+                'activities': '💡',
+                'hands_on_activities': '💡',
+                'discussion_topics': '💬',
+                'discussion': '💬',
+                'resources': '📚',
+                'additional_resources': '📚',
+                'key_takeaways': '⭐',
+                'takeaways': '⭐',
+                'summary': '📝'
+            };
+
+            Object.entries(session.sections).forEach(([key, section]) => {
+                const icon = iconMap[key] || '📄';
+                html += renderSection(icon, section.title, section.content);
+            });
+
+            // Navigation
+            html += `
+                <div class="navigation-controls">
+                    <button class="nav-button" onclick="moveToNextSession(-1)" ${currentSessionIndex === 0 ? 'disabled' : ''}>
+                        ◀ Previous
+                    </button>
+                    <button class="nav-button complete-button ${isCompleted ? 'completed' : ''}" onclick="toggleComplete()">
+                        ${isCompleted ? '✓ Completed' : 'Mark Complete'}
+                    </button>
+                    <button class="nav-button" onclick="moveToNextSession(1)" ${currentSessionIndex === sessionsList.length - 1 ? 'disabled' : ''}>
+                        Next ▶
+                    </button>
+                </div>
+            `;
+
+            return html;
+        }
+
+        // Render a single section
+        function renderSection(icon, title, content) {
+            const parsedContent = parseSessionContent(content);
+            
+            // Check if this section should have special rendering
+            if (title.toLowerCase().includes('video') && parsedContent.videos) {
+                return `
+                    <div class="lesson-section">
+                        <div class="section-header">
+                            <span class="section-icon">${icon}</span>
+                            <h2 class="section-title">${title}</h2>
+                        </div>
+                        <div class="section-content">
+                            ${parsedContent.videos}
+                        </div>
+                    </div>
+                `;
+            } else if (title.toLowerCase().includes('activit') && parsedContent.activities) {
+                return `
+                    <div class="lesson-section">
+                        <div class="section-header">
+                            <span class="section-icon">${icon}</span>
+                            <h2 class="section-title">${title}</h2>
+                        </div>
+                        <div class="section-content">
+                            ${parsedContent.activities}
+                        </div>
+                    </div>
+                `;
+            } else if (title.toLowerCase().includes('discussion') && parsedContent.discussions) {
+                return `
+                    <div class="lesson-section">
+                        <div class="section-header">
+                            <span class="section-icon">${icon}</span>
+                            <h2 class="section-title">${title}</h2>
+                        </div>
+                        <div class="section-content">
+                            ${parsedContent.discussions}
+                        </div>
+                    </div>
+                `;
+            } else if (title.toLowerCase().includes('resource') && parsedContent.resources) {
+                return `
+                    <div class="lesson-section">
+                        <div class="section-header">
+                            <span class="section-icon">${icon}</span>
+                            <h2 class="section-title">${title}</h2>
+                        </div>
+                        <div class="section-content">
+                            ${parsedContent.resources}
+                        </div>
+                    </div>
+                `;
+            } else if (title.toLowerCase().includes('takeaway') && parsedContent.takeaways) {
+                return `
+                    <div class="lesson-section">
+                        <div class="section-header">
+                            <span class="section-icon">${icon}</span>
+                            <h2 class="section-title">${title}</h2>
+                        </div>
+                        <div class="section-content">
+                            ${parsedContent.takeaways}
+                        </div>
+                    </div>
+                `;
+            } else {
+                // Default rendering
+                return `
+                    <div class="lesson-section">
+                        <div class="section-header">
+                            <span class="section-icon">${icon}</span>
+                            <h2 class="section-title">${title}</h2>
+                        </div>
+                        <div class="section-content">
+                            ${markdownToHtml(content)}
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        // Parse session content for special elements
+        function parseSessionContent(content) {
+            const result = {
+                videos: '',
+                activities: '',
+                discussions: '',
+                resources: '',
+                takeaways: ''
+            };
+
+            // Parse videos (YouTube links)
+            const videoRegex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/g;
+            const videoMatches = [...content.matchAll(videoRegex)];
+            
+            if (videoMatches.length > 0) {
+                result.videos = '<div class="videos-grid">';
+                videoMatches.forEach((match, index) => {
+                    const videoId = match[1];
+                    // Try to find title near the link
+                    const lines = content.split('\n');
+                    let title = `Video ${index + 1}`;
+                    for (const line of lines) {
+                        if (line.includes(match[0])) {
+                            const titleMatch = line.match(/[-*]\s*(.+?):/);
+                            if (titleMatch) {
+                                title = titleMatch[1].trim();
+                            } else {
+                                const simpleMatch = line.match(/[-*]\s*([^(\[http]+)/);
+                                if (simpleMatch) {
+                                    title = simpleMatch[1].trim();
+                                }
+                            }
+                            break;
+                        }
+                    }
+                    
+                    result.videos += `
+                        <div class="video-card">
+                            <div class="video-embed">
+                                <iframe src="https://www.youtube.com/embed/${videoId}" 
+                                        allowfullscreen 
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture">
+                                </iframe>
+                            </div>
+                            <div class="video-title">${title}</div>
+                        </div>
+                    `;
+                });
+                result.videos += '</div>';
+            }
+
+            // Parse activities (numbered or bulleted items)
+            const activityRegex = /(?:^|\n)(?:\d+\.|[-*])\s*\*\*(.+?)\*\*:?\s*(.+?)(?=\n(?:\d+\.|[-*]|\n)|$)/gs;
+            const activityMatches = [...content.matchAll(activityRegex)];
+            
+            if (activityMatches.length > 0) {
+                activityMatches.forEach(match => {
+                    const title = match[1].trim();
+                    const description = match[2].trim();
+                    result.activities += `
+                        <div class="activity-item">
+                            <div class="activity-type">Activity</div>
+                            <h4>${title}</h4>
+                            <p>${markdownToHtml(description)}</p>
+                        </div>
+                    `;
+                });
+            } else {
+                result.activities = markdownToHtml(content);
+            }
+
+            // Parse discussions
+            const discussionMatches = [...content.matchAll(activityRegex)];
+            if (discussionMatches.length > 0) {
+                discussionMatches.forEach(match => {
+                    const title = match[1].trim();
+                    const description = match[2].trim();
+                    result.discussions += `
+                        <div class="discussion-topic">
+                            <h4>${title}</h4>
+                            <p>${markdownToHtml(description)}</p>
+                        </div>
+                    `;
+                });
+            } else {
+                result.discussions = markdownToHtml(content);
+            }
+
+            // Parse resources
+            const resourceMatches = [...content.matchAll(activityRegex)];
+            if (resourceMatches.length > 0) {
+                resourceMatches.forEach(match => {
+                    const title = match[1].trim();
+                    const description = match[2].trim();
+                    
+                    // Extract link if present
+                    const linkMatch = description.match(/\[([^\]]+)\]\(([^)]+)\)/);
+                    const link = linkMatch ? linkMatch[2] : '';
+                    const linkText = linkMatch ? linkMatch[1] : '';
+                    
+                    result.resources += `
+                        <div class="resource-item">
+                            <h4>${title}</h4>
+                            <p>${markdownToHtml(description)}</p>
+                            ${link ? `<a href="${link}" target="_blank" rel="noopener noreferrer">Access Resource: ${linkText}</a>` : ''}
+                        </div>
+                    `;
+                });
+            } else {
+                result.resources = markdownToHtml(content);
+            }
+
+            // Parse key takeaways
+            const takeawayLines = content.split('\n').filter(line => 
+                line.match(/^[-*]\s+/) && line.length > 5
+            );
+            
+            if (takeawayLines.length > 0) {
+                result.takeaways = '<ul class="takeaway-list">';
+                takeawayLines.forEach(line => {
+                    const text = line.replace(/^[-*]\s+/, '').trim();
+                    if (text) {
+                        result.takeaways += `<li>${markdownToHtml(text)}</li>`;
+                    }
+                });
+                result.takeaways += '</ul>';
+            } else {
+                result.takeaways = markdownToHtml(content);
+            }
+
+            return result;
+        }
+
+        // Navigate to next/previous session
+        function moveToNextSession(direction) {
+            const newIndex = currentSessionIndex + direction;
+            if (newIndex >= 0 && newIndex < sessionsList.length) {
+                showSession(newIndex);
+            }
+        }
+
+        // Toggle session completion
+        function toggleComplete() {
+            if (currentSessionIndex === -1) return;
+            
+            progress[currentSessionIndex] = !progress[currentSessionIndex];
+            saveProgress();
+            updateProgressDisplay();
+            
+            // Update button
+            const button = document.querySelector('.complete-button');
+            if (button) {
+                const isCompleted = progress[currentSessionIndex];
+                button.className = `nav-button complete-button ${isCompleted ? 'completed' : ''}`;
+                button.textContent = isCompleted ? '✓ Completed' : 'Mark Complete';
+            }
+        }
+
+        // Update active states in UI
+        function updateActiveStates() {
+            // Update overview button
+            const overviewBtn = document.getElementById('overviewBtn');
+            if (currentSessionIndex === -1) {
+                overviewBtn.classList.add('active');
+            } else {
+                overviewBtn.classList.remove('active');
+            }
+
+            // Update session items
+            document.querySelectorAll('.session-item').forEach((item, index) => {
+                if (index === currentSessionIndex) {
+                    item.classList.add('active');
+                } else {
+                    item.classList.remove('active');
+                }
+            });
+
+            // Expand the day containing current session
+            if (currentSessionIndex >= 0) {
+                const sessionData = sessionsList[currentSessionIndex];
+                const dayIndex = curriculumData.days.findIndex(d => d.number === sessionData.dayNumber);
+                if (dayIndex >= 0) {
+                    const dayHeader = document.querySelectorAll('.day-header')[dayIndex];
+                    const sessionList = document.getElementById(`day-${dayIndex}-sessions`);
+                    if (dayHeader && sessionList) {
+                        dayHeader.classList.add('expanded');
+                        sessionList.classList.add('expanded');
+                    }
+                }
+            }
+        }
+
+        // Save progress to localStorage
+        function saveProgress() {
+            try {
+                localStorage.setItem('ai_curriculum_progress', JSON.stringify(progress));
+            } catch (error) {
+                console.error('Error saving progress:', error);
+            }
+        }
+
+        // Load progress from localStorage
+        function loadProgress() {
+            try {
+                const saved = localStorage.getItem('ai_curriculum_progress');
+                if (saved) {
+                    progress = JSON.parse(saved);
+                }
+            } catch (error) {
+                console.error('Error loading progress:', error);
+                progress = {};
+            }
+        }
+
+        // Update progress display
+        function updateProgressDisplay() {
+            const totalSessions = sessionsList.length;
+            const completedSessions = Object.keys(progress).filter(k => progress[k]).length;
+            const progressPercentage = totalSessions > 0 ? (completedSessions / totalSessions * 100) : 0;
+
+            // Update sidebar progress
+            const progressFill = document.getElementById('sidebarProgressFill');
+            const progressText = document.getElementById('sidebarProgressText');
+            
+            if (progressFill) {
+                progressFill.style.width = `${progressPercentage}%`;
+            }
+            if (progressText) {
+                progressText.textContent = `${completedSessions} of ${totalSessions} sessions completed`;
+            }
+
+            // Update completion badges
+            document.querySelectorAll('.completion-badge').forEach((badge, index) => {
+                if (progress[index]) {
+                    badge.classList.add('completed');
+                } else {
+                    badge.classList.remove('completed');
+                }
+            });
+        }
+
+        // Convert markdown to HTML
+        function markdownToHtml(markdown) {
+            if (!markdown) return '';
+            
+            let html = markdown;
+
+            // Code blocks (must be before inline code)
+            html = html.replace(/```(\w+)?\n([\s\S]+?)```/g, (match, lang, code) => {
+                return `<pre><code>${escapeHtml(code.trim())}</code></pre>`;
+            });
+
+            // Inline code
+            html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
+
+            // Bold
+            html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+            html = html.replace(/__(.+?)__/g, '<strong>$1</strong>');
+
+            // Italic
+            html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
+            html = html.replace(/_(.+?)_/g, '<em>$1</em>');
+
+            // Links
+            html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
+
+            // Headers
+            html = html.replace(/^#### (.+)$/gm, '<h4>$1</h4>');
+            html = html.replace(/^### (.+)$/gm, '<h3>$1</h3>');
+            html = html.replace(/^## (.+)$/gm, '<h2>$1</h2>');
+            html = html.replace(/^# (.+)$/gm, '<h1>$1</h1>');
+
+            // Blockquotes
+            html = html.replace(/^> (.+)$/gm, '<blockquote>$1</blockquote>');
+
+            // Unordered lists
+            html = html.replace(/(?:^|\n)((?:[-*+] .+(?:\n|$))+)/g, (match, list) => {
+                const items = list.trim().split('\n').map(item => {
+                    const text = item.replace(/^[-*+] /, '');
+                    return `<li>${text}</li>`;
+                }).join('');
+                return `<ul>${items}</ul>`;
+            });
+
+            // Ordered lists
+            html = html.replace(/(?:^|\n)((?:\d+\. .+(?:\n|$))+)/g, (match, list) => {
+                const items = list.trim().split('\n').map(item => {
+                    const text = item.replace(/^\d+\. /, '');
+                    return `<li>${text}</li>`;
+                }).join('');
+                return `<ol>${items}</ol>`;
+            });
+
+            // Paragraphs (lines separated by blank lines)
+            html = html.split(/\n\s*\n/).map(para => {
+                para = para.trim();
+                if (!para) return '';
+                // Don't wrap if already wrapped in a block element
+                if (para.match(/^<(?:h[1-6]|ul|ol|pre|blockquote|div)/)) {
+                    return para;
+                }
+                return `<p>${para}</p>`;
+            }).join('\n');
+
+            // Line breaks
+            html = html.replace(/\n/g, '<br>');
+            // Clean up excessive line breaks
+            html = html.replace(/(<br>\s*)+<\/(p|li|h[1-6]|blockquote)>/g, '</$1>');
+            html = html.replace(/<(p|li|h[1-6]|blockquote)>(<br>\s*)+/g, '<$1>');
+
+            return html;
+        }
+
+        // Escape HTML special characters
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
