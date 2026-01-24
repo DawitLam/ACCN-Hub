@@ -604,6 +604,223 @@
             margin-right: 0.5rem;
         }
 
+        /* Interactive Quiz Styles */
+        .quiz-container {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border: 1px solid var(--card-border);
+        }
+
+        .quiz-question {
+            background: rgba(168, 85, 247, 0.08);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(168, 85, 247, 0.2);
+        }
+
+        .quiz-question-text {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        .quiz-question-number {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--primary-purple), var(--secondary-purple));
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 28px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-right: 0.75rem;
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+
+        .quiz-option {
+            display: flex;
+            align-items: center;
+            padding: 0.9rem 1.2rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(168, 85, 247, 0.2);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .quiz-option:hover {
+            background: rgba(168, 85, 247, 0.15);
+            border-color: var(--accent-purple);
+        }
+
+        .quiz-option input[type="radio"] {
+            display: none;
+        }
+
+        .quiz-option .radio-custom {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--accent-purple);
+            border-radius: 50%;
+            margin-right: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all 0.2s ease;
+        }
+
+        .quiz-option .radio-custom::after {
+            content: '';
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--accent-purple);
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .quiz-option.selected {
+            background: rgba(168, 85, 247, 0.2);
+            border-color: var(--accent-purple);
+        }
+
+        .quiz-option.selected .radio-custom::after {
+            opacity: 1;
+        }
+
+        .quiz-option.correct {
+            background: rgba(16, 185, 129, 0.2);
+            border-color: var(--success-green);
+        }
+
+        .quiz-option.correct .radio-custom {
+            border-color: var(--success-green);
+            background: var(--success-green);
+        }
+
+        .quiz-option.correct .radio-custom::after {
+            background: white;
+            opacity: 1;
+        }
+
+        .quiz-option.incorrect {
+            background: rgba(239, 68, 68, 0.2);
+            border-color: #ef4444;
+        }
+
+        .quiz-option.incorrect .radio-custom {
+            border-color: #ef4444;
+        }
+
+        .quiz-option-text {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+
+        .quiz-feedback {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .quiz-feedback.correct {
+            display: block;
+            background: rgba(16, 185, 129, 0.15);
+            border-left: 4px solid var(--success-green);
+            color: var(--success-green);
+        }
+
+        .quiz-feedback.incorrect {
+            display: block;
+            background: rgba(239, 68, 68, 0.15);
+            border-left: 4px solid #ef4444;
+            color: #ef4444;
+        }
+
+        .quiz-check-btn {
+            margin-top: 1rem;
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(135deg, var(--primary-purple), var(--secondary-purple));
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .quiz-check-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 15px rgba(168, 85, 247, 0.4);
+        }
+
+        .quiz-score {
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.2), rgba(147, 51, 234, 0.2));
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            margin-top: 1.5rem;
+            border: 1px solid var(--accent-purple);
+        }
+
+        .quiz-score-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--accent-purple);
+        }
+
+        .quiz-score-label {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-top: 0.5rem;
+        }
+
+        /* Matching Quiz Styles */
+        .matching-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .matching-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1rem;
+            border-radius: 8px;
+            border: 2px solid var(--card-border);
+        }
+
+        .matching-select {
+            width: 100%;
+            padding: 0.75rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--card-border);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        .matching-select option {
+            background: #1e1b4b;
+            color: var(--text-primary);
+        }
+
         /* Navigation Styles */
         .navigation-controls {
             display: flex;
@@ -614,6 +831,90 @@
             border-top: 2px solid var(--card-border);
             gap: 1rem;
             flex-wrap: wrap;
+        }
+
+        /* Inner Section Navigation (within a session) */
+        .inner-navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(168, 85, 247, 0.1);
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--card-border);
+        }
+
+        .inner-nav-btn {
+            padding: 0.6rem 1.2rem;
+            background: linear-gradient(135deg, var(--primary-purple), var(--secondary-purple));
+            color: var(--text-primary);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .inner-nav-btn:hover:not(:disabled) {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(168, 85, 247, 0.4);
+        }
+
+        .inner-nav-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .section-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(168, 85, 247, 0.3);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .section-dot:hover {
+            background: rgba(168, 85, 247, 0.6);
+        }
+
+        .section-dot.active {
+            background: var(--accent-purple);
+            width: 12px;
+            height: 12px;
+            box-shadow: 0 0 8px var(--accent-purple);
+        }
+
+        .section-counter {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        /* Single Section Display */
+        .section-slide {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .section-slide.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .nav-button {
@@ -1088,9 +1389,12 @@
             const contentWrapper = document.getElementById('contentWrapper');
             
             // Determine lesson type and render accordingly
+            // Check for legacy section names OR numbered sections (Section 1, Section 2, etc.)
+            const sectionKeys = Object.keys(session.sections);
             const hasLegacySections = session.sections.learning_objectives || 
                                       session.sections.main_content ||
-                                      session.sections.videos;
+                                      session.sections.videos ||
+                                      sectionKeys.some(key => key.startsWith('section_'));
             
             if (hasLegacySections) {
                 contentWrapper.innerHTML = renderLegacyLesson(sessionData);
@@ -1101,10 +1405,49 @@
             contentWrapper.scrollTop = 0;
         }
 
-        // Render legacy lesson format (with defined sections)
+        // Track current inner section index
+        let currentInnerSection = 0;
+        let totalInnerSections = 0;
+
+        // Render legacy lesson format (with defined sections) - Now with inner navigation
         function renderLegacyLesson(sessionData) {
             const { dayNumber, dayTitle, sessionNumber, sessionTitle, session } = sessionData;
             const isCompleted = progress[currentSessionIndex] || false;
+
+            // Get icon for section based on key name or section title
+            function getSectionIcon(key, title = '') {
+                const searchText = (key + ' ' + title).toLowerCase();
+                if (searchText.includes('welcome') || searchText.includes('journey')) return '🎉';
+                if (searchText.includes('learning') || searchText.includes('objective')) return '🎯';
+                if (searchText.includes('understanding') || searchText.includes('deep_dive') || searchText.includes('content') || searchText.includes('delivery')) return '📖';
+                if (searchText.includes('video')) return '🎥';
+                if (searchText.includes('activit') || searchText.includes('hands') || searchText.includes('interactive') || searchText.includes('scavenger') || searchText.includes('timeline') || searchText.includes('detective')) return '💡';
+                if (searchText.includes('quiz') || searchText.includes('knowledge') || searchText.includes('check')) return '📝';
+                if (searchText.includes('discussion') || searchText.includes('debate') || searchText.includes('talk')) return '💬';
+                if (searchText.includes('resource') || searchText.includes('reading')) return '📚';
+                if (searchText.includes('takeaway') || searchText.includes('summary') || searchText.includes('reflection')) return '⭐';
+                if (searchText.includes('assignment') || searchText.includes('homework')) return '📋';
+                // For numbered sections, use different icons
+                if (key.match(/section_1/)) return '👋';
+                if (key.match(/section_2/)) return '🧠';
+                if (key.match(/section_3/)) return '🎬';
+                if (key.match(/section_4/)) return '🎮';
+                if (key.match(/section_5/)) return '💬';
+                if (key.match(/section_6/)) return '✅';
+                return '📌';
+            }
+
+            // Collect all sections
+            const sections = [];
+            Object.entries(session.sections).forEach(([key, section]) => {
+                if (!section || !section.content) return;
+                const icon = getSectionIcon(key, section.title || '');
+                const title = section.title || key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                sections.push({ key, icon, title, content: section.content });
+            });
+
+            totalInnerSections = sections.length;
+            currentInnerSection = 0; // Reset to first section
 
             let html = `
                 <div class="session-header">
@@ -1113,107 +1456,129 @@
                 </div>
             `;
 
-            // Learning Objectives
-            if (session.sections.learning_objectives) {
-                html += renderSection('🎯', 'Learning Objectives', session.sections.learning_objectives.content);
-            }
-
-            // Main Content
-            if (session.sections.main_content) {
-                html += renderSection('📖', 'Main Content', session.sections.main_content.content);
-            }
-
-            // Videos
-            if (session.sections.videos) {
-                html += `
-                    <div class="lesson-section">
-                        <div class="section-header">
-                            <span class="section-icon">🎥</span>
-                            <h2 class="section-title">Videos</h2>
-                        </div>
-                        <div class="section-content">
-                            ${parseSessionContent(session.sections.videos.content).videos}
-                        </div>
-                    </div>
-                `;
-            }
-
-            // Activities
-            if (session.sections.activities) {
-                html += `
-                    <div class="lesson-section">
-                        <div class="section-header">
-                            <span class="section-icon">💡</span>
-                            <h2 class="section-title">Activities</h2>
-                        </div>
-                        <div class="section-content">
-                            ${parseSessionContent(session.sections.activities.content).activities}
-                        </div>
-                    </div>
-                `;
-            }
-
-            // Discussion Topics
-            if (session.sections.discussion_topics) {
-                html += `
-                    <div class="lesson-section">
-                        <div class="section-header">
-                            <span class="section-icon">💬</span>
-                            <h2 class="section-title">Discussion Topics</h2>
-                        </div>
-                        <div class="section-content">
-                            ${parseSessionContent(session.sections.discussion_topics.content).discussions}
-                        </div>
-                    </div>
-                `;
-            }
-
-            // Resources
-            if (session.sections.resources) {
-                html += `
-                    <div class="lesson-section">
-                        <div class="section-header">
-                            <span class="section-icon">📚</span>
-                            <h2 class="section-title">Resources</h2>
-                        </div>
-                        <div class="section-content">
-                            ${parseSessionContent(session.sections.resources.content).resources}
-                        </div>
-                    </div>
-                `;
-            }
-
-            // Key Takeaways
-            if (session.sections.key_takeaways) {
-                html += `
-                    <div class="lesson-section">
-                        <div class="section-header">
-                            <span class="section-icon">⭐</span>
-                            <h2 class="section-title">Key Takeaways</h2>
-                        </div>
-                        <div class="section-content">
-                            ${parseSessionContent(session.sections.key_takeaways.content).takeaways}
-                        </div>
-                    </div>
-                `;
-            }
-
-            // Navigation
+            // Inner navigation bar
             html += `
-                <div class="navigation-controls">
+                <div class="inner-navigation">
+                    <button class="inner-nav-btn" onclick="navigateInnerSection(-1)" id="innerPrevBtn" disabled>
+                        ◀ Prev Section
+                    </button>
+                    <div class="section-indicator">
+                        ${sections.map((s, i) => `
+                            <div class="section-dot ${i === 0 ? 'active' : ''}" 
+                                 onclick="jumpToInnerSection(${i})" 
+                                 title="${s.title}"></div>
+                        `).join('')}
+                    </div>
+                    <span class="section-counter" id="sectionCounter">1 / ${sections.length}</span>
+                    <button class="inner-nav-btn" onclick="navigateInnerSection(1)" id="innerNextBtn" ${sections.length <= 1 ? 'disabled' : ''}>
+                        Next Section ▶
+                    </button>
+                </div>
+            `;
+
+            // Render each section as a slide
+            html += '<div id="sectionsContainer">';
+            sections.forEach((section, index) => {
+                html += `
+                    <div class="section-slide ${index === 0 ? 'active' : ''}" data-section-index="${index}">
+                        ${renderSectionHTML(section.icon, section.title, section.content)}
+                    </div>
+                `;
+            });
+            html += '</div>';
+
+            // Session navigation (between sessions) - Hidden until last section
+            const isLastSection = sections.length <= 1;
+            html += `
+                <div class="navigation-controls" id="sessionNavigation" style="${isLastSection ? '' : 'display: none;'}">
                     <button class="nav-button" onclick="moveToNextSession(-1)" ${currentSessionIndex === 0 ? 'disabled' : ''}>
-                        ◀ Previous
+                        ◀ Previous Session
                     </button>
                     <button class="nav-button complete-button ${isCompleted ? 'completed' : ''}" onclick="toggleComplete()">
                         ${isCompleted ? '✓ Completed' : 'Mark Complete'}
                     </button>
                     <button class="nav-button" onclick="moveToNextSession(1)" ${currentSessionIndex === sessionsList.length - 1 ? 'disabled' : ''}>
-                        Next ▶
+                        Next Session ▶
                     </button>
                 </div>
             `;
 
             return html;
+        }
+
+        // Navigate between inner sections
+        function navigateInnerSection(direction) {
+            const newIndex = currentInnerSection + direction;
+            if (newIndex >= 0 && newIndex < totalInnerSections) {
+                jumpToInnerSection(newIndex);
+            }
+        }
+
+        // Jump to a specific inner section
+        function jumpToInnerSection(index) {
+            currentInnerSection = index;
+            
+            // Update slides visibility
+            document.querySelectorAll('.section-slide').forEach((slide, i) => {
+                slide.classList.toggle('active', i === index);
+            });
+            
+            // Update dots
+            document.querySelectorAll('.section-dot').forEach((dot, i) => {
+                dot.classList.toggle('active', i === index);
+            });
+            
+            // Update counter
+            document.getElementById('sectionCounter').textContent = `${index + 1} / ${totalInnerSections}`;
+            
+            // Update buttons
+            document.getElementById('innerPrevBtn').disabled = (index === 0);
+            document.getElementById('innerNextBtn').disabled = (index === totalInnerSections - 1);
+            
+            // Show/hide session navigation based on whether we're at the last section
+            const sessionNav = document.getElementById('sessionNavigation');
+            if (sessionNav) {
+                if (index === totalInnerSections - 1) {
+                    sessionNav.style.display = 'flex';
+                } else {
+                    sessionNav.style.display = 'none';
+                }
+            }
+            
+            // Scroll to top of content
+            document.getElementById('contentWrapper').scrollTop = 0;
+        }
+
+        // Helper to render section HTML (used by both render functions)
+        function renderSectionHTML(icon, title, content) {
+            const parsedContent = parseSessionContent(content);
+            
+            // Check if this section should have special rendering
+            if (title.toLowerCase().includes('video') || title.toLowerCase().includes('content delivery')) {
+                return `
+                    <div class="lesson-section">
+                        <div class="section-header">
+                            <span class="section-icon">${icon}</span>
+                            <h2 class="section-title">${title}</h2>
+                        </div>
+                        <div class="section-content">
+                            ${parsedContent.videos || markdownToHtml(content)}
+                        </div>
+                    </div>
+                `;
+            } else {
+                return `
+                    <div class="lesson-section">
+                        <div class="section-header">
+                            <span class="section-icon">${icon}</span>
+                            <h2 class="section-title">${title}</h2>
+                        </div>
+                        <div class="section-content">
+                            ${markdownToHtml(content)}
+                        </div>
+                    </div>
+                `;
+            }
         }
 
         // Render academic lesson format (all sections as-is)
@@ -1609,6 +1974,9 @@
             
             let html = markdown;
 
+            // First, parse any quizzes
+            html = parseQuizzes(html);
+
             // Code blocks (must be before inline code)
             html = html.replace(/```(\w+)?\n([\s\S]+?)```/g, (match, lang, code) => {
                 return `<pre><code>${escapeHtml(code.trim())}</code></pre>`;
@@ -1680,6 +2048,174 @@
             const div = document.createElement('div');
             div.textContent = text;
             return div.innerHTML;
+        }
+
+        // Parse and render interactive quizzes
+        function parseQuizzes(content) {
+            // Look for quiz blocks marked with [QUIZ] ... [/QUIZ]
+            const quizRegex = /\[QUIZ\]([\s\S]*?)\[\/QUIZ\]/g;
+            let quizCounter = 0;
+            
+            return content.replace(quizRegex, (match, quizContent) => {
+                const questions = parseQuizQuestions(quizContent);
+                if (questions.length === 0) return match;
+                
+                const quizId = `quiz_${Date.now()}_${quizCounter++}`;
+                let html = `<div class="quiz-container" id="${quizId}">`;
+                
+                questions.forEach((q, qIndex) => {
+                    const questionId = `${quizId}_q${qIndex}`;
+                    // Shuffle options
+                    const shuffledOptions = shuffleArray([...q.options]);
+                    
+                    html += `
+                        <div class="quiz-question" data-correct="${q.correct}" id="${questionId}">
+                            <div class="quiz-question-text">
+                                <span class="quiz-question-number">${qIndex + 1}</span>
+                                ${q.question}
+                            </div>
+                            <div class="quiz-options">
+                    `;
+                    
+                    shuffledOptions.forEach((opt, oIndex) => {
+                        const optionLetter = String.fromCharCode(65 + oIndex);
+                        html += `
+                            <label class="quiz-option" onclick="selectQuizOption(this, '${questionId}')">
+                                <input type="radio" name="${questionId}" value="${opt.letter}">
+                                <span class="radio-custom"></span>
+                                <span class="quiz-option-text"><strong>${optionLetter})</strong> ${opt.text}</span>
+                            </label>
+                        `;
+                    });
+                    
+                    html += `
+                            </div>
+                            <div class="quiz-feedback" id="${questionId}_feedback"></div>
+                        </div>
+                    `;
+                });
+                
+                html += `
+                    <button class="quiz-check-btn" onclick="checkQuizAnswers('${quizId}', ${questions.length})">
+                        Check Answers
+                    </button>
+                    <div class="quiz-score" id="${quizId}_score" style="display:none;">
+                        <div class="quiz-score-number" id="${quizId}_score_num">0/${questions.length}</div>
+                        <div class="quiz-score-label">Questions Correct</div>
+                    </div>
+                </div>`;
+                
+                return html;
+            });
+        }
+
+        // Parse quiz questions from text
+        function parseQuizQuestions(content) {
+            const questions = [];
+            // Match questions like: **Question 1:** or Q1: or 1.
+            const questionBlocks = content.split(/(?=\*\*Question \d+|\*\*Q\d+|^\d+\.\s+\*\*)/m);
+            
+            questionBlocks.forEach(block => {
+                if (!block.trim()) return;
+                
+                // Extract question text
+                const questionMatch = block.match(/(?:\*\*(?:Question \d+|Q\d+)[:\*]*\s*\*?\*?|^\d+\.\s*\*?\*?)(.+?)(?=\n\s*-\s*[A-D]\)|\n\s*[A-D]\)|\n\s*\([A-D]\))/s);
+                if (!questionMatch) return;
+                
+                const questionText = questionMatch[1].replace(/\*\*/g, '').trim();
+                
+                // Extract options - look for A) B) C) D) patterns
+                const optionMatches = [...block.matchAll(/(?:^|\n)\s*[-]?\s*([A-D])\)\s*(.+?)(?=(?:\n\s*[-]?\s*[A-D]\)|\n\s*\*\*Answer|\n\s*$|$))/gs)];
+                
+                if (optionMatches.length < 2) return;
+                
+                const options = optionMatches.map(m => ({
+                    letter: m[1],
+                    text: m[2].trim().replace(/\*\*/g, '')
+                }));
+                
+                // Find correct answer
+                const answerMatch = block.match(/\*\*Answer[:\s]*\*?\*?\s*([A-D])/i);
+                const correct = answerMatch ? answerMatch[1].toUpperCase() : 'A';
+                
+                questions.push({
+                    question: questionText,
+                    options: options,
+                    correct: correct
+                });
+            });
+            
+            return questions;
+        }
+
+        // Shuffle array (Fisher-Yates)
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        // Select quiz option
+        function selectQuizOption(element, questionId) {
+            const options = element.parentElement.querySelectorAll('.quiz-option');
+            options.forEach(opt => opt.classList.remove('selected'));
+            element.classList.add('selected');
+            element.querySelector('input').checked = true;
+        }
+
+        // Check quiz answers
+        function checkQuizAnswers(quizId, totalQuestions) {
+            const container = document.getElementById(quizId);
+            const questions = container.querySelectorAll('.quiz-question');
+            let correct = 0;
+            
+            questions.forEach(q => {
+                const correctAnswer = q.dataset.correct;
+                const selectedOption = q.querySelector('input:checked');
+                const feedback = document.getElementById(q.id + '_feedback');
+                const allOptions = q.querySelectorAll('.quiz-option');
+                
+                // Reset states
+                allOptions.forEach(opt => {
+                    opt.classList.remove('correct', 'incorrect');
+                });
+                
+                if (selectedOption) {
+                    const selectedValue = selectedOption.value;
+                    const selectedLabel = selectedOption.closest('.quiz-option');
+                    
+                    if (selectedValue === correctAnswer) {
+                        correct++;
+                        selectedLabel.classList.add('correct');
+                        feedback.className = 'quiz-feedback correct';
+                        feedback.textContent = '✓ Correct!';
+                    } else {
+                        selectedLabel.classList.add('incorrect');
+                        // Highlight correct answer
+                        allOptions.forEach(opt => {
+                            if (opt.querySelector('input').value === correctAnswer) {
+                                opt.classList.add('correct');
+                            }
+                        });
+                        feedback.className = 'quiz-feedback incorrect';
+                        feedback.textContent = `✗ Incorrect. The correct answer is ${correctAnswer}.`;
+                    }
+                } else {
+                    feedback.className = 'quiz-feedback incorrect';
+                    feedback.textContent = 'Please select an answer.';
+                }
+            });
+            
+            // Show score
+            const scoreDiv = document.getElementById(quizId + '_score');
+            const scoreNum = document.getElementById(quizId + '_score_num');
+            scoreDiv.style.display = 'block';
+            scoreNum.textContent = `${correct}/${totalQuestions}`;
+            
+            // Scroll to score
+            scoreDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
 
         // Initialize on page load
