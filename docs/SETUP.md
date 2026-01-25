@@ -93,7 +93,7 @@ The platform will be available at: http://localhost:3000
 
 ## Need Help?
 
-Contact: ACCN Umoja Robotics Team 7712
+Contact: ACCN's Programs
 
 ---
 

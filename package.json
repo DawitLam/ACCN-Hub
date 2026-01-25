@@ -1,7 +1,7 @@
 {
   "name": "accn-hub",
   "version": "2.0.0",
-  "description": "Advanced Learning Management System for ACCN Umoja Robotics with Interactive Python Editor",
+  "description": "Advanced Learning Management System for ACCN's Programs with Interactive Python Editor",
   "main": "backend/server.js",
   "scripts": {
     "start": "node backend/server.js",
@@ -17,7 +17,7 @@
     "learning",
     "management"
   ],
-  "author": "ACCN Umoja Robotics Team 7712",
+  "author": "ACCN's Programs",
   "license": "UNLICENSED",
   "dependencies": {
     "express": "^4.18.2",

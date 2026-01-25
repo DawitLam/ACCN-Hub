@@ -247,6 +247,8 @@ The posts and videos you see are selected by recommendation algorithms that pred
 
 These terms are related but distinct. Think of them as nested categories:
 
+[DIAGRAM:ai-ml-dl]
+
 **Artificial Intelligence** is the broadest category — any system designed to exhibit intelligent behavior. This includes both *rule-based systems* (programmed with explicit instructions) and *learning systems* (which improve from data).
 
 **Machine Learning** is a subset of AI. Rather than being programmed with specific rules, ML systems *learn patterns from data*. You provide examples, and the system discovers the rules itself.
@@ -295,6 +297,8 @@ The machine learning process follows these steps:
 
 Deep learning uses structures called *neural networks*, inspired by how biological neurons connect in the brain.
 
+[DIAGRAM:neural-network]
+
 A neural network consists of layers:
 - An **input layer** receives data (such as image pixels)
 - **Hidden layers** process the data, each layer learning more abstract features
@@ -328,10 +332,9 @@ As you watch each video, take notes on:
 
 *"But what is a neural network?"* by 3Blue1Brown (19 minutes)
 
-This video provides a visual explanation of how neural networks function. Pay attention to:
-- The structure of layers, neurons, and connections
-- How "weights" determine the network's behavior
-- The concept of training through error correction
+This video provides one of the best visual explanations of neural networks available. Grant Sanderson uses beautiful animations to show exactly how data flows through a network. You will see neurons light up, watch weights being adjusted, and understand why "deep" networks have multiple layers. This foundational understanding will be essential when you build your own neural network later in the course.
+
+Pay attention to the mathematical intuition — you do not need to memorize formulas, but understanding why the math works will help you debug models later.
 
 https://www.youtube.com/watch?v=aircAruvnKk
 
@@ -348,7 +351,9 @@ https://www.youtube.com/watch?v=aircAruvnKk
 
 *"What is Artificial Intelligence?"* by IBM Technology (8 minutes)
 
-This video provides a business and practical perspective on AI applications.
+This concise video from IBM provides a business and practical perspective on AI. Unlike academic explanations, this shows you how AI is actually being used in companies today. You will see real applications across healthcare, finance, retail, and manufacturing. This context is important because you are not just learning technology — you are learning skills that solve real business problems.
+
+Notice how IBM distinguishes between narrow AI (what we have today) and general AI (a future goal). This distinction helps you set realistic expectations for what your projects can achieve.
 
 https://www.youtube.com/watch?v=2ePf9rue1Ao
 
@@ -365,7 +370,9 @@ https://www.youtube.com/watch?v=2ePf9rue1Ao
 
 *"AI vs Machine Learning vs Deep Learning"* by Simplilearn (15 minutes)
 
-This video directly compares the three concepts we have discussed.
+This video ties everything together by directly comparing the three concepts you learned about in Section 2. The presenter uses clear diagrams and real examples to reinforce the nested relationship. This is excellent review material — if you can explain these distinctions to someone else after watching, you have truly understood the fundamentals.
+
+Watch for the decision flowchart that shows when to use traditional programming versus machine learning. This practical guidance will help you choose the right approach for your own projects.
 
 https://www.youtube.com/watch?v=WSbgixdC9g8
 
@@ -2179,6 +2186,8 @@ By the end of this session, you will be able to:
 ---
 
 **Overview**
+
+[DIAGRAM:ml-types]
 
 | Paradigm | Has Labels? | Learns From | Example |
 |----------|-------------|-------------|---------|
@@ -12356,7 +12365,7 @@ By the end of this session, you will be able to:
 
 ---
 
-**Category C: Robotics AI Projects (Umoja Special)**
+**Category C: Robotics AI Projects (ACCN Special)**
 
 | Project | Description | Difficulty |
 |---------|-------------|------------|
@@ -14043,7 +14052,7 @@ Students who complete this certification are prepared for advanced study in the 
 
 ---
 
-## Module 21-22: Robotics AI Integration (6 hours) — Umoja Special
+## Module 21-22: Robotics AI Integration (6 hours) — ACCN Special
 
 ---
 
@@ -14270,7 +14279,7 @@ This 10-day foundation plus advanced modules pathway represents a complete journ
 - Consider ethical implications of AI systems
 - Pursue advanced study or careers in AI
 
-**For Umoja Robotics students:** This curriculum integrates with your robotics work, providing AI capabilities for computer vision, autonomous navigation, and intelligent decision-making.
+**For ACCN students:** This curriculum integrates with your learning journey, providing AI capabilities for computer vision, autonomous navigation, and intelligent decision-making.
 
 ---
 
@@ -14280,5 +14289,5 @@ This 10-day foundation plus advanced modules pathway represents a complete journ
 
 *AI Fundamentals Certification Curriculum*  
 *Version 2.0*  
-*Developed for Umoja Robotics (Team 7712)*  
+*Developed for ACCN's Programs*  
 *Total Content: 150+ pages, 30+ hours core + 72+ hours advanced*

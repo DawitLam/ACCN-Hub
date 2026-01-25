@@ -239,7 +239,7 @@ http://localhost:3000/api/certificates/verify/A7F3C2E8B4D19C5E6F2A3B7C8D9E0F1A
     "courseName": "AI Fundamentals Certification",
     "tier": "AI Practitioner",
     "issuedAt": "2025-12-01T10:00:00Z",
-    "organization": "ACCN Hub - Umoja Robotics",
+    "organization": "ACCN Hub - ACCN's Programs",
     "skills": ["Python", "Machine Learning", "Data Science", "AI Ethics"]
   }
 }

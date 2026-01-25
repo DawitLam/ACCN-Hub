@@ -1,7 +1,7 @@
 # ACCN Hub - Advanced Learning Management System
 
 ## Overview
-ACCN Hub is a comprehensive Learning Management System designed for Umoja Robotics and future educational programs. The platform features intelligent lesson generation, automated progress tracking, and certificate generation.
+ACCN Hub is a comprehensive Learning Management System designed for ACCN's Programs and future educational programs. The platform features intelligent lesson generation, automated progress tracking, and certificate generation.
 
 ## Features
 
@@ -143,15 +143,15 @@ API documentation available at `/docs/API.md`
 
 ## Contributing
 
-This project is developed for Umoja Robotics (Team 7712). For contributions or questions, contact the development team.
+This project is developed for ACCN's Programs. For contributions or questions, contact the development team.
 
 ## License
 
-© 2025 Umoja Robotics. All rights reserved.
+© 2025 ACCN's Programs. All rights reserved.
 
 ## Contact
 
-- **Organization:** ACCN Umoja Robotics 7712
+- **Organization:** ACCN's Programs
 - **Repository:** https://github.com/DawitLam/ACCN-Hub
 - **Issues:** https://github.com/DawitLam/ACCN-Hub/issues
 

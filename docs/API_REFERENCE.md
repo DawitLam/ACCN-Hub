@@ -138,7 +138,7 @@ Response: 200 (Valid)
     "courseName": "AI Fundamentals Certification",
     "tier": "AI Practitioner",
     "issuedAt": "2025-12-01T10:00:00Z",
-    "organization": "ACCN Hub - Umoja Robotics",
+    "organization": "ACCN Hub - ACCN's Programs",
     "skills": ["Python", "Machine Learning", "Data Science"]
   }
 }

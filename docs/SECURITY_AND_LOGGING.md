@@ -98,7 +98,7 @@ GET /api/certificates/verify/A7F3C2E8B4D1...
     "courseName": "AI Fundamentals",
     "tier": "AI Practitioner",
     "issuedAt": "2025-12-01T10:00:00Z",
-    "organization": "ACCN Hub - Umoja Robotics"
+    "organization": "ACCN Hub - ACCN's Programs"
   }
 }
 ```
@@ -396,7 +396,7 @@ const cert = await Certificate.create({
     instructorName: 'Dawit LG',
     courseDuration: '10 days',
     skills: ['Python', 'Machine Learning', 'Data Science', 'AI Ethics'],
-    issuerOrganization: 'ACCN Hub - Umoja Robotics'
+    issuerOrganization: 'ACCN Hub - ACCN Programs'
   }
 });
 ```

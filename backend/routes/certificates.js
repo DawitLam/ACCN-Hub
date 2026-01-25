@@ -105,7 +105,7 @@ router.post('/issue/:courseId', protect, authorize('instructor', 'admin'), async
         instructorName: `${course.instructor.firstName} ${course.instructor.lastName}`,
         courseDuration: course.duration,
         skills: course.tags,
-        issuerOrganization: 'ACCN Hub - Umoja Robotics'
+        issuerOrganization: 'ACCN Hub - ACCN Programs'
       }
     });
     
