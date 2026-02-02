@@ -68,6 +68,9 @@ app.use('/api', apiRateLimiter);
 // Serve static files from frontend
 app.use(express.static(path.join(__dirname, '../frontend')));
 
+// Serve curriculum files from root directory
+app.use(express.static(path.join(__dirname, '..')));
+
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/courses', courseRoutes);
@@ -84,6 +87,16 @@ app.use('/api/grades', gradeRoutes);
 // Health check endpoint
 app.get('/api/health', (req, res) => {
   res.json({ status: 'active', message: 'ACCN Hub server is running' });
+});
+
+// Serve curriculum markdown file specifically
+app.get('/AI_CERTIFICATION_CURRICULUM.md', (req, res) => {
+  res.sendFile(path.join(__dirname, '../AI_CERTIFICATION_CURRICULUM.md'));
+});
+
+// Serve curriculum from curriculum folder
+app.get('/curriculum/:filename', (req, res) => {
+  res.sendFile(path.join(__dirname, '../curriculum', req.params.filename));
 });
 
 // Serve frontend for all other routes

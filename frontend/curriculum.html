@@ -1,0 +1,1860 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Learning Hub | ACCN Programs v2.0</title>
+    <script src="marked.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Learning Hub Teal Theme */
+            --primary-teal: #0f7b74;
+            --secondary-teal: #125e5b;
+            --accent-green: #34d399;
+            --light-teal: #5eead4;
+            --dark-teal: #0b4b4b;
+            --bg-gradient-start: #0b4b4b;
+            --bg-gradient-end: #125e5b;
+            --text-primary: #e6fff7;
+            --text-secondary: rgba(230, 255, 247, 0.85);
+            --text-muted: rgba(230, 255, 247, 0.65);
+            --card-bg: rgba(255, 255, 255, 0.04);
+            --card-border: rgba(52, 211, 153, 0.15);
+            --hover-bg: rgba(52, 211, 153, 0.08);
+            --success: #10b981;
+            --warning: #f59e0b;
+        }
+
+        body {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Roboto', sans-serif;
+            background: linear-gradient(145deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+            color: var(--text-primary);
+            line-height: 1.7;
+            min-height: 100vh;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 340px;
+            background: rgba(11, 75, 75, 0.85);
+            backdrop-filter: blur(10px);
+            border-right: 1px solid var(--card-border);
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-header {
+            padding: 1.5rem;
+            background: linear-gradient(135deg, var(--primary-teal), var(--secondary-teal));
+            border-bottom: 1px solid var(--card-border);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .sidebar-header h1 {
+            font-size: 1.4rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, var(--text-primary), var(--light-teal));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .sidebar-header p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .progress-summary {
+            padding: 1rem 1.5rem;
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: rgba(52, 211, 153, 0.15);
+            border-radius: 5px;
+            overflow: hidden;
+            margin-top: 0.75rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-green), var(--light-teal));
+            transition: width 0.3s ease;
+            border-radius: 5px;
+        }
+
+        .progress-text {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-top: 0.5rem;
+        }
+
+        .curriculum-nav {
+            padding: 1rem 0;
+        }
+
+        .day-group {
+            margin-bottom: 0.5rem;
+        }
+
+        .day-header {
+            padding: 0.875rem 1.5rem;
+            background: var(--card-bg);
+            cursor: pointer;
+            border-left: 3px solid transparent;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .day-header:hover {
+            background: var(--hover-bg);
+            border-left-color: var(--accent-green);
+        }
+
+        .day-header.active {
+            background: var(--hover-bg);
+            border-left-color: var(--accent-green);
+        }
+
+        .session-list {
+            display: none;
+        }
+
+        .session-list.expanded {
+            display: block;
+        }
+
+        .session-item {
+            padding: 0.75rem 1.5rem 0.75rem 2.5rem;
+            cursor: pointer;
+            border-left: 3px solid transparent;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+        }
+
+        .session-item:hover {
+            background: var(--hover-bg);
+            border-left-color: var(--light-teal);
+        }
+
+        .session-item.active {
+            background: var(--hover-bg);
+            border-left-color: var(--accent-green);
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .section-list {
+            display: none;
+            padding-left: 1rem;
+        }
+
+        .section-list.expanded {
+            display: block;
+        }
+
+        .section-item {
+            padding: 0.5rem 1.5rem 0.5rem 3.5rem;
+            cursor: pointer;
+            border-left: 3px solid transparent;
+            transition: all 0.3s ease;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .section-item:hover {
+            background: var(--hover-bg);
+            border-left-color: var(--light-teal);
+            color: var(--text-secondary);
+        }
+
+        .section-item.active {
+            border-left-color: var(--accent-green);
+            color: var(--text-primary);
+        }
+
+        .section-item.completed::before {
+            content: '✓ ';
+            color: var(--success);
+            margin-right: 0.5rem;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 2rem 3rem;
+        }
+
+        .lesson-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .lesson-header {
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px solid var(--card-border);
+        }
+
+        .lesson-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--text-primary), var(--accent-green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .lesson-meta {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+            font-size: 0.95rem;
+            color: var(--text-muted);
+        }
+
+        .lesson-meta span {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .lesson-content {
+            background: var(--card-bg);
+            padding: 2.5rem;
+            border-radius: 12px;
+            border: 1px solid var(--card-border);
+            line-height: 1.8;
+        }
+
+        .lesson-content h2 {
+            color: var(--accent-green);
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            font-size: 1.8rem;
+        }
+
+        .lesson-content h3 {
+            color: var(--light-teal);
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+            font-size: 1.4rem;
+        }
+
+        .lesson-content h4 {
+            color: var(--text-secondary);
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .lesson-content p {
+            margin-bottom: 1rem;
+            color: var(--text-secondary);
+        }
+
+        .lesson-content ul,
+        .lesson-content ol {
+            margin: 1rem 0 1rem 2rem;
+            color: var(--text-secondary);
+        }
+
+        .lesson-content li {
+            margin-bottom: 0.5rem;
+        }
+
+        .lesson-content code {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            color: var(--accent-green);
+        }
+
+        .lesson-content pre {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 1.5rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            border-left: 3px solid var(--accent-green);
+        }
+
+        .lesson-content pre code {
+            background: none;
+            padding: 0;
+            color: var(--text-primary);
+        }
+
+        .lesson-navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 2px solid var(--card-border);
+        }
+
+        .nav-btn {
+            padding: 0.875rem 1.75rem;
+            background: linear-gradient(135deg, var(--primary-teal), var(--secondary-teal));
+            color: var(--text-primary);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .nav-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(52, 211, 153, 0.3);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .welcome-screen {
+            text-align: center;
+            padding: 4rem 2rem;
+        }
+
+        .welcome-screen h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--text-primary), var(--accent-green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .welcome-screen p {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-muted);
+        }
+
+        /* Video Player Styles */
+        .video-container {
+            position: relative;
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: rgba(52, 211, 153, 0.05);
+            border-radius: 12px;
+            border: 2px solid var(--card-border);
+        }
+
+        .video-container h4 {
+            color: var(--accent-green);
+            margin-bottom: 1rem;
+        }
+
+        .video-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 1.5rem;
+            background: linear-gradient(135deg, var(--primary-teal), var(--secondary-teal));
+            color: var(--text-primary);
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .video-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(52, 211, 153, 0.3);
+        }
+
+        .video-link::before {
+            content: "▶";
+            font-size: 1.2rem;
+        }
+
+        /* Quiz Styles */
+        .quiz-container {
+            margin: 2rem 0;
+            padding: 2rem;
+            background: rgba(15, 123, 116, 0.1);
+            border-radius: 12px;
+            border: 2px solid var(--accent-green);
+        }
+
+        .quiz-question {
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: var(--card-bg);
+            border-radius: 8px;
+            border-left: 4px solid var(--primary-teal);
+        }
+
+        .quiz-question.skipped {
+            border-left-color: #f59e0b;
+            background: rgba(245, 158, 11, 0.1);
+        }
+
+        .quiz-question.correct {
+            border-left-color: var(--success);
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .quiz-question.incorrect {
+            border-left-color: #ef4444;
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .quiz-question h4 {
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .quiz-option {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            padding: 0.875rem;
+            margin: 0.5rem 0;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .quiz-option:hover {
+            background: var(--hover-bg);
+        }
+
+        .quiz-option input[type="radio"] {
+            margin-top: 0.25rem;
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: var(--accent-green);
+        }
+
+        .quiz-option label {
+            flex: 1;
+            cursor: pointer;
+            color: var(--text-secondary);
+            user-select: none;
+        }
+
+        .quiz-submit {
+            margin-top: 1.5rem;
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, var(--accent-green), var(--primary-teal));
+            color: var(--text-primary);
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .quiz-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(52, 211, 153, 0.3);
+        }
+
+        .quiz-result {
+            margin-top: 1.5rem;
+            padding: 1.5rem;
+            background: var(--card-bg);
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .quiz-result h3 {
+            color: var(--accent-green);
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .quiz-result p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        .quiz-feedback {
+            margin-top: 0.5rem;
+            padding: 0.75rem;
+            border-radius: 6px;
+            font-size: 0.95rem;
+        }
+
+        .quiz-feedback.correct {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--success);
+        }
+
+        .quiz-feedback.incorrect {
+            background: rgba(239, 68, 68, 0.15);
+            color: #ef4444;
+        }
+
+        .checklist {
+            margin: 1rem 0;
+        }
+
+        .checklist-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            margin: 0.5rem 0;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 6px;
+        }
+
+        .checklist-item input[type="checkbox"] {
+            margin-top: 0.25rem;
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .checklist-item label {
+            flex: 1;
+            cursor: pointer;
+            color: var(--text-secondary);
+        }
+
+        textarea {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Roboto', sans-serif;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--accent-green);
+            box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.1);
+        }
+
+        textarea::placeholder {
+            color: var(--text-muted);
+            opacity: 0.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h1>🎓 AI Learning Hub</h1>
+                <p>ACCN Programs - 10-Day Certification</p>
+            </div>
+            
+            <div class="progress-summary">
+                <div>Progress: <span id="progress-text">0 of 260 sections</span></div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+                </div>
+                <div class="progress-text" id="progress-percentage">0% Complete</div>
+            </div>
+
+            <div class="curriculum-nav" id="curriculumNav">
+                <!-- Will be populated dynamically -->
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <div class="lesson-container" id="lessonContainer">
+                <div class="welcome-screen">
+                    <h1>🎓 AI Fundamentals Certification Program</h1>
+                    <p style="font-size: 1rem; color: var(--text-muted); margin: 1rem 0;">
+                        10-Day Intensive Program | 30 Contact Hours
+                    </p>
+                    
+                    <div style="max-width: 800px; margin: 3rem auto; text-align: left;">
+                        <h2 style="color: var(--accent-green); margin-bottom: 1.5rem; text-align: center;">What You Will Achieve</h2>
+                        
+                        <div style="display: grid; gap: 1.5rem; margin: 2rem 0;">
+                            <div style="padding: 1.5rem; background: rgba(52, 211, 153, 0.05); border-radius: 8px; border-left: 4px solid var(--accent-green);">
+                                <h3 style="color: var(--text-primary); margin-bottom: 0.5rem;">🧠 Understand AI Fundamentals</h3>
+                                <p style="color: var(--text-secondary);">Define and distinguish between Artificial Intelligence, Machine Learning, and Deep Learning</p>
+                            </div>
+                            
+                            <div style="padding: 1.5rem; background: rgba(52, 211, 153, 0.05); border-radius: 8px; border-left: 4px solid var(--primary-teal);">
+                                <h3 style="color: var(--text-primary); margin-bottom: 0.5rem;">💻 Write Python Code</h3>
+                                <p style="color: var(--text-secondary);">Create programs that process data and train predictive models</p>
+                            </div>
+                            
+                            <div style="padding: 1.5rem; background: rgba(52, 211, 153, 0.05); border-radius: 8px; border-left: 4px solid var(--accent-green);">
+                                <h3 style="color: var(--text-primary); margin-bottom: 0.5rem;">🛠️ Use Industry Tools</h3>
+                                <p style="color: var(--text-secondary);">Work with TensorFlow, Pandas, and Jupyter Notebooks</p>
+                            </div>
+                            
+                            <div style="padding: 1.5rem; background: rgba(52, 211, 153, 0.05); border-radius: 8px; border-left: 4px solid var(--primary-teal);">
+                                <h3 style="color: var(--text-primary); margin-bottom: 0.5rem;">🎯 Build a Portfolio</h3>
+                                <p style="color: var(--text-secondary);">Complete projects that demonstrate your capabilities</p>
+                            </div>
+                            
+                            <div style="padding: 1.5rem; background: rgba(52, 211, 153, 0.05); border-radius: 8px; border-left: 4px solid var(--accent-green);">
+                                <h3 style="color: var(--text-primary); margin-bottom: 0.5rem;">📜 Earn Certification</h3>
+                                <p style="color: var(--text-secondary);">Receive an industry-aligned credential upon successful completion</p>
+                            </div>
+                        </div>
+
+                        <div style="margin: 3rem 0; padding: 2rem; background: var(--card-bg); border-radius: 12px; border: 2px solid var(--card-border);">
+                            <h3 style="color: var(--accent-green); margin-bottom: 1rem; text-align: center;">Certification Tiers</h3>
+                            <table style="width: 100%; border-collapse: collapse;">
+                                <thead>
+                                    <tr style="border-bottom: 2px solid var(--card-border);">
+                                        <th style="padding: 1rem; text-align: left; color: var(--text-primary);">Level</th>
+                                        <th style="padding: 1rem; text-align: left; color: var(--text-primary);">Requirements</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr style="border-bottom: 1px solid var(--card-border);">
+                                        <td style="padding: 1rem; color: var(--accent-green); font-weight: 600;">AI Literacy</td>
+                                        <td style="padding: 1rem; color: var(--text-secondary);">80%+ attendance, 70%+ on activities, final project submitted</td>
+                                    </tr>
+                                    <tr style="border-bottom: 1px solid var(--card-border);">
+                                        <td style="padding: 1rem; color: var(--accent-green); font-weight: 600;">AI Practitioner</td>
+                                        <td style="padding: 1rem; color: var(--text-secondary);">Above + 75%+ project score + proficiency in 2+ tools</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 1rem; color: var(--accent-green); font-weight: 600;">AI Developer</td>
+                                        <td style="padding: 1rem; color: var(--text-secondary);">Above + 85%+ project score + exceptional presentation</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div style="text-align: center; margin: 3rem 0;">
+                            <p style="font-size: 1.2rem; color: var(--text-primary); margin-bottom: 1rem;">Ready to begin?</p>
+                            <p style="color: var(--text-muted);">📚 10 Days • 39 Sessions • 260 Sections • 30 Contact Hours</p>
+                            <p style="color: var(--accent-green); font-weight: 500; margin-top: 1rem;">Select a section from the sidebar to start your learning journey →</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Complete curriculum structure
+        let curriculum = {
+  "DAY 1: Foundation of Artificial Intelligence": [
+    {
+      "title": "Session 1.1: What is AI? (60 minutes)",
+      "sections": [
+        "Section 1: Welcome and Course Overview",
+        "Section 2: Core Concepts — Understanding AI",
+        "Section 3: Video Learning",
+        "Section 4: Knowledge Check",
+        "Section 5: Discussion and Reflection",
+        "Section 6: Summary and Next Steps"
+      ],
+      "sessionNumber": 1
+    },
+    {
+      "title": "Session 1.2: History and Evolution of AI (45 minutes)",
+      "sections": [
+        "Section 1: Introduction and Objectives",
+        "Section 2: The History of Artificial Intelligence",
+        "Section 3: Video Learning",
+        "Section 4: Knowledge Check",
+        "Section 5: Activity — Create Your AI Timeline",
+        "Section 6: Summary and Next Steps"
+      ],
+      "sessionNumber": 2
+    },
+    {
+      "title": "Session 1.3: Types of AI and How AI Works (45 minutes)",
+      "sections": [
+        "Section 1: Introduction and Objectives",
+        "Section 2: Understanding AI Types",
+        "Section 3: How AI Actually Works",
+        "Section 4: Video Learning",
+        "Section 5: Knowledge Check",
+        "Section 6: Summary and Next Steps"
+      ],
+      "sessionNumber": 3
+    },
+    {
+      "title": "Session 1.4: AI in Everyday Life and Common Myths (45 minutes)",
+      "sections": [
+        "Section 1: Introduction and Objectives",
+        "Section 2: AI in Your Daily Life",
+        "Section 3: Common AI Myths Debunked",
+        "Section 4: Video Learning",
+        "Section 5: Knowledge Check",
+        "Section 6: Interactive Activity — Quick Draw",
+        "Section 7: Summary and Day 1 Wrap-Up"
+      ],
+      "sessionNumber": 4
+    }
+  ],
+  "DAY 2: Machine Learning Fundamentals": [
+    {
+      "title": "Session 2.1: The Machine Learning Pipeline (45 minutes)",
+      "sections": [
+        "Section 1: Introduction and Objectives",
+        "Section 2: The Machine Learning Pipeline",
+        "Section 3: Video Learning",
+        "Section 4: Knowledge Check",
+        "Section 5: Activity — Paper Machine Learning",
+        "Section 6: Summary and Next Steps"
+      ],
+      "sessionNumber": 5
+    },
+    {
+      "title": "Session 2.2: Learning Paradigms (60 minutes)",
+      "sections": [
+        "Section 1: Introduction and Objectives",
+        "Section 2: The Four Learning Paradigms",
+        "Section 3: Video Learning",
+        "Section 4: Knowledge Check",
+        "Section 5: Activity — Classify the Paradigm",
+        "Section 6: Summary and Next Steps"
+      ],
+      "sessionNumber": 6
+    },
+    {
+      "title": "Session 2.3: The Importance of Data (45 minutes)",
+      "sections": [
+        "Section 1: Introduction and Objectives",
+        "Section 2: Why Data Quality Matters",
+        "Section 3: The Three V's of Data Quality",
+        "Section 4: The Critical Problem of Bias",
+        "Section 5: Video Learning",
+        "Section 6: Knowledge Check",
+        "Section 7: Activity — Data Bias Detective",
+        "Section 8: Summary and Next Steps"
+      ],
+      "sessionNumber": 7
+    },
+    {
+      "title": "Session 2.4: Review and Game Time (30 minutes)",
+      "sections": [
+        "Section 1: Introduction and Objectives",
+        "Section 2: Interactive Game — Drawize",
+        "Section 3: Connecting Games to Machine Learning",
+        "Section 4: Day 2 Comprehensive Review",
+        "Section 5: Knowledge Check",
+        "Section 6: Summary and Day 2 Wrap-Up"
+      ],
+      "sessionNumber": 8
+    }
+  ],
+  "DAY 3: Python Foundations and AI Ethics": [
+    {
+      "title": "Session 3.1: Python Fundamentals for AI (60 minutes)",
+      "sections": [
+        "Section 1: Introduction and Objectives",
+        "Section 2: Why Python for AI?",
+        "Section 3: Python Building Blocks",
+        "Section 4: Video Learning",
+        "Section 5: Hands-On Activity — Google Colab Setup",
+        "Section 6: Knowledge Check",
+        "Section 7: Summary and Next Steps"
+      ],
+      "sessionNumber": 9
+    },
+    {
+      "title": "Session 3.2: AI Ethics and Responsible AI (60 minutes)",
+      "sections": [
+        "Section 1: Introduction and Objectives",
+        "Section 2: The Six Key Ethical Issues in AI",
+        "Section 3: Case Studies — When AI Goes Wrong",
+        "Section 4: Video Learning",
+        "Section 5: Knowledge Check",
+        "Section 6: Activity — Ethics Debate",
+        "Section 7: Responsible AI Framework",
+        "Section 8: Summary and Next Steps"
+      ],
+      "sessionNumber": 10
+    },
+    {
+      "title": "Session 3.3: Practical Ethics — Building Fair Classifiers (45 minutes)",
+      "sections": [
+        "Section 1: Introduction and Objectives",
+        "Section 2: The Scenario — College Admission AI",
+        "Section 3: Analyzing Bias in the Data",
+        "Section 4: Code Exercise — Testing Fairness",
+        "Section 5: Group Debate Activity",
+        "Section 6: Knowledge Check",
+        "Section 7: Summary and Next Steps"
+      ],
+      "sessionNumber": 11
+    },
+    {
+      "title": "Session 3.4: Python Practice and Day 3 Review (15 minutes)",
+      "sections": [
+        "Section 1: Introduction and Objectives",
+        "Section 2: Python Coding Challenges",
+        "Section 3: Day 3 Comprehensive Review",
+        "Section 4: Knowledge Check — Day 3 Comprehensive",
+        "Section 5: Summary and Day 3 Wrap-Up"
+      ],
+      "sessionNumber": 12
+    }
+  ],
+  "DAY 4: Teachable Machine — Build Your First AI": [
+    {
+      "title": "Session 4.1: Introduction to Teachable Machine (30 minutes)",
+      "sections": [
+        "Section 1: Introduction and Objectives",
+        "Section 2: Understanding Transfer Learning",
+        "Section 3: Teachable Machine Overview",
+        "Section 4: Video Learning",
+        "Section 5: Knowledge Check",
+        "Section 6: Summary and Next Steps"
+      ],
+      "sessionNumber": 13
+    },
+    {
+      "title": "Session 4.2: Project 1 — Rock Paper Scissors AI (45 minutes)",
+      "sections": [
+        "Section 1: Introduction and Objectives",
+        "Section 2: Project Setup",
+        "Section 3: Collecting Training Data",
+        "Section 4: Training and Testing",
+        "Section 5: Improving Your Model",
+        "Section 6: Play Against Your AI",
+        "Section 7: Knowledge Check",
+        "Section 8: Summary and Next Steps"
+      ],
+      "sessionNumber": 14
+    },
+    {
+      "title": "Session 4.3: Project 2 — Emotion Detector (45 minutes)",
+      "sections": [
+        "Section 1: Introduction and Objectives",
+        "Section 2: Building the Emotion Detector",
+        "Section 3: Advanced Challenges",
+        "Section 4: Ethics of Emotion Recognition",
+        "Section 5: Group Discussion Activity",
+        "Section 6: Knowledge Check",
+        "Section 7: Summary and Next Steps"
+      ],
+      "sessionNumber": 15
+    },
+    {
+      "title": "Session 4.4: Project 3 — Custom Classifier and Model Export (60 minutes)",
+      "sections": [
+        "Section 1: Introduction and Objectives",
+        "Section 2: Choose Your Project",
+        "Section 3: Project Requirements",
+        "Section 4: Building Your Project",
+        "Section 5: Exporting Your Model",
+        "Section 6: Knowledge Check",
+        "Section 7: Summary and Day 4 Wrap-Up"
+      ],
+      "sessionNumber": 16
+    }
+  ],
+  "DAY 5: Advanced Teachable Machine + Python Libraries": [
+    {
+      "title": "Session 5.1: Using Teachable Machine Models in Python (45 minutes)",
+      "sections": [
+        "Section 1: Introduction and Objectives",
+        "Section 2: Understanding Model Export",
+        "Section 3: Loading Models in Python",
+        "Section 4: Making Predictions",
+        "Section 5: Batch Prediction System",
+        "Section 6: Video Resources",
+        "Section 7: Knowledge Check",
+        "Section 8: Hands-On Activity",
+        "Section 9: Summary and Next Steps"
+      ],
+      "sessionNumber": 17
+    },
+    {
+      "title": "Session 5.2: Introduction to ML Libraries (60 minutes)",
+      "sections": [
+        "Section 1: Introduction and Objectives",
+        "Section 2: The Python ML Stack",
+        "Section 3: NumPy Fundamentals",
+        "Section 4: Pandas for Data Manipulation",
+        "Section 5: Matplotlib for Visualization",
+        "Section 6: Video Resources",
+        "Section 7: Knowledge Check",
+        "Section 8: Hands-On Activity",
+        "Section 9: Summary and Next Steps"
+      ],
+      "sessionNumber": 18
+    },
+    {
+      "title": "Session 5.3: Mini ML Project - Predict Quiz Scores (60 minutes)",
+      "sections": [
+        "Section 1: Introduction and Objectives",
+        "Section 2: Understanding the Problem",
+        "Section 3: Exploring the Dataset",
+        "Section 4: Simple Prediction (Without ML Library)",
+        "Section 5: Using Scikit-learn (The ML Way)",
+        "Section 6: Knowledge Check",
+        "Section 7: Hands-On Activity",
+        "Section 8: Discussion Questions",
+        "Section 9: Summary and Next Steps"
+      ],
+      "sessionNumber": 19
+    }
+  ],
+  "DAY 6: Data Science with Python (Pandas Deep Dive)": [
+    {
+      "title": "Session 6.1: Advanced Pandas Operations (60 minutes)",
+      "sections": [
+        "Section 1: Introduction and Objectives",
+        "Section 2: Loading and Inspecting Data",
+        "Section 3: Handling Missing Values",
+        "Section 4: Handling Duplicates",
+        "Section 5: Data Type Corrections",
+        "Section 6: Detecting and Handling Outliers",
+        "Section 7: Video Resources",
+        "Section 8: Knowledge Check",
+        "Section 9: Hands-On Activity",
+        "Section 10: Summary and Next Steps"
+      ],
+      "sessionNumber": 20
+    },
+    {
+      "title": "Session 6.2: Data Transformation and Feature Engineering (60 minutes)",
+      "sections": [
+        "Section 1: Introduction and Objectives",
+        "Section 2: Why Feature Engineering Matters",
+        "Section 3: Creating New Features",
+        "Section 4: Encoding Categorical Variables",
+        "Section 5: Normalization and Scaling",
+        "Section 6: Grouping and Aggregation",
+        "Section 7: Knowledge Check",
+        "Section 8: Hands-On Activity",
+        "Section 9: Summary and Next Steps"
+      ],
+      "sessionNumber": 21
+    },
+    {
+      "title": "Session 6.3: Exploratory Data Analysis (EDA) (45 minutes)",
+      "sections": [
+        "Section 1: Introduction and Objectives",
+        "Section 2: The EDA Process",
+        "Section 3: Statistical Summary",
+        "Section 4: Distribution Analysis",
+        "Section 5: Correlation Analysis",
+        "Section 6: Relationship Plots",
+        "Section 7: Group Comparisons",
+        "Section 8: Knowledge Check",
+        "Section 9: Hands-On Activity",
+        "Section 10: Summary and Next Steps"
+      ],
+      "sessionNumber": 22
+    },
+    {
+      "title": "Session 6.4: Prepare Data for Machine Learning (15 minutes)",
+      "sections": [
+        "Section 1: Introduction and Objectives",
+        "Section 2: Why Split Data?",
+        "Section 3: Implementing Train-Test Split",
+        "Section 4: Stratified Splitting",
+        "Section 5: Complete Data Preparation Pipeline",
+        "Section 6: Knowledge Check",
+        "Section 7: Day 6 Summary and Homework"
+      ],
+      "sessionNumber": 23
+    }
+  ],
+  "DAY 7: Traditional Machine Learning Models": [
+    {
+      "title": "Session 7.1: Introduction to Scikit-learn (45 minutes)",
+      "sections": [
+        "Section 1: Introduction and Objectives",
+        "Section 2: The Scikit-learn Workflow",
+        "Section 3: Video Resources",
+        "Section 4: Building Your First ML Model",
+        "Section 5: Understanding the Model",
+        "Section 6: Knowledge Check",
+        "Section 7: Hands-On Activity",
+        "Section 8: Summary and Next Steps"
+      ],
+      "sessionNumber": 24
+    },
+    {
+      "title": "Session 7.2: Classification Models (75 minutes)",
+      "sections": [
+        "Section 1: Introduction and Objectives",
+        "Section 2: Classification vs Regression",
+        "Section 3: Preparing Classification Data",
+        "Section 4: Model 1 — Logistic Regression",
+        "Section 5: Model 2 — Decision Tree",
+        "Section 6: Model 3 — Random Forest",
+        "Section 7: Model 4 — K-Nearest Neighbors",
+        "Section 8: Understanding Classification Metrics",
+        "Section 9: Model Comparison",
+        "Section 10: Knowledge Check",
+        "Section 11: Hands-On Activity",
+        "Section 12: Summary and Next Steps"
+      ],
+      "sessionNumber": 25
+    },
+    {
+      "title": "Session 7.3: Model Tuning and Cross-Validation (45 minutes)",
+      "sections": [
+        "Section 1: Introduction and Objectives",
+        "Section 2: Understanding Hyperparameters",
+        "Section 3: Manual Hyperparameter Tuning",
+        "Section 4: Automated Tuning with Grid Search",
+        "Section 5: Cross-Validation Explained",
+        "Section 6: Overfitting vs Underfitting",
+        "Section 7: Knowledge Check",
+        "Section 8: Hands-On Activity",
+        "Section 9: Summary and Next Steps"
+      ],
+      "sessionNumber": 26
+    },
+    {
+      "title": "Session 7.4: Model Deployment Basics (15 minutes)",
+      "sections": [
+        "Section 1: Introduction and Objectives",
+        "Section 2: Saving and Loading Models",
+        "Section 3: Creating a Prediction Function",
+        "Section 4: Day 7 Summary and Homework"
+      ],
+      "sessionNumber": 27
+    }
+  ],
+  "DAY 8: Neural Networks and Deep Learning Introduction": [
+    {
+      "title": "Session 8.1: How Neural Networks Work (60 minutes)",
+      "sections": [
+        "Section 1: Introduction and Objectives",
+        "Section 2: Video Resources (Essential)",
+        "Section 3: Biological Inspiration",
+        "Section 4: How a Single Neuron Works",
+        "Section 5: Network Architecture",
+        "Section 6: Activation Functions",
+        "Section 7: How Neural Networks Learn",
+        "Section 8: Interactive Demo",
+        "Section 9: Knowledge Check",
+        "Section 10: Summary and Next Steps"
+      ],
+      "sessionNumber": 28
+    },
+    {
+      "title": "Session 8.2: Build Your First Neural Network (75 minutes)",
+      "sections": [
+        "Section 1: Introduction and Objectives",
+        "Section 2: TensorFlow and Keras Setup",
+        "Section 3: The MNIST Dataset",
+        "Section 4: Preparing Data for Neural Networks",
+        "Section 5: Building the Neural Network",
+        "Section 6: Compiling the Model",
+        "Section 7: Training the Model",
+        "Section 8: Visualizing Training Progress",
+        "Section 9: Evaluating the Model",
+        "Section 10: Knowledge Check",
+        "Section 11: Hands-On Activity",
+        "Section 12: Summary and Next Steps"
+      ],
+      "sessionNumber": 29
+    },
+    {
+      "title": "Session 8.3: Convolutional Neural Networks (CNNs) (45 minutes)",
+      "sections": [
+        "Section 1: Introduction and Objectives",
+        "Section 2: The Problem with Fully Connected Networks for Images",
+        "Section 3: How Convolution Works",
+        "Section 4: Pooling Layers",
+        "Section 5: CNN Architecture",
+        "Section 6: Building a CNN for MNIST",
+        "Section 7: Training and Evaluation",
+        "Section 8: Visualizing CNN Features",
+        "Section 9: Knowledge Check",
+        "Section 10: Summary and Next Steps"
+      ],
+      "sessionNumber": 30
+    },
+    {
+      "title": "Session 8.4: Transfer Learning with Pre-trained Models (40 minutes)",
+      "sections": [
+        "Section 1: Introduction and Objectives",
+        "Section 2: What is Transfer Learning?",
+        "Section 3: Popular Pre-trained Models",
+        "Section 4: Building a Custom Classifier",
+        "Section 5: Data Preparation and Augmentation",
+        "Section 6: Training with Transfer Learning",
+        "Section 7: Fine-Tuning (Advanced)",
+        "Section 8: Knowledge Check",
+        "Section 9: Summary and Day 8 Review",
+        "Section 10: Assignment Overview"
+      ],
+      "sessionNumber": 31
+    }
+  ],
+  "DAY 9: Final Project Workshop": [
+    {
+      "title": "Session 9.1: Project Planning and Selection (45 minutes)",
+      "sections": [
+        "Section 1: Introduction and Objectives",
+        "Section 2: Project Categories",
+        "Section 3: Certification Levels and Requirements",
+        "Section 4: Project Planning Template",
+        "Section 5: Knowledge Check",
+        "Section 6: Instructor Approval Activity"
+      ],
+      "sessionNumber": 32
+    },
+    {
+      "title": "Session 9.2: Data Collection and Preparation (60 minutes)",
+      "sections": [
+        "Section 1: Introduction and Objectives",
+        "Section 2: Finding Existing Datasets",
+        "Section 3: Collecting Custom Data (Images)",
+        "Section 4: Data Augmentation",
+        "Section 5: Data Preparation Checklist",
+        "Section 6: Knowledge Check"
+      ],
+      "sessionNumber": 33
+    },
+    {
+      "title": "Session 9.3: Model Development (60 minutes)",
+      "sections": [
+        "Section 1: Introduction and Objectives",
+        "Section 2: Establish a Baseline",
+        "Section 3: Train Multiple Models",
+        "Section 4: Hyperparameter Tuning",
+        "Section 5: Save Your Model",
+        "Section 6: Knowledge Check"
+      ],
+      "sessionNumber": 34
+    },
+    {
+      "title": "Session 9.4: Create Demo Application (55 minutes)",
+      "sections": [
+        "Section 1: Introduction and Objectives",
+        "Section 2: Option 1 — Streamlit Web App",
+        "Section 3: Option 2 — Gradio Interface",
+        "Section 4: Option 3 — Simple Prediction Function",
+        "Section 5: Knowledge Check",
+        "Section 6: Summary and Evening Work"
+      ],
+      "sessionNumber": 35
+    }
+  ],
+  "DAY 10: Final Presentations and Certification": [
+    {
+      "title": "Session 10.1: Final Touches and Practice (45 minutes)",
+      "sections": [
+        "Section 1: Introduction and Objectives",
+        "Section 2: Code Cleanup and Documentation",
+        "Section 3: Professional README Template",
+        "Section 4: Presentation Practice",
+        "Section 5: Knowledge Check"
+      ],
+      "sessionNumber": 36
+    },
+    {
+      "title": "Session 10.2: Project Presentations (90 minutes)",
+      "sections": [
+        "Section 1: Presentation Format",
+        "Section 2: Judging Criteria",
+        "Section 3: Award Categories"
+      ],
+      "sessionNumber": 37
+    },
+    {
+      "title": "Session 10.3: Industry Insights (30 minutes)",
+      "sections": [
+        "Section 1: Guest Speaker — AI Industry Professional",
+        "Section 2: Q&A with Industry Professional"
+      ],
+      "sessionNumber": 38
+    },
+    {
+      "title": "Session 10.4: Certification and Closing (15 minutes)",
+      "sections": [
+        "Section 1: Certificate Levels",
+        "Section 2: What You Have Accomplished",
+        "Section 3: Next Steps",
+        "Section 4: Final Knowledge Check"
+      ],
+      "sessionNumber": 39
+    }
+  ]
+};
+
+        let completedSections = new Set();
+        let currentSection = null;
+
+        function init() {
+            renderCurriculum();
+            updateProgress();
+        }
+
+        function renderCurriculum() {
+            const nav = document.getElementById('curriculumNav');
+            let html = '';
+            let sectionCount = 0;
+
+            Object.entries(curriculum).forEach(([dayName, sessions], dayIndex) => {
+                html += `
+                    <div class="day-group">
+                        <div class="day-header" onclick="toggleDay(${dayIndex})">
+                            <div>${dayName}</div>
+                            <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.25rem;">
+                                ${sessions.length} sessions
+                            </div>
+                        </div>
+                        <div class="session-list" id="day-sessions-${dayIndex}">
+                `;
+
+                sessions.forEach((session, sessionIndex) => {
+                    const sessionNum = session.sessionNumber;
+                    html += `
+                        <div class="session-item" onclick="toggleSession(${dayIndex}, ${sessionIndex})">
+                            ${session.title}
+                        </div>
+                        <div class="section-list" id="session-sections-${dayIndex}-${sessionIndex}">
+                    `;
+
+                    session.sections.forEach((sectionName, sectionIndex) => {
+                        sectionCount++;
+                        const sectionId = `${dayIndex}-${sessionIndex}-${sectionIndex}`;
+                        const isCompleted = completedSections.has(sectionId);
+                        html += `
+                            <div class="section-item ${isCompleted ? 'completed' : ''}" 
+                                 onclick="loadSection(${dayIndex}, ${sessionIndex}, ${sectionIndex})">
+                                ${sectionName}
+                            </div>
+                        `;
+                    });
+
+                    html += `</div>`;
+                });
+
+                html += `</div></div>`;
+            });
+
+            nav.innerHTML = html;
+        }
+
+        function toggleDay(dayIndex) {
+            const sessionList = document.getElementById(`day-sessions-${dayIndex}`);
+            sessionList.classList.toggle('expanded');
+        }
+
+        function toggleSession(dayIndex, sessionIndex) {
+            const sectionList = document.getElementById(`session-sections-${dayIndex}-${sessionIndex}`);
+            sectionList.classList.toggle('expanded');
+        }
+
+        async function loadSection(dayIndex, sessionIndex, sectionIndex) {
+            const days = Object.keys(curriculum);
+            const dayName = days[dayIndex];
+            const session = curriculum[dayName][sessionIndex];
+            const sectionName = session.sections[sectionIndex];
+            const sectionId = `${dayIndex}-${sessionIndex}-${sectionIndex}`;
+
+            // Update active states
+            document.querySelectorAll('.section-item').forEach(el => el.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+
+            const container = document.getElementById('lessonContainer');
+            container.innerHTML = '<div class="loading">📚 Loading section content...</div>';
+
+            currentSection = { dayIndex, sessionIndex, sectionIndex };
+
+            console.log('🔍 DEBUG: Loading section:', { dayIndex, sessionIndex, sectionIndex, dayName, sessionTitle: session.title, sectionName });
+
+            try {
+                // Fetch the actual curriculum content
+                const response = await fetch('AI_CERTIFICATION_CURRICULUM.md');
+                console.log('📥 DEBUG: Fetch response status:', response.status, response.ok);
+                const fullMarkdown = await response.text();
+                console.log('📄 DEBUG: Markdown loaded, length:', fullMarkdown.length);
+                
+                // Extract the specific section content
+                const sectionContent = extractSectionContent(fullMarkdown, dayName, session.title, sectionName);
+                console.log('✂️ DEBUG: Extracted content length:', sectionContent.length);
+                console.log('🔤 DEBUG: First 200 chars:', sectionContent.substring(0, 200));
+                
+                // Convert markdown to HTML
+                let htmlContent = typeof marked !== 'undefined' ? marked.parse(sectionContent) : sectionContent.replace(/\n/g, '<br>');
+                
+                // Process videos and quizzes
+                htmlContent = processVideos(htmlContent);
+                htmlContent = processQuizzes(htmlContent);
+                htmlContent = processChecklists(htmlContent);
+                htmlContent = processReflections(htmlContent);
+                
+                displaySection(sectionName, htmlContent, session.title, dayName);
+                loadReflections();
+            } catch (error) {
+                console.error('Error loading section:', error);
+                // Fallback content if file can't be loaded
+                const fallbackContent = `
+                    <div style="background: rgba(244, 63, 94, 0.1); padding: 1.5rem; border-radius: 8px; border-left: 4px solid #f43f5e;">
+                        <h3>⚠️ Content Loading Issue</h3>
+                        <p>Unable to load section content from the curriculum file.</p>
+                        <p><strong>Section:</strong> ${sectionName}</p>
+                        <p><strong>Session:</strong> ${session.title}</p>
+                        <p><strong>Day:</strong> ${dayName}</p>
+                        <p style="margin-top: 1rem; font-size: 0.9rem; color: var(--text-muted);">
+                            <strong>Tip:</strong> Make sure you're running this through a web server or open the AI_CERTIFICATION_CURRICULUM.md file directly.
+                        </p>
+                    </div>
+                `;
+                displaySection(sectionName, fallbackContent, session.title, dayName);
+            }
+        }
+
+        function extractSectionContent(markdown, dayName, sessionTitle, sectionName) {
+            // Find the day header - match flexibly (e.g., "Day 1" matches "# DAY 1: Foundation...")
+            const dayNum = dayName.match(/\d+/);
+            const dayPattern = new RegExp(`^# DAY ${dayNum}:?[^\\n]*`, 'm');
+            const dayMatch = markdown.match(dayPattern);
+            if (!dayMatch) {
+                console.error('Day not found:', dayName);
+                return `<p>Day content not found: ${dayName}</p>`;
+            }
+            
+            const dayStart = dayMatch.index;
+            const afterDay = markdown.slice(dayStart);
+            
+            // Find the session header - be more flexible with session matching
+            let sessionPattern = new RegExp(`^## ${sessionTitle.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`, 'm');
+            let sessionMatch = afterDay.match(sessionPattern);
+            
+            // If not found, try matching just the session number pattern
+            if (!sessionMatch) {
+                const sessionNum = sessionTitle.match(/Session ([\d.]+)/);
+                if (sessionNum) {
+                    sessionPattern = new RegExp(`^## Session ${sessionNum[1]}:?[^\\n]*`, 'm');
+                    sessionMatch = afterDay.match(sessionPattern);
+                }
+            }
+            
+            if (!sessionMatch) {
+                console.error('Session not found:', sessionTitle);
+                return `<p>Session content not found: ${sessionTitle}</p>`;
+            }
+            
+            const sessionStart = dayStart + sessionMatch.index;
+            const afterSession = markdown.slice(sessionStart);
+            
+            // Find the section header
+            const sectionPattern = new RegExp(`^### ${sectionName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`, 'm');
+            const sectionMatch = afterSession.match(sectionPattern);
+            if (!sectionMatch) {
+                console.error('Section not found:', sectionName);
+                return `<p>Section content not found: ${sectionName}</p>`;
+            }
+            
+            const sectionStart = sessionStart + sectionMatch.index;
+            
+            // Find the end of this section (next ### or ## or #)
+            const remainingContent = markdown.slice(sectionStart);
+            const lines = remainingContent.split('\n');
+            let endIndex = remainingContent.length;
+            
+            for (let i = 1; i < lines.length; i++) {
+                if (lines[i].match(/^###?\s/)) {
+                    endIndex = lines.slice(0, i).join('\n').length;
+                    break;
+                }
+            }
+            
+            return remainingContent.slice(0, endIndex).trim();
+        }
+
+        function processVideos(html) {
+            // Convert YouTube links to embedded video players
+            // Handle both markdown links and plain URLs
+            
+            // First, handle markdown links: <a href="URL">text</a>
+            html = html.replace(/<a href="(https:\/\/www\.youtube\.com\/watch\?v=([\w-]+))"[^>]*>[^<]*<\/a>/g, 
+                (match, url, videoId) => {
+                    return `
+                    <div class="video-container" style="padding: 0; background: transparent; border: none; margin: 1.5rem 0;">
+                        <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.3);">
+                            <iframe 
+                                style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;"
+                                src="https://www.youtube.com/embed/${videoId}"
+                                frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowfullscreen>
+                            </iframe>
+                        </div>
+                        <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.75rem; text-align: center;">
+                            <a href="${url}" target="_blank" style="color: var(--accent-green); text-decoration: none;">Open in YouTube ↗</a>
+                        </p>
+                    </div>
+                `;
+            });
+            
+            // Then handle plain URLs in paragraphs: <p>URL</p>
+            html = html.replace(/<p>(https:\/\/www\.youtube\.com\/watch\?v=([\w-]+))<\/p>/g, 
+                (match, url, videoId) => {
+                    return `
+                    <div class="video-container" style="padding: 0; background: transparent; border: none; margin: 1.5rem 0;">
+                        <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.3);">
+                            <iframe 
+                                style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;"
+                                src="https://www.youtube.com/embed/${videoId}"
+                                frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowfullscreen>
+                            </iframe>
+                        </div>
+                        <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.75rem; text-align: center;">
+                            <a href="${url}" target="_blank" style="color: var(--accent-green); text-decoration: none;">Open in YouTube ↗</a>
+                        </p>
+                    </div>
+                `;
+            });
+            
+            return html;
+        }
+
+        function processChecklists(html) {
+            // Convert [ ] to interactive checkboxes
+            const checklistRegex = /- \[ \] (.+?)(?=<\/li>)/g;
+            let checkboxId = 0;
+            
+            return html.replace(checklistRegex, (match, text) => {
+                checkboxId++;
+                return `
+                    <div class="checklist-item">
+                        <input type="checkbox" id="check-${checkboxId}" onchange="saveChecklistState()">
+                        <label for="check-${checkboxId}">${text}</label>
+                    </div>
+                `;
+            });
+        }
+
+        function processQuizzes(html) {
+            // First, remove all "Answer: X" lines from the HTML to hide them from students
+            html = html.replace(/<p><strong>Answer:\s*[A-D]<\/strong><\/p>/gi, '');
+            html = html.replace(/<p>Answer:\s*[A-D]<\/p>/gi, '');
+            html = html.replace(/\*\*Answer:\s*[A-D]\*\*/gi, '');
+            
+            // Find quiz blocks marked with [QUIZ] ... [/QUIZ]
+            const quizRegex = /\[QUIZ\]([\s\S]*?)\[\/QUIZ\]/g;
+            
+            return html.replace(quizRegex, (match, quizContent) => {
+                // Extract questions with answers BEFORE removing them (for validation only)
+                const questions = [];
+                
+                // Split by Question markers to process each question individually
+                const questionParts = quizContent.split(/(?=\*\*Question \d+:)/);
+                
+                questionParts.forEach(part => {
+                    // Match question pattern
+                    const questionMatch = part.match(/\*\*Question (\d+):\*\*\s*(.+?)(?=\n)/s);
+                    if (!questionMatch) return;
+                    
+                    const [, number, question] = questionMatch;
+                    
+                    // Extract answer (store securely, don't display)
+                    const answerMatch = part.match(/\*\*Answer:\s*([A-D])\*\*/i);
+                    if (!answerMatch) return;
+                    const answer = answerMatch[1];
+                    
+                    // Extract options
+                    const optionRegex = /-\s*([A-D])\)\s*(.+?)(?=\n|$)/g;
+                    const options = [];
+                    let oMatch;
+                    while ((oMatch = optionRegex.exec(part)) !== null) {
+                        options.push({ letter: oMatch[1], text: oMatch[2].trim() });
+                    }
+                    
+                    if (options.length > 0) {
+                        questions.push({ number, question: question.trim(), options, answer });
+                    }
+                });
+                
+                if (questions.length === 0) return match;
+                
+                // Generate quiz HTML WITHOUT showing answers
+                const quizId = 'quiz-' + Date.now();
+                let quizHtml = `
+                    <div class="quiz-container" id="${quizId}">
+                        <div class="quiz-header">
+                            <h3 style="color: var(--accent-green); margin-bottom: 0.5rem;">📝 Knowledge Check</h3>
+                            <div class="quiz-progress" style="font-size: 0.9rem; color: var(--text-muted);">
+                                <span id="${quizId}-answered">0</span> of ${questions.length} answered
+                            </div>
+                        </div>
+                `;
+                
+                questions.forEach((q, idx) => {
+                    quizHtml += `
+                        <div class="quiz-question" id="${quizId}-q${idx}" data-correct="${q.answer}">
+                            <div class="quiz-question-text">
+                                <span class="quiz-question-number">Question ${q.number}</span>
+                                <h4 style="margin-top: 0.5rem;">${q.question}</h4>
+                            </div>
+                            <div class="quiz-options">
+                    `;
+                    
+                    q.options.forEach(opt => {
+                        quizHtml += `
+                            <div class="quiz-option" onclick="selectAnswer('${quizId}', ${idx}, '${opt.letter}')">
+                                <div class="radio-custom"></div>
+                                <span class="quiz-option-text">${opt.letter}) ${opt.text}</span>
+                            </div>
+                        `;
+                    });
+                    
+                    quizHtml += `
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                quizHtml += `
+                        <div class="quiz-actions" style="margin-top: 2rem; display: flex; gap: 1rem; justify-content: center;">
+                            <button class="quiz-submit" onclick="submitQuizAnswers('${quizId}', ${questions.length})" style="min-width: 200px;">
+                                Submit for Grading
+                            </button>
+                        </div>
+                        <div class="quiz-result" id="${quizId}-result" style="display: none;"></div>
+                    </div>
+                `;
+                
+                return quizHtml;
+            });
+        }
+
+        function selectAnswer(quizId, questionIndex, selectedLetter) {
+            // Remove selected class from all options in this question
+            const questionDiv = document.getElementById(`${quizId}-q${questionIndex}`);
+            questionDiv.querySelectorAll('.quiz-option').forEach(opt => opt.classList.remove('selected'));
+            
+            // Add selected class to clicked option
+            event.currentTarget.classList.add('selected');
+            
+            // Store student's answer
+            if (!window.quizAnswers) window.quizAnswers = {};
+            if (!window.quizAnswers[quizId]) window.quizAnswers[quizId] = {};
+            window.quizAnswers[quizId][questionIndex] = selectedLetter;
+            
+            // Save to localStorage
+            const storageKey = `quiz-${currentSection.dayIndex}-${currentSection.sessionIndex}-${currentSection.sectionIndex}`;
+            localStorage.setItem(storageKey, JSON.stringify(window.quizAnswers[quizId]));
+            
+            // Update answered count
+            const answeredCount = Object.keys(window.quizAnswers[quizId] || {}).length;
+            const answeredSpan = document.getElementById(`${quizId}-answered`);
+            if (answeredSpan) {
+                answeredSpan.textContent = answeredCount;
+            }
+        }
+
+        function submitQuizAnswers(quizId, totalQuestions) {
+            const studentAnswers = window.quizAnswers?.[quizId] || {};
+            let correct = 0;
+            let answered = 0;
+            const unanswered = [];
+            
+            // Check each question
+            for (let i = 0; i < totalQuestions; i++) {
+                const questionDiv = document.getElementById(`${quizId}-q${i}`);
+                const correctAnswer = questionDiv.dataset.correct;
+                const studentAnswer = studentAnswers[i];
+                
+                if (!studentAnswer) {
+                    unanswered.push(i + 1);
+                    questionDiv.classList.add('skipped');
+                } else {
+                    answered++;
+                    questionDiv.classList.remove('skipped');
+                    
+                    if (studentAnswer === correctAnswer) {
+                        correct++;
+                        questionDiv.classList.add('correct');
+                        questionDiv.classList.remove('incorrect');
+                    } else {
+                        questionDiv.classList.add('incorrect');
+                        questionDiv.classList.remove('correct');
+                        
+                        // Show correct answer
+                        const feedback = document.createElement('div');
+                        feedback.className = 'quiz-feedback incorrect';
+                        feedback.textContent = `Correct answer: ${correctAnswer}`;
+                        questionDiv.appendChild(feedback);
+                    }
+                }
+            }
+            
+            // Show results
+            const resultDiv = document.getElementById(`${quizId}-result`);
+            resultDiv.style.display = 'block';
+            
+            if (unanswered.length > 0) {
+                resultDiv.innerHTML = `
+                    <h3 style="color: #f59e0b;">⚠️ Incomplete Quiz</h3>
+                    <p style="font-size: 1.1rem; margin: 1rem 0;">You answered <strong>${answered}</strong> out of <strong>${totalQuestions}</strong> questions.</p>
+                    <p style="color: #f59e0b; font-weight: 600;">Unanswered questions: ${unanswered.join(', ')}</p>
+                    <p>Score on answered questions: <strong>${correct}</strong> out of <strong>${answered}</strong> (${Math.round((correct/answered)*100)}%)</p>
+                    <p style="font-size: 0.9rem; margin-top: 1rem; color: var(--text-muted);">Please answer all questions to get your final score.</p>
+                `;
+            } else {
+                const percentage = Math.round((correct / totalQuestions) * 100);
+                let feedback = '';
+                let emoji = '';
+                
+                if (percentage >= 90) {
+                    feedback = 'Outstanding! Perfect understanding!';
+                    emoji = '🌟';
+                } else if (percentage >= 80) {
+                    feedback = 'Excellent work! Great understanding!';
+                    emoji = '🎉';
+                } else if (percentage >= 70) {
+                    feedback = 'Good job! You passed!';
+                    emoji = '👍';
+                } else if (percentage >= 60) {
+                    feedback = 'Fair. Review the material and try again.';
+                    emoji = '📚';
+                } else {
+                    feedback = 'Please review the section content carefully.';
+                    emoji = '📖';
+                }
+                
+                resultDiv.innerHTML = `
+                    <div style="text-align: center;">
+                        <div style="font-size: 4rem; margin-bottom: 1rem;">${emoji}</div>
+                        <h3 style="color: var(--accent-green); font-size: 1.8rem;">Quiz Complete!</h3>
+                        <p style="font-size: 2rem; font-weight: 600; color: var(--text-primary); margin: 1rem 0;">${correct} / ${totalQuestions}</p>
+                        <p style="font-size: 1.3rem; color: var(--accent-green);">${percentage}% Correct</p>
+                        <p style="margin-top: 1.5rem; font-size: 1.1rem; color: var(--text-secondary);">${feedback}</p>
+                    </div>
+                `;
+                
+                // Save score to localStorage
+                const scoreKey = `quiz-score-${currentSection.dayIndex}-${currentSection.sessionIndex}-${currentSection.sectionIndex}`;
+                localStorage.setItem(scoreKey, JSON.stringify({ correct, total: totalQuestions, percentage, timestamp: new Date().toISOString() }));
+            }
+            
+            // Scroll to result
+            resultDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function saveChecklistState() {
+            // Save checklist state to localStorage
+            // Implementation can be added later
+        }
+
+        function processReflections(html) {
+            // Find discussion/reflection sections and add text areas
+            let questionCounter = 0;
+            
+            // Replace "Write your response: ___" patterns with text areas
+            html = html.replace(/Write your response:\s*_{10,}/g, () => {
+                questionCounter++;
+                return `
+                    <textarea 
+                        id="reflection-${questionCounter}"
+                        placeholder="Type your thoughts here..."
+                        style="width: 100%; min-height: 150px; padding: 1rem; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 6px; color: var(--text-primary); font-family: inherit; font-size: 0.95rem; line-height: 1.6; resize: vertical; margin-top: 0.5rem;"
+                        oninput="saveReflection(${questionCounter}, this.value)"></textarea>
+                    <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.5rem;">💾 Your response is saved automatically</p>
+                `;
+            });
+            
+            // Also handle list items with questions
+            html = html.replace(/<li>([^<]+\?[^<]*)<\/li>/g, (match, question) => {
+                questionCounter++;
+                return `
+                    <li style="list-style: none; margin: 1.5rem 0; padding: 1.25rem; background: rgba(52, 211, 153, 0.05); border-radius: 8px; border-left: 3px solid var(--accent-green);">
+                        <p style="font-weight: 600; color: var(--text-primary); margin-bottom: 0.75rem;">${question}</p>
+                        <textarea 
+                            id="reflection-${questionCounter}"
+                            placeholder="Type your thoughts here..."
+                            style="width: 100%; min-height: 120px; padding: 1rem; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 6px; color: var(--text-primary); font-family: inherit; font-size: 0.95rem; line-height: 1.6; resize: vertical;"
+                            oninput="saveReflection(${questionCounter}, this.value)"></textarea>
+                        <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.5rem;">💾 Your response is saved automatically</p>
+                    </li>
+                `;
+            });
+            
+            return html;
+        }
+
+        function saveReflection(questionId, content) {
+            // Save to localStorage
+            const key = `reflection-${currentSection.dayIndex}-${currentSection.sessionIndex}-${currentSection.sectionIndex}-${questionId}`;
+            localStorage.setItem(key, content);
+        }
+
+        function loadReflections() {
+            // Load saved reflections when section loads
+            if (!currentSection) return;
+            
+            setTimeout(() => {
+                document.querySelectorAll('[id^="reflection-"]').forEach(textarea => {
+                    const questionId = textarea.id.split('-')[1];
+                    const key = `reflection-${currentSection.dayIndex}-${currentSection.sessionIndex}-${currentSection.sectionIndex}-${questionId}`;
+                    const saved = localStorage.getItem(key);
+                    if (saved) {
+                        textarea.value = saved;
+                    }
+                });
+            }, 100);
+        }
+
+        function displaySection(title, content, sessionTitle, dayName) {
+            const container = document.getElementById('lessonContainer');
+            container.innerHTML = `
+                <div class="lesson-header">
+                    <h1>${title}</h1>
+                    <div class="lesson-meta">
+                        <span>📅 ${dayName}</span>
+                        <span>📚 ${sessionTitle}</span>
+                    </div>
+                </div>
+                <div class="lesson-content">
+                    ${content}
+                </div>
+                <div class="lesson-navigation">
+                    <button class="nav-btn" onclick="previousSection()" id="prevBtn">← Previous</button>
+                    <button class="nav-btn" onclick="markComplete()">Mark Complete ✓</button>
+                    <button class="nav-btn" onclick="nextSection()" id="nextBtn">Next →</button>
+                </div>
+            `;
+
+            updateNavigationButtons();
+        }
+
+        function markComplete() {
+            if (!currentSection) return;
+
+            const { dayIndex, sessionIndex, sectionIndex } = currentSection;
+            const sectionId = `${dayIndex}-${sessionIndex}-${sectionIndex}`;
+            completedSections.add(sectionId);
+            
+            renderCurriculum();
+            updateProgress();
+            
+            setTimeout(() => nextSection(), 300);
+        }
+
+        function previousSection() {
+            if (!currentSection) return;
+            let { dayIndex, sessionIndex, sectionIndex } = currentSection;
+
+            const days = Object.keys(curriculum);
+            const sessions = curriculum[days[dayIndex]];
+
+            if (sectionIndex > 0) {
+                loadSectionByIndices(dayIndex, sessionIndex, sectionIndex - 1);
+            } else if (sessionIndex > 0) {
+                const prevSession = sessions[sessionIndex - 1];
+                loadSectionByIndices(dayIndex, sessionIndex - 1, prevSession.sections.length - 1);
+            } else if (dayIndex > 0) {
+                const prevDaySessions = curriculum[days[dayIndex - 1]];
+                const lastSession = prevDaySessions[prevDaySessions.length - 1];
+                loadSectionByIndices(dayIndex - 1, prevDaySessions.length - 1, lastSession.sections.length - 1);
+            }
+        }
+
+        function nextSection() {
+            if (!currentSection) return;
+            let { dayIndex, sessionIndex, sectionIndex } = currentSection;
+
+            const days = Object.keys(curriculum);
+            const sessions = curriculum[days[dayIndex]];
+            const currentSession = sessions[sessionIndex];
+
+            if (sectionIndex < currentSession.sections.length - 1) {
+                loadSectionByIndices(dayIndex, sessionIndex, sectionIndex + 1);
+            } else if (sessionIndex < sessions.length - 1) {
+                loadSectionByIndices(dayIndex, sessionIndex + 1, 0);
+            } else if (dayIndex < days.length - 1) {
+                loadSectionByIndices(dayIndex + 1, 0, 0);
+            }
+        }
+
+        function loadSectionByIndices(dayIndex, sessionIndex, sectionIndex) {
+            const sectionItems = document.querySelectorAll('.section-item');
+            let targetIndex = 0;
+
+            const days = Object.keys(curriculum);
+            for (let d = 0; d < dayIndex; d++) {
+                const sessions = curriculum[days[d]];
+                for (let s = 0; s < sessions.length; s++) {
+                    targetIndex += sessions[s].sections.length;
+                }
+            }
+
+            const sessions = curriculum[days[dayIndex]];
+            for (let s = 0; s < sessionIndex; s++) {
+                targetIndex += sessions[s].sections.length;
+            }
+
+            targetIndex += sectionIndex;
+
+            if (sectionItems[targetIndex]) {
+                sectionItems[targetIndex].click();
+            }
+        }
+
+        function updateNavigationButtons() {
+            if (!currentSection) return;
+
+            const { dayIndex, sessionIndex, sectionIndex } = currentSection;
+            const days = Object.keys(curriculum);
+            const sessions = curriculum[days[dayIndex]];
+            const currentSession = sessions[sessionIndex];
+
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+
+            prevBtn.disabled = (dayIndex === 0 && sessionIndex === 0 && sectionIndex === 0);
+
+            const isLastDay = dayIndex === days.length - 1;
+            const isLastSession = sessionIndex === sessions.length - 1;
+            const isLastSection = sectionIndex === currentSession.sections.length - 1;
+            nextBtn.disabled = (isLastDay && isLastSession && isLastSection);
+        }
+
+        function updateProgress() {
+            let totalSections = 0;
+            Object.values(curriculum).forEach(sessions => {
+                sessions.forEach(session => {
+                    totalSections += session.sections.length;
+                });
+            });
+
+            const completed = completedSections.size;
+            const percentage = Math.round((completed / totalSections) * 100);
+
+            document.getElementById('progress-text').textContent = `${completed} of ${totalSections} sections`;
+            document.getElementById('progress-fill').style.width = `${percentage}%`;
+            document.getElementById('progress-percentage').textContent = `${percentage}% Complete`;
+        }
+
+        // Initialize on load
+        init();
+    </script>
+</body>
+</html>

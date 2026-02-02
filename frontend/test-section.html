@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Section Test - Debug</title>
+    <script src="marked.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background: #1a1a2e; color: #fff; }
+        #debug { background: #16213e; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
+        .log { padding: 5px; margin: 5px 0; border-left: 3px solid #0f7b74; background: rgba(15, 123, 116, 0.1); }
+        .error { border-left-color: #f43f5e; background: rgba(244, 63, 94, 0.1); }
+        .success { border-left-color: #34d399; background: rgba(52, 211, 153, 0.1); }
+        #content { background: #fff; color: #000; padding: 20px; border-radius: 8px; }
+    </style>
+</head>
+<body>
+    <h1>🔬 Section Loading Test</h1>
+    <div id="debug"></div>
+    <div id="content"></div>
+
+    <script>
+        const debugDiv = document.getElementById('debug');
+        const contentDiv = document.getElementById('content');
+
+        function log(message, type = 'log') {
+            const div = document.createElement('div');
+            div.className = `log ${type}`;
+            div.textContent = message;
+            debugDiv.appendChild(div);
+            console.log(message);
+        }
+
+        function extractSectionContent(markdown, dayName, sessionTitle, sectionName) {
+            log(`🔍 Extracting: Day="${dayName}", Session="${sessionTitle}", Section="${sectionName}"`);
+            
+            // Find the day header
+            const dayNum = dayName.match(/\d+/);
+            log(`📊 Day number extracted: ${dayNum[0]}`);
+            
+            const dayPattern = new RegExp(`^# DAY ${dayNum}:?[^\\n]*`, 'm');
+            const dayMatch = markdown.match(dayPattern);
+            
+            if (!dayMatch) {
+                log(`❌ Day not found: ${dayName}`, 'error');
+                return `<p>Day content not found: ${dayName}</p>`;
+            }
+            log(`✅ Day found at position ${dayMatch.index}`, 'success');
+            
+            const dayStart = dayMatch.index;
+            const afterDay = markdown.slice(dayStart);
+            
+            // Find the session header
+            const sessionNum = sessionTitle.match(/Session ([\d.]+)/);
+            log(`📊 Session number extracted: ${sessionNum[1]}`);
+            
+            const sessionPattern = new RegExp(`^## Session ${sessionNum[1]}:?[^\\n]*`, 'm');
+            const sessionMatch = afterDay.match(sessionPattern);
+            
+            if (!sessionMatch) {
+                log(`❌ Session not found: ${sessionTitle}`, 'error');
+                return `<p>Session content not found: ${sessionTitle}</p>`;
+            }
+            log(`✅ Session found at position ${sessionMatch.index}`, 'success');
+            
+            const sessionStart = sessionMatch.index;
+            const afterSession = afterDay.slice(sessionStart);
+            
+            // Find the section header
+            const sectionPattern = new RegExp(`^### ${sectionName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`, 'm');
+            const sectionMatch = afterSession.match(sectionPattern);
+            
+            if (!sectionMatch) {
+                log(`❌ Section not found: ${sectionName}`, 'error');
+                return `<p>Section not found: ${sectionName}</p>`;
+            }
+            log(`✅ Section found at position ${sectionMatch.index}`, 'success');
+            
+            const sectionStart = sectionMatch.index;
+            const nextSectionPattern = /^### /m;
+            const nextSectionMatch = afterSession.slice(sectionStart + 4).match(nextSectionPattern);
+            
+            let sectionContent;
+            if (nextSectionMatch) {
+                sectionContent = afterSession.slice(sectionStart, sectionStart + 4 + nextSectionMatch.index);
+            } else {
+                const nextSessionPattern = /^## /m;
+                const nextSessionMatch = afterSession.slice(sessionStart + 3).match(nextSessionPattern);
+                if (nextSessionMatch) {
+                    sectionContent = afterSession.slice(sectionStart, sectionStart + nextSessionMatch.index);
+                } else {
+                    sectionContent = afterSession.slice(sectionStart);
+                }
+            }
+            
+            log(`✅ Section content extracted: ${sectionContent.length} characters`, 'success');
+            return sectionContent;
+        }
+
+        async function testSection() {
+            log('🚀 Starting section load test...');
+            
+            try {
+                log('📥 Fetching AI_CERTIFICATION_CURRICULUM.md...');
+                const response = await fetch('AI_CERTIFICATION_CURRICULUM.md');
+                log(`📊 Response status: ${response.status} ${response.statusText}`, response.ok ? 'success' : 'error');
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const markdown = await response.text();
+                log(`✅ Markdown loaded: ${markdown.length} characters`, 'success');
+                log(`📄 First 100 chars: ${markdown.substring(0, 100)}`);
+                
+                // Test Day 1, Session 1.1, Section 1
+                const dayName = "DAY 1: Foundation of Artificial Intelligence";
+                const sessionTitle = "Session 1.1: What is AI? (60 minutes)";
+                const sectionName = "Section 1: Welcome and Course Overview";
+                
+                const sectionContent = extractSectionContent(markdown, dayName, sessionTitle, sectionName);
+                
+                log('🎨 Converting markdown to HTML...');
+                const htmlContent = marked.parse(sectionContent);
+                log(`✅ HTML generated: ${htmlContent.length} characters`, 'success');
+                
+                contentDiv.innerHTML = htmlContent;
+                log('🎉 SUCCESS! Content loaded and displayed!', 'success');
+                
+            } catch (error) {
+                log(`💥 ERROR: ${error.message}`, 'error');
+                log(`📚 Stack: ${error.stack}`, 'error');
+                contentDiv.innerHTML = `<div style="color: red; padding: 20px; background: #fff3f3;">
+                    <h2>❌ Error Loading Content</h2>
+                    <p><strong>Message:</strong> ${error.message}</p>
+                    <pre>${error.stack}</pre>
+                </div>`;
+            }
+        }
+
+        // Run test on page load
+        window.addEventListener('load', testSection);
+    </script>
+</body>
+</html>
