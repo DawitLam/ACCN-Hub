@@ -6,6 +6,51 @@
     <title>AI Fundamentals Certification | ACCN Learning</title>
     <!-- Accessibility: Screen reader support -->
     <meta name="description" content="10-Day AI Fundamentals Certification Program for students ages 14+. Learn AI, Machine Learning, Python, and build real projects.">
+
+    <!--
+    ═══════════════════════════════════════════════════════════════════════════════
+    DEPLOYMENT COMPATIBILITY NOTES
+    ═══════════════════════════════════════════════════════════════════════════════
+
+    REQUIREMENTS FOR DEPLOYMENT:
+    1. This HTML file requires AI_CERTIFICATION_CURRICULUM.md to be located at:
+       ../curriculum/AI_CERTIFICATION_CURRICULUM.md (relative to this HTML file)
+
+    2. No sign-in/sign-up required for the viewer itself
+
+    3. EXTERNAL DEPENDENCIES IN CURRICULUM CONTENT:
+       - Google Colab: Sessions 3.1, 5.2, 5.3, 6.x, 7.x, 8.x, 9.x (requires Google account)
+       - Teachable Machine: Sessions 4.1-4.4, 5.1 (Google service, no auth required)
+       - YouTube: 42 embedded videos (requires internet connection)
+       - Curriculum references creating Google accounts for hands-on activities
+
+    4. AI FOUNDATION COMPATIBILITY:
+       ✓ Compatible: Days 1-2 (Foundation concepts)
+       ⚠ Advanced: Days 3-4 (Python coding, projects)
+       ⚠ Intermediate-Advanced: Days 5-7 (ML libraries, data science, classification)
+       ⚠ Advanced: Day 8 (Neural networks, CNNs, deep learning)
+       ✓ Capstone: Days 9-10 (Project work)
+
+       NOTE: Sessions 5.1-8.4 contain intermediate-to-advanced content that may
+       exceed typical "AI Foundation" curriculum scope. Consider relabeling these
+       as "Advanced Topics" or creating a separate track.
+
+    5. STANDALONE DEPLOYMENT:
+       - HTML viewer is fully self-contained (no external JS libraries)
+       - All CSS and JavaScript embedded
+       - Works offline once curriculum markdown file is loaded
+       - Uses localStorage for progress tracking (browser-based, no server required)
+
+    KNOWN ISSUES:
+    - Some Teachable Machine code examples use placeholder "YOUR_MODEL_ID"
+    - Google Colab dependency prevents fully offline hands-on activities
+    - YouTube embeds will fail if YouTube is blocked (corporate networks, some regions)
+
+    VERSION: 2.0.0 (Working Branch)
+    LAST UPDATED: 2026-02-09
+    ═══════════════════════════════════════════════════════════════════════════════
+    -->
+
     <style>
         * {
             margin: 0;
@@ -1801,7 +1846,7 @@
         // Load curriculum from markdown file
         async function loadCurriculum() {
             try {
-                const response = await fetch('/curriculum/AI_CERTIFICATION_CURRICULUM.md');
+                const response = await fetch('../curriculum/AI_CERTIFICATION_CURRICULUM.md');
                 if (!response.ok) {
                     throw new Error(`Failed to load curriculum: ${response.status}`);
                 }
@@ -1813,7 +1858,7 @@
                     <div class="error" role="alert">
                         <h3>Error Loading Curriculum</h3>
                         <p>${error.message}</p>
-                        <p>Please ensure the curriculum file exists at /curriculum/AI_CERTIFICATION_CURRICULUM.md</p>
+                        <p>Please ensure the curriculum file exists at ../curriculum/AI_CERTIFICATION_CURRICULUM.md (relative to this HTML file)</p>
                     </div>
                 `;
             }
