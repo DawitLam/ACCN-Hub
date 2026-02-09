@@ -3598,6 +3598,14 @@ Build a simple classifier that categorizes temperatures:
 ```python
 def classify_temperature(temp):
     """Classify temperature like an AI would."""
+    # Input validation - important for real applications!
+    if not isinstance(temp, (int, float)):
+        return "Error: Temperature must be a number"
+
+    if temp < -100 or temp > 150:
+        return "Error: Temperature out of reasonable range (-100 to 150°F)"
+
+    # Classification logic
     if temp < 32:
         return "Freezing"
     elif temp < 60:
@@ -5946,7 +5954,12 @@ Here is how to use your model in a website:
     <div id="label-container"></div>
     
     <script>
-        // Replace with YOUR model URL
+        // ⚠️ IMPORTANT: Replace YOUR_MODEL_ID with your actual model ID
+        // To get your model ID:
+        // 1. Train your model on Teachable Machine
+        // 2. Click "Export Model" → "Upload my model"
+        // 3. Copy the shareable link - the ID is after /models/
+        // Example: https://teachablemachine.withgoogle.com/models/ABC123xyz/
         const URL = "https://teachablemachine.withgoogle.com/models/YOUR_MODEL_ID/";
         
         let model, webcam, maxPredictions;
@@ -6180,8 +6193,8 @@ Teachable Machine exports models in TensorFlow format, which can be loaded and u
 **Required Libraries:**
 
 ```python
-# Install required packages
-!pip install tensorflow pillow numpy
+# Install required packages (with specific TensorFlow version for compatibility)
+!pip install tensorflow==2.15.0 pillow numpy
 ```
 
 **Loading Your Model:**
@@ -6877,15 +6890,21 @@ df = pd.DataFrame(data)
 print(df.describe())
 
 # 2. Find students who studied 7+ hours
-# high_study = ???
+# HINT: Use df[df['Study_Hours'] >= 7]
+# high_study = ???  # Your code here
+high_study = None  # Replace with your solution
 
 # 3. Calculate correlation between Study_Hours and Quiz_Score
-# correlation = ???
+# HINT: Use df['Study_Hours'].corr(df['Quiz_Score'])
+# correlation = ???  # Your code here
+correlation = None  # Replace with your solution
 
 # 4. Create a scatter plot of Study_Hours vs Quiz_Score
-# plt.scatter(???)
+# HINT: plt.scatter(df['Study_Hours'], df['Quiz_Score'])
+# plt.scatter(???)  # Your code here
 
 # 5. Find the average score for students with 7+ sleep hours vs less
+# HINT: Use df[df['Sleep_Hours'] >= 7]['Quiz_Score'].mean()
 ```
 
 ---
@@ -7269,8 +7288,11 @@ model.fit(X, y)
 print(f"R² Score: {model.score(X, y):.4f}")
 
 # Step 6: Make a prediction
-new_value = [[YOUR_VALUE_HERE]]
-print(f"Prediction: {model.predict(new_value)[0]:.2f}")
+# ⚠️ Replace YOUR_VALUE_HERE with an actual number from your input feature
+# Example: If predicting score from study hours, try [[5]] for 5 hours
+new_value = [[YOUR_VALUE_HERE]]  # Example: [[5]] or [[7.5]]
+prediction = model.predict(new_value)[0]
+print(f"Prediction for input {new_value[0][0]}: {prediction:.2f}")
 ```
 
 ---
@@ -7549,20 +7571,20 @@ df_clean = df.dropna(axis=1, thresh=threshold)
 **Strategy 2: Fill Missing Values**
 
 ```python
-# Fill with a specific value
-df['Homework'].fillna(0, inplace=True)
+# Fill with a specific value (modern Pandas 2.0+ syntax)
+df['Homework'] = df['Homework'].fillna(0)
 
 # Fill with column mean (numeric)
-df['Score'].fillna(df['Score'].mean(), inplace=True)
+df['Score'] = df['Score'].fillna(df['Score'].mean())
 
 # Fill with column median (better for skewed data)
-df['Attendance'].fillna(df['Attendance'].median(), inplace=True)
+df['Attendance'] = df['Attendance'].fillna(df['Attendance'].median())
 
 # Fill with most common value (categorical)
-df['Grade'].fillna(df['Grade'].mode()[0], inplace=True)
+df['Grade'] = df['Grade'].fillna(df['Grade'].mode()[0])
 
-# Forward fill (use previous value)
-df['Date'].fillna(method='ffill', inplace=True)
+# Forward fill (use previous value) - Pandas 2.0+ method
+df['Date'] = df['Date'].ffill()  # or .bfill() for backward fill
 ```
 
 ---
@@ -10980,15 +11002,23 @@ By the end of this session, you will be able to:
 TensorFlow is Google's open-source deep learning framework. Keras is a high-level API that makes building neural networks easy.
 
 ```python
-# Install (run once in Google Colab)
-!pip install tensorflow
+# Install specific TensorFlow version for compatibility (run once in Google Colab)
+!pip install tensorflow==2.15.0
 
 import tensorflow as tf
 from tensorflow import keras
 import numpy as np
 import matplotlib.pyplot as plt
 
+# Check TensorFlow version and GPU availability
 print(f"TensorFlow version: {tf.__version__}")
+
+# Check for GPU
+gpus = tf.config.list_physical_devices('GPU')
+if gpus:
+    print(f"✓ GPU available: {len(gpus)} GPU(s) detected - Training will be faster!")
+else:
+    print("⚠️ No GPU detected - using CPU (normal for most laptops)")
 ```
 
 ---
@@ -12564,8 +12594,17 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-# Load data
-df = pd.read_csv('your_dataset.csv')
+# Load data with error handling
+# ⚠️ IMPORTANT: Replace 'your_dataset.csv' with your actual filename
+# Example: 'student_data.csv', 'project_data.csv', etc.
+try:
+    df = pd.read_csv('your_dataset.csv')  # Change this filename
+    print(f"✓ Successfully loaded {len(df)} rows of data")
+except FileNotFoundError:
+    print("❌ Error: File not found!")
+    print("   Make sure your CSV file is in the same folder as this notebook")
+    print("   Or provide the full path: df = pd.read_csv('/path/to/file.csv')")
+    raise
 
 # Initial exploration
 print("=" * 50)
