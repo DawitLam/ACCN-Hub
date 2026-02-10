@@ -1789,8 +1789,8 @@ Complete the following before Day 2:
    - One ethical consideration
 
 2. **Video Preview for Day 2**
-   Watch: *"Python in 100 Seconds"* by Fireship
-   https://www.youtube.com/watch?v=x7X9w_GIm1s
+   Watch: *"Machine Learning for Everybody"* by Kylie Ying (30 minutes)
+   https://www.youtube.com/watch?v=i_LwzRVP7bg
 
 3. **Optional Reading**
    Review: *"What is Python?"* — Python.org documentation
@@ -2090,17 +2090,17 @@ https://www.youtube.com/watch?v=HcqpanDadyQ
 
 **Video 2: How Machines Learn**
 
-*"How Machines Learn"* by CGP Grey (7 minutes)
+*"Machine Learning in 5 Minutes"* by Siraj Raval (5 minutes)
 
-An excellent visual explanation of how machines learn through trial and error, using bots learning to navigate obstacles.
+Siraj Raval's energetic explanation uses a simple salary prediction example to show exactly how machines learn. Unlike the previous video's theoretical overview, this one walks through actual Python code and shows the math behind gradient descent. You'll see how the model starts with a bad guess and iteratively improves by adjusting parameters.
 
-https://www.youtube.com/watch?v=R9OHn5ZF4Uo
+https://www.youtube.com/watch?v=9gGnTQTYNaE
 
 **After watching, confirm you understand:**
 
 - [ ] How models improve through iteration
-- [ ] Why some bots perform better than others
-- [ ] The role of selection and variation in learning
+- [ ] What gradient descent does (minimizing error)
+- [ ] The role of training vs testing data
 
 ---
 
@@ -2998,17 +2998,17 @@ Proxy variables can encode discrimination. Healthcare cost ≠ healthcare need.
 
 **Video 1: Why Data Matters in AI**
 
-*"Why Data Matters in AI"* by Microsoft (8 minutes)
+*"The Importance of Data in Machine Learning"* by IBM Technology (8 minutes)
 
-Microsoft's data science team breaks down why "garbage in, garbage out" is the golden rule of AI. This video uses real examples of AI failures caused by bad data—from biased hiring algorithms to inaccurate medical diagnoses. You'll learn the "3 V's" of data quality (Volume, Variety, Validity) and why spending 80% of your time on data preparation is completely normal in AI projects.
+IBM's data science team breaks down why "garbage in, garbage out" is the golden rule of AI. This video uses real examples of AI failures caused by bad data—from biased hiring algorithms to inaccurate medical diagnoses. You'll learn why data quality, quantity, and diversity are the three pillars of successful AI, and why data scientists spend 80% of their time on data preparation.
 
 **Key insights you'll gain:**
 - Why a simple algorithm with great data beats a sophisticated algorithm with poor data
 - Real-world examples of data quality problems costing companies millions
-- The "3 V's" framework for evaluating your own datasets
-- How to spot common data issues before they break your models
+- How to evaluate dataset quality, quantity, and diversity
+- The critical role of labeled data in supervised learning
 
-https://www.youtube.com/watch?v=ZJixNvx9BAc
+https://www.youtube.com/watch?v=kWxcJYdV1Eo
 
 **After watching, confirm you understand:**
 
@@ -8215,7 +8215,7 @@ Master the most important data science skill—cleaning messy real-world data:
 
 | Video | Duration | Link |
 |-------|----------|------|
-| Pandas in 10 Minutes | 15 min | https://www.youtube.com/watch?v=vmEHCJofslg |
+| Complete Pandas Tutorial | 20 min | https://www.youtube.com/watch?v=PcvsOaixUh8 |
 | Data Cleaning with Pandas | 12 min | https://www.youtube.com/watch?v=iYie42M1ZyU |
 
 **Additional Resources:**
