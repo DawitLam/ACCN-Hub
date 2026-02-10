@@ -122,10 +122,14 @@ Throughout this course, you will build **four real-world AI projects**. These pr
 
 # DAY 1: Foundation of Artificial Intelligence
 
-**Duration:** 3 hours  
+**Duration:** 4.5-5 hours
 **Format:** Video + Activities + Discussion
 
-## Session 1.1: What is AI? (60 minutes)
+⚠️ **Time Note:** This foundational day includes significant video content (42+ minutes) and interactive activities. Plan for 4.5-5 hours to fully engage with all materials and discussions.
+
+## Session 1.1: What is AI? (90 minutes)
+
+⏱️ **Realistic Time Breakdown:** Reading & Concepts (18 min) + Videos (42 min total) + Quiz (8 min) + Discussion & Reflection (15-20 min)
 
 ### Section 1: Welcome and Course Overview
 
@@ -631,7 +635,9 @@ Continue to the next session when ready.
 
 ---
 
-## Session 1.2: History and Evolution of AI (45 minutes)
+## Session 1.2: History and Evolution of AI (75 minutes)
+
+⏱️ **Realistic Time Breakdown:** Reading Timeline Content (20 min) + Videos (25 min total) + Timeline Activity (20-25 min) + Quiz (6 min)
 
 ### Section 1: Introduction and Objectives
 
@@ -981,7 +987,9 @@ In *Session 1.3: Types of AI and How AI Works*, you will learn:
 
 ---
 
-## Session 1.3: Types of AI and How AI Works (45 minutes)
+## Session 1.3: Types of AI and How AI Works (60 minutes)
+
+⏱️ **Realistic Time Breakdown:** Reading & Concepts (22 min) + Videos (21 min total) + Definitions Activity (10 min) + Quiz (7 min)
 
 ### Section 1: Introduction and Objectives
 
@@ -1368,7 +1376,9 @@ In *Session 1.4: AI in Everyday Life and Common Myths*, you will:
 
 ---
 
-## Session 1.4: AI in Everyday Life and Common Myths (45 minutes)
+## Session 1.4: AI in Everyday Life and Common Myths (70 minutes)
+
+⏱️ **Realistic Time Breakdown:** Reading Examples & Myths (18 min) + Videos (14 min total) + Google Quick Draw Activity (15-20 min) + Quiz (6 min) + Discussion (10-15 min)
 
 ### Section 1: Introduction and Objectives
 
@@ -1837,8 +1847,10 @@ Earn points by actively engaging in all Day 1 hands-on activities:
 
 # DAY 2: Machine Learning Fundamentals
 
-**Duration:** 3 hours  
+**Duration:** 3.5-4 hours
 **Focus:** Understanding how machines learn from data
+
+⚠️ **Time Note:** Sessions include interactive activities (paper ML, Drawize game) and hands-on data analysis. Plan for 3.5-4 hours to complete all exercises thoroughly.
 
 ---
 
@@ -2762,7 +2774,9 @@ In *Session 2.3: The Importance of Data*, you will learn:
 
 ---
 
-## Session 2.3: The Importance of Data (45 minutes)
+## Session 2.3: The Importance of Data (60 minutes)
+
+⏱️ **Realistic Time Breakdown:** 3V Framework Reading (17 min) + Videos (18 min) + Data Bias Detective Activity (15-20 min) + Quiz (5 min)
 
 ### Section 1: Introduction and Objectives
 
@@ -3195,7 +3209,9 @@ In *Session 2.4: Review and Game Time*, you will:
 
 ---
 
-## Session 2.4: Review and Game Time (30 minutes)
+## Session 2.4: Review and Game Time (45 minutes)
+
+⏱️ **Realistic Time Breakdown:** Drawize Game (15 min) + Discussion (10 min) + Review Concepts (5 min) + Quiz (5 min) + Homework Instructions (10 min)
 
 ### Section 1: Introduction and Objectives
 
@@ -3486,12 +3502,18 @@ Tomorrow you will:
 
 # DAY 3: Python Foundations and AI Ethics
 
-**Duration:** 3 hours  
+**Duration:** 3.5-4 hours
 **Focus:** Hands-on Python coding and ethical AI considerations
+
+⚠️ **Time Note:** This day includes substantial coding practice (your first Python exercises) and deep ethical discussions. Expect 3.5-4 hours to write, debug, and understand code properly.
 
 ---
 
-## Session 3.1: Python Fundamentals for AI (60 minutes)
+## Session 3.1: Python Fundamentals for AI (85 minutes)
+
+⏱️ **Realistic Time Breakdown:** Reading Concepts (20 min) + Videos (22 min) + Colab Setup (5 min) + Hands-On Coding Exercises (25-30 min) + Quiz (5 min)
+
+⚠️ **Coding Time Note:** Hands-on programming exercises require extra time for typing, debugging, and understanding. Don't rush this foundational session.
 
 ---
 
@@ -4838,7 +4860,9 @@ In *Session 3.4: Python Practice and Day 3 Review*, you will:
 
 ---
 
-## Session 3.4: Python Practice and Day 3 Review (15 minutes)
+## Session 3.4: Python Practice and Day 3 Review (30 minutes)
+
+⏱️ **Realistic Time Breakdown:** Python Challenge 1 (10 min) + Python Challenge 2 (10 min) + Review (5 min) + Quiz (5 min)
 
 ### Section 1: Introduction and Objectives
 
@@ -5104,8 +5128,10 @@ Tomorrow you will:
 
 # DAY 4: Teachable Machine — Build Your First AI
 
-**Duration:** 3 hours  
+**Duration:** 5-6 hours
 **Focus:** Hands-on AI model training without coding
+
+⚠️ **Important Time Note:** This day involves substantial hands-on data collection (recording 150-200+ training images across three projects). Plan for 5-6 hours to complete all activities properly, including time for recording samples, training models, and iteration.
 
 ---
 
@@ -5389,7 +5415,9 @@ In *Session 4.2: Project 1 — Rock Paper Scissors AI*, you will:
 
 ---
 
-## Session 4.2: Project 1 — Rock Paper Scissors AI (45 minutes)
+## Session 4.2: Project 1 — Rock Paper Scissors AI (120 minutes)
+
+⏱️ **Realistic Time Breakdown:** Setup (5 min) + Data Collection ~60-80 min (4 classes × 30-50 samples each) + Training (2 min) + Testing & Iteration (15-20 min) + Tournament Play (10-15 min)
 
 ### Section 1: Introduction and Objectives
 
@@ -5693,7 +5721,9 @@ In *Session 4.3: Project 2 — Emotion Detector*, you will:
 
 ---
 
-## Session 4.3: Project 2 — Emotion Detector (45 minutes)
+## Session 4.3: Project 2 — Emotion Detector (120 minutes)
+
+⏱️ **Realistic Time Breakdown:** Setup (5 min) + Data Collection ~75-95 min (5 classes × 30-40 samples each) + Training (2 min) + Testing & Iteration (15-20 min) + Ethical Discussion (10 min)
 
 ### Section 1: Introduction and Objectives
 
@@ -6022,7 +6052,9 @@ In *Session 4.4: Project 3 — Custom Classifier*, you will:
 
 ---
 
-## Session 4.4: Project 3 — Custom Classifier and Model Export (60 minutes)
+## Session 4.4: Project 3 — Custom Classifier and Model Export (120 minutes)
+
+⏱️ **Realistic Time Breakdown:** Project Selection (10 min) + Data Collection ~80-100 min (custom classes × samples) + Training (2 min) + Testing (15 min) + Export & Integration (10-15 min)
 
 ### Section 1: Introduction and Objectives
 
