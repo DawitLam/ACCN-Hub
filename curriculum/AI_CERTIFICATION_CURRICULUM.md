@@ -1547,7 +1547,16 @@ Modern AI tools have become remarkably accessible. You can:
 
 *"Machine Learning: Living in the Age of AI"* by WIRED (30 minutes)
 
-This documentary provides a broad overview of how AI appears across different sectors. Pay attention to examples you may not have considered.
+WIRED's award-winning documentary takes you inside AI labs at Google, hospitals using AI for cancer detection, farms optimizing crop yields, and courtrooms grappling with algorithmic sentencing. This isn't just about technology—it's about how AI is reshaping every aspect of society right now.
+
+**Eye-opening examples you'll discover:**
+- **Healthcare:** How AI detects diabetic retinopathy faster than doctors
+- **Agriculture:** Robots that identify and remove weeds without pesticides
+- **Justice:** The controversial use of AI in predicting criminal recidivism
+- **Manufacturing:** Factories where robots and humans work side-by-side
+- **Education:** Personalized learning systems adapting to each student
+
+Pay special attention to the ethical dilemmas raised—these are questions you'll face as an AI developer.
 
 https://www.youtube.com/watch?v=ZJixNvx9BAc
 
@@ -2489,7 +2498,13 @@ New State + Reward → Agent updates strategy → Repeat
 
 *"Supervised vs Unsupervised vs Reinforcement Learning"* by IBM (12 minutes)
 
-This video clearly explains the three main paradigms with examples and visualizations.
+IBM's AI researchers explain the three fundamental ways machines learn, using intuitive analogies and real-world applications. Think of supervised learning as learning with a teacher (labeled examples), unsupervised learning as finding patterns on your own (no labels), and reinforcement learning as learning through trial and error with rewards (like training a dog).
+
+**What you'll understand after watching:**
+- **Supervised:** How Netflix knows which movies you'll love (trained on millions of user ratings)
+- **Unsupervised:** How Spotify discovers new music genres by grouping similar songs
+- **Reinforcement:** How AlphaGo learned to beat the world's best Go players through self-play
+- Decision framework: which paradigm to use for your own projects
 
 https://www.youtube.com/watch?v=1FZ0A1QCMWc
 
@@ -2923,7 +2938,13 @@ Proxy variables can encode discrimination. Healthcare cost ≠ healthcare need.
 
 *"Why Data Matters in AI"* by Microsoft (8 minutes)
 
-This video explains the critical role of data quality in AI systems.
+Microsoft's data science team breaks down why "garbage in, garbage out" is the golden rule of AI. This video uses real examples of AI failures caused by bad data—from biased hiring algorithms to inaccurate medical diagnoses. You'll learn the "3 V's" of data quality (Volume, Variety, Validity) and why spending 80% of your time on data preparation is completely normal in AI projects.
+
+**Key insights you'll gain:**
+- Why a simple algorithm with great data beats a sophisticated algorithm with poor data
+- Real-world examples of data quality problems costing companies millions
+- The "3 V's" framework for evaluating your own datasets
+- How to spot common data issues before they break your models
 
 https://www.youtube.com/watch?v=ZJixNvx9BAc
 
@@ -3672,7 +3693,13 @@ print(is_passing(55))  # Output: False
 
 *"Python in 100 Seconds"* by Fireship (2 minutes)
 
-A lightning-fast overview of Python's key features and why it is so popular.
+Fireship's signature rapid-fire style explains why Python went from a hobby project in 1991 to the #1 programming language today. In just 100 seconds, you'll understand Python's "batteries included" philosophy, dynamic typing, and why companies like Instagram (handling 2+ billion users), Spotify, and NASA's Jet Propulsion Laboratory chose Python.
+
+**Quick takeaways:**
+- Why Python reads almost like English (great for beginners!)
+- The massive ecosystem: 390,000+ packages on PyPI for anything imaginable
+- Why "simple is better than complex" is Python's core philosophy (from Zen of Python)
+- How Python balances ease-of-use with serious computing power
 
 https://www.youtube.com/watch?v=x7X9w_GIm1s
 
@@ -5135,7 +5162,14 @@ Teachable Machine is a free, web-based tool from Google that lets you train AI m
 
 *"Teachable Machine Tutorial"* by Google (8 minutes)
 
-An official Google tutorial showing how to build your first project.
+Google's official step-by-step walkthrough shows you how to train an image, sound, or pose classifier without writing a single line of code. You'll watch a Google engineer build a rock-paper-scissors detector from scratch in real-time, explaining every click and design decision along the way.
+
+**Practical skills you'll learn:**
+- The optimal number of training samples per class (hint: at least 50)
+- Why diverse backgrounds and lighting matter for your training data
+- How to test your model and identify when it's failing
+- The difference between "Train Model" and "Export Model"
+- Tips for avoiding overfitting (when your model memorizes instead of learns)
 
 https://www.youtube.com/watch?v=T2qQGqZxkD0
 
@@ -5151,7 +5185,14 @@ https://www.youtube.com/watch?v=T2qQGqZxkD0
 
 *"What is Transfer Learning?"* (7 minutes)
 
-A deeper explanation of why transfer learning works.
+This video answers the question: "Why train from scratch when you can stand on the shoulders of giants?" Transfer learning is how you can build a sophisticated image classifier with just 100 training images instead of millions. The video uses the analogy of a professional chef learning to cook a new cuisine—they leverage existing knife skills, timing intuition, and flavor knowledge.
+
+**Core concepts explained:**
+- Why pre-trained models (like MobileNet, trained on millions of images) are like having 1000 years of experience
+- The concept of "feature extraction": early layers detect edges, middle layers detect textures, final layers detect objects
+- When transfer learning shines: limited data, limited computing power, limited time
+- The difference between "fine-tuning" vs. "feature extraction" strategies
+- Why Google's Teachable Machine uses transfer learning behind the scenes
 
 https://www.youtube.com/watch?v=yofjFQddwHE
 
