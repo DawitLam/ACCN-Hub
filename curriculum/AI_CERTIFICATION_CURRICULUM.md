@@ -1606,9 +1606,9 @@ https://www.youtube.com/watch?v=ZJixNvx9BAc
 
 **Video 2: Understanding AI Limitations**
 
-*"The Biggest Misconceptions About AI"* by Two Minute Papers (10 minutes)
+*"7 Myths About Artificial Intelligence"* by IBM Technology (10 minutes)
 
-Computer scientist Károly Zsolnai-Fehér debunks the most common AI myths using actual research papers and experiments. This channel reviews cutting-edge AI research and separates Hollywood hype from scientific reality. You'll see demonstrations of what AI can and cannot do, with citations to peer-reviewed studies.
+IBM's technology expert Martin Keen systematically debunks the most common AI myths using real-world examples and technical explanations. This video separates Hollywood hype from scientific reality, showing what AI can and cannot do in actual applications. Understanding these limitations is crucial for building effective AI systems and setting realistic expectations.
 
 **Myths debunked:**
 - **Myth:** "AI is conscious" → **Reality:** AI processes patterns; consciousness requires subjective experience
@@ -1617,7 +1617,7 @@ Computer scientist Károly Zsolnai-Fehér debunks the most common AI myths using
 - **Myth:** "AI understands language" → **Reality:** AI matches patterns in text; it doesn't comprehend meaning
 - Why setting realistic expectations helps you build better AI systems
 
-https://www.youtube.com/watch?v=f4e-EnLAo5w
+https://www.youtube.com/watch?v=oV0qCRJX6mU
 
 **After watching, confirm you understand:**
 
