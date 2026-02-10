@@ -1797,10 +1797,13 @@ You will learn:
 
 ---
 Watch: **"Python in 100 Seconds"** by Fireship  
-https://www.youtube.com/watch?v=x7X9w_GIm1s  
+https://www.youtube.com/watch?v=x7X9w_GIm1s
 *Get a sneak peek at the language we'll use*
 
 ### Submission:
+
+Complete these deliverables to demonstrate your understanding of Day 1 concepts:
+
 - Upload worksheet to LMS by 11:59 PM
 - Post one AI discovery to discussion forum
 - Respond to 2 classmates' posts
@@ -1810,12 +1813,18 @@ https://www.youtube.com/watch?v=x7X9w_GIm1s
 ## Day 1 Assessment
 
 ### Knowledge Check (Auto-graded)
+
+Test your understanding of Day 1 concepts with this automatically graded quiz:
+
 - 10 multiple choice questions
 - Must score 70% to unlock Day 2
 - Unlimited attempts allowed
 - Instant feedback provided
 
 ### Participation Points
+
+Earn points by actively engaging in all Day 1 hands-on activities:
+
 - ✅ Scavenger hunt completed
 - ✅ Timeline created
 - ✅ Quick Draw played
@@ -9635,6 +9644,9 @@ Document all the data issues you've encountered and how you fixed them:
 ```
 
 ### Submission:
+
+Submit these three notebooks showcasing your data science skills from today's sessions:
+
 - Kaggle analysis notebook
 - Feature engineering notebook
 - Data cleaning portfolio
@@ -9645,17 +9657,25 @@ Document all the data issues you've encountered and how you fixed them:
 ## Day 6 Assessment
 
 ### Technical Skills Quiz:
+
+Demonstrate your mastery of data science concepts with this comprehensive quiz covering:
+
 - Pandas operations (15 questions)
 - Data cleaning strategies (10 questions)
 - Feature engineering concepts (10 questions)
 
 ### Practical Assessment:
+
+Show that you've successfully applied data science techniques by completing these hands-on tasks:
+
 - ✅ Cleaned a messy dataset
 - ✅ Created meaningful features
 - ✅ Completed EDA with insights
 - ✅ Prepared data for ML
 
 ### Code Review:
+
+Your code will be evaluated for quality and professional practices, including:
 - Proper documentation
 - Efficient pandas operations
 - Clear visualizations
@@ -15460,16 +15480,25 @@ Brief description of the problem you're solving and why it matters.
 ## How to Use
 
 ### Installation
+
+Before running the project, install all required dependencies using this command:
+
 ```bash
 pip install -r requirements.txt
 ```
 
 ### Running the Demo
+
+Launch the interactive web application with this command (opens in your browser at localhost:8501):
+
 ```bash
 streamlit run app.py
 ```
 
 ### Making Predictions
+
+Use the trained model to make predictions by calling the predict function with your feature values:
+
 ```python
 from model import predict
 
@@ -15636,6 +15665,8 @@ Your Name - AI Fundamentals Certification Program
 
 ---
 
+Learn from a working AI professional about real-world applications, career paths, and what it's really like to work in the field. Our guest will share their journey, current projects, and insights into the AI industry.
+
 **Topics Covered:**
 
 | Topic | Key Points |
@@ -15653,6 +15684,8 @@ Your Name - AI Fundamentals Certification Program
 ### Section 2: Q&A with Industry Professional
 
 ---
+
+Interactive question and answer session where you can ask anything about AI careers, skills, projects, and industry trends. Come prepared with questions about topics that interest you most.
 
 **Suggested Questions:**
 
