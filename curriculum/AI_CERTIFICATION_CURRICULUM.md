@@ -6486,8 +6486,10 @@ Tomorrow you will:
 
 # DAY 5: Advanced Teachable Machine + Python Libraries
 
-**Duration:** 3 hours  
+**Duration:** 3-3.5 hours
 **Focus:** Integrate Teachable Machine models with code and introduce essential ML libraries
+
+⚠️ **Time Note:** This day bridges no-code and coding approaches. Expect 3-3.5 hours with hands-on library practice and your first mini ML project.
 
 ---
 
@@ -6851,7 +6853,9 @@ print(f"\\nOverall Accuracy: {accuracy:.1f}%")
 
 ---
 
-## Session 5.2: Introduction to ML Libraries (60 minutes)
+## Session 5.2: Introduction to ML Libraries (75 minutes)
+
+⏱️ **Realistic Time Breakdown:** Library Concepts (20 min) + NumPy Practice (15 min) + Pandas Practice (15 min) + Matplotlib Practice (15 min) + Quiz (5 min) + Integration (5 min)
 
 ### Section 1: Introduction and Objectives
 
@@ -7325,7 +7329,9 @@ correlation = None  # Replace with your solution
 
 ---
 
-## Session 5.3: Mini ML Project - Predict Quiz Scores (60 minutes)
+## Session 5.3: Mini ML Project - Predict Quiz Scores (75 minutes)
+
+⏱️ **Realistic Time Breakdown:** Data Exploration (15 min) + Linear Regression Concept (10 min) + Model Building (20 min) + Predictions & Visualization (15 min) + Interpretation (10 min) + Quiz (5 min)
 
 ### Section 1: Introduction and Objectives
 
@@ -7856,8 +7862,10 @@ Complete before Day 6:
 
 # DAY 6: Data Science with Python (Pandas Deep Dive)
 
-**Duration:** 3 hours  
+**Duration:** 3-3.5 hours
 **Focus:** Real-world data analysis and preparation for machine learning
+
+⚠️ **Time Note:** Data science work is iterative and exploratory. Expect 3-3.5 hours for comprehensive pandas practice, EDA, and feature engineering exercises.
 
 ---
 
@@ -8865,7 +8873,9 @@ print(df_customers)
 
 ---
 
-## Session 6.3: Exploratory Data Analysis (EDA) (45 minutes)
+## Session 6.3: Exploratory Data Analysis (EDA) (60 minutes)
+
+⏱️ **Realistic Time Breakdown:** EDA Concepts (10 min) + Visualization Practice (25 min) + Statistical Analysis (15 min) + Insights Documentation (10 min)
 
 ---
 
@@ -9314,7 +9324,9 @@ print("""
 
 ---
 
-## Session 6.4: Prepare Data for Machine Learning (15 minutes)
+## Session 6.4: Prepare Data for Machine Learning (30 minutes)
+
+⏱️ **Realistic Time Breakdown:** Train-Test Split Concept (5 min) + Normalization & Scaling (10 min) + Encoding Categorical Data (10 min) + Final Prep Checklist (5 min)
 
 ### Section 1: Introduction and Objectives
 
@@ -9719,12 +9731,16 @@ Your code will be evaluated for quality and professional practices, including:
 
 # DAY 7: Traditional Machine Learning Models
 
-**Duration:** 3 hours  
+**Duration:** 4-4.5 hours
 **Focus:** Build, compare, and evaluate machine learning algorithms
+
+⚠️ **Time Note:** This day involves building multiple ML models with scikit-learn, hyperparameter tuning, and learning MLOps practices. Plan for 4-4.5 hours to work through all algorithms and deployment concepts thoroughly.
 
 ---
 
-## Session 7.1: Introduction to Scikit-learn (45 minutes)
+## Session 7.1: Introduction to Scikit-learn (60 minutes)
+
+⏱️ **Realistic Time Breakdown:** Scikit-learn Overview (10 min) + First Model Code (20 min) + Evaluation Metrics (15 min) + Practice Exercise (10 min) + Quiz (5 min)
 
 ---
 
@@ -10108,7 +10124,9 @@ X_train, X_test, y_train, y_test = train_test_split(
 
 ---
 
-## Session 7.2: Classification Models (75 minutes)
+## Session 7.2: Classification Models (90 minutes)
+
+⏱️ **Realistic Time Breakdown:** Algorithm Concepts (20 min) + Logistic Regression (15 min) + Decision Trees (15 min) + Random Forest (15 min) + SVM (10 min) + Model Comparison (10 min) + Quiz (5 min)
 
 ---
 
@@ -10569,7 +10587,9 @@ X_train, X_test, y_train, y_test = train_test_split(
 
 ---
 
-## Session 7.3: Model Tuning and Cross-Validation (45 minutes)
+## Session 7.3: Model Tuning and Cross-Validation (60 minutes)
+
+⏱️ **Realistic Time Breakdown:** Hyperparameter Concepts (10 min) + Grid Search Practice (20 min) + Cross-Validation (15 min) + Overfitting Analysis (10 min) + Quiz (5 min)
 
 ---
 
@@ -11926,8 +11946,10 @@ Answer these questions (200+ words total):
 
 # DAY 8: Neural Networks and Deep Learning Introduction
 
-**Duration:** 3 hours  
+**Duration:** 5-5.5 hours
 **Focus:** Understanding and building neural networks
+
+⚠️ **Time Note:** Deep learning is the most content-heavy day. With 5 sessions including hands-on neural network building, CNN implementation, transfer learning, AND the new GenAI/LLMs module, expect 5-5.5 hours for full comprehension and practice.
 
 ---
 
@@ -12328,7 +12350,9 @@ INPUT → [Dense + ReLU] → [Dense + ReLU] → [Dense + Softmax] → OUTPUT
 
 ---
 
-## Session 8.2: Build Your First Neural Network (75 minutes)
+## Session 8.2: Build Your First Neural Network (90 minutes)
+
+⏱️ **Realistic Time Breakdown:** TensorFlow/Keras Setup (10 min) + MNIST Data Prep (10 min) + Network Architecture (20 min) + Training & Debugging (30 min) + Evaluation (15 min) + Quiz (5 min)
 
 ### Section 1: Introduction and Objectives
 
@@ -12791,7 +12815,9 @@ model.compile(optimizer=optimizer,
 
 ---
 
-## Session 8.3: Convolutional Neural Networks (CNNs) (45 minutes)
+## Session 8.3: Convolutional Neural Networks (CNNs) (60 minutes)
+
+⏱️ **Realistic Time Breakdown:** CNN Concepts (15 min) + Architecture Understanding (15 min) + Building CNN (20 min) + Training & Comparison (10 min)
 
 ### Section 1: Introduction and Objectives
 
@@ -13180,7 +13206,9 @@ plt.show()
 
 ---
 
-## Session 8.4: Transfer Learning with Pre-trained Models (40 minutes)
+## Session 8.4: Transfer Learning with Pre-trained Models (60 minutes)
+
+⏱️ **Realistic Time Breakdown:** Transfer Learning Concept (10 min) + Pre-trained Models Overview (10 min) + Custom Classifier Building (25 min) + Training & Fine-tuning (10 min) + Quiz (5 min)
 
 ---
 
@@ -14395,12 +14423,16 @@ You now understand the technology behind ChatGPT, Claude, and every other LLM. Y
 
 # DAY 9: Final Project Workshop
 
-**Duration:** 3 hours  
+**Duration:** 4-5 hours
 **Focus:** Plan, build, and refine capstone project
+
+⚠️ **Time Note:** Your capstone project requires careful planning, data collection, model development, and demo creation. Allocate 4-5 hours for a polished, portfolio-worthy project. Quality projects take time!
 
 ---
 
-## Session 9.1: Project Planning and Selection (45 minutes)
+## Session 9.1: Project Planning and Selection (60 minutes)
+
+⏱️ **Realistic Time Breakdown:** Project Category Review (15 min) + Brainstorming & Selection (20 min) + Scope Definition (15 min) + Implementation Planning (10 min)
 
 ### Section 1: Introduction and Objectives
 
@@ -14600,7 +14632,9 @@ By the end of this session, you will be able to:
 
 ---
 
-## Session 9.2: Data Collection and Preparation (60 minutes)
+## Session 9.2: Data Collection and Preparation (75 minutes)
+
+⏱️ **Realistic Time Breakdown:** Data Source Selection (10 min) + Collection Methods (15 min) + Data Gathering (30 min) + Cleaning & Preparation (15 min) + Validation (5 min)
 
 ### Section 1: Introduction and Objectives
 
@@ -14866,7 +14900,9 @@ df.to_csv('prepared_data.csv', index=False)
 
 ---
 
-## Session 9.3: Model Development (60 minutes)
+## Session 9.3: Model Development (90 minutes)
+
+⏱️ **Realistic Time Breakdown:** Algorithm Selection (10 min) + Initial Model Building (25 min) + Training & Iteration (30 min) + Evaluation & Tuning (20 min) + Documentation (5 min)
 
 ### Section 1: Introduction and Objectives
 
@@ -15086,7 +15122,9 @@ print(f"\\nLoaded model accuracy: {loaded_model.score(X_test, y_test):.2%}")
 
 ---
 
-## Session 9.4: Create Demo Application (55 minutes)
+## Session 9.4: Create Demo Application (75 minutes)
+
+⏱️ **Realistic Time Breakdown:** Demo Format Selection (10 min) + Application Development (35 min) + Testing & Debugging (15 min) + README Creation (10 min) + Presentation Prep (5 min)
 
 ### Section 1: Introduction and Objectives
 
@@ -15419,12 +15457,16 @@ result = make_prediction([50, 75, 0])
 
 # DAY 10: Final Presentations and Certification
 
-**Duration:** 3 hours  
+**Duration:** 3-3.5 hours
 **Focus:** Present projects, celebrate achievements, receive certificates
+
+⚠️ **Time Note:** Presentation day includes final polish (45 min), student presentations (90 min for full cohort), industry guest speaker (30 min), and certification ceremony (15 min). Total: 3-3.5 hours.
 
 ---
 
-## Session 10.1: Final Touches and Practice (45 minutes)
+## Session 10.1: Final Touches and Practice (60 minutes)
+
+⏱️ **Realistic Time Breakdown:** Last-minute Fixes (20 min) + Presentation Rehearsal (25 min) + Peer Feedback (10 min) + Final Adjustments (5 min)
 
 ### Section 1: Introduction and Objectives
 
@@ -15691,7 +15733,9 @@ Your Name - AI Fundamentals Certification Program
 
 ---
 
-## Session 10.3: Industry Insights (30 minutes)
+## Session 10.3: Industry Insights (45 minutes)
+
+⏱️ **Realistic Time Breakdown:** Guest Speaker Presentation (20 min) + Q&A Session (20 min) + Networking Advice (5 min)
 
 ### Section 1: Guest Speaker — AI Industry Professional
 
@@ -15730,7 +15774,9 @@ Interactive question and answer session where you can ask anything about AI care
 
 ---
 
-## Session 10.4: Certification and Closing (15 minutes)
+## Session 10.4: Certification and Closing (30 minutes)
+
+⏱️ **Realistic Time Breakdown:** Certification Overview (5 min) + Award Ceremony (15 min) + Program Reflection (5 min) + Next Steps & Resources (5 min)
 
 ### Section 1: Certificate Levels
 
