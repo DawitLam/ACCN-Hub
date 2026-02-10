@@ -791,7 +791,16 @@ Three factors converged to enable modern AI:
 
 *"AI in 100 Seconds"* by Fireship (3 minutes) + *"History of AI"* by CrashCourse (12 minutes)
 
-These videos provide an engaging overview of AI's development from the 1950s to today. Pay attention to the cycles of optimism and disappointment.
+Fireship's 3-minute speed-run covers AI from 1950 to present day, then CrashCourse dives deeper into the fascinating cycles of AI development. You'll see how AI went from beating humans at chess (1997) to generating art (2022). Understanding this history helps you see that today's AI boom isn't the first—and why this time feels different.
+
+**Historical turning points you'll learn:**
+- **1956:** The Dartmouth Conference coins "Artificial Intelligence"
+- **1960s-70s:** First AI winter due to overpromising and computational limits
+- **1980s:** Expert systems briefly revive interest, then crash again (second AI winter)
+- **1990s-2000s:** Narrow breakthroughs (chess, spam filters) without general progress
+- **2010s-present:** Deep learning revolution powered by big data + GPUs + new algorithms
+
+**Why this matters:** Recognizing these patterns helps you set realistic expectations and avoid past mistakes.
 
 https://www.youtube.com/watch?v=PbL9vr4Q2LU
 
@@ -808,7 +817,17 @@ https://www.youtube.com/watch?v=PbL9vr4Q2LU
 
 *"But what is a GPT? Visual intro to Transformers"* by 3Blue1Brown (27 minutes)
 
-A visually engaging explanation of how modern AI language models work, from the same creator as the neural networks video.
+Grant Sanderson's masterpiece on how ChatGPT, Claude, and GPT-4 actually work under the hood. This 27-minute video will transform your understanding of modern AI. You'll see the transformer architecture visualized with stunning animations—how attention mechanisms let models understand context, how tokens are processed, and why these models seem so "intelligent."
+
+**Deep insights you'll gain:**
+- **Tokenization:** How text is broken into pieces the model can process
+- **Embeddings:** How words become vectors in high-dimensional space (nearby = similar meaning)
+- **Attention mechanism:** How models focus on relevant context (the breakthrough that made ChatGPT possible)
+- **Training at scale:** Why GPT-4 trained on trillions of tokens
+- **Emergent abilities:** Why capabilities appear suddenly at certain scales
+- **Limitations:** Why models "hallucinate" and struggle with logic
+
+This is dense content—pause frequently and rewatch sections. Understanding transformers is the foundation for working with modern AI.
 
 https://www.youtube.com/watch?v=wjZofJX0v4M
 
@@ -3733,9 +3752,18 @@ https://www.youtube.com/watch?v=x7X9w_GIm1s
 
 *"Python for Beginners"* by Microsoft (watch first 20 minutes)
 
-https://www.youtube.com/playlist?list=PLlrxD0HtieHhS8VzuMCfQD4uJ9yne1mE6
+Microsoft's official Python series designed for absolute beginners. The instructors walk you through Python basics with clear examples and common pitfalls. This playlist has 44 short videos, but you only need the first 20 minutes covering fundamentals. The teaching style is patient and beginner-friendly—perfect if you've never coded before.
 
-Focus on: Variables, Lists, and Loops sections.
+**Focus on these essential sections:**
+- **Variables:** How to store and name data (temperature = 72)
+- **Data types:** Strings ("hello"), integers (42), floats (3.14), booleans (True/False)
+- **Lists:** Collections of items [1, 2, 3, 4]
+- **For loops:** Repeat code for each item in a list
+- **While loops:** Repeat code until a condition is met
+
+**Why these matter for AI:** Every AI program uses these building blocks—variables store data, lists hold datasets, loops process training examples.
+
+https://www.youtube.com/playlist?list=PLlrxD0HtieHhS8VzuMCfQD4uJ9yne1mE6
 
 **After watching, confirm you understand:**
 
@@ -4161,7 +4189,16 @@ What AI optimizes for matters. Maximizing engagement ≠ maximizing well-being.
 
 *"The Ethical Dilemma of Self-Driving Cars"* by TED-Ed (5 minutes)
 
-This video explores the classic "trolley problem" as it applies to autonomous vehicles.
+TED-Ed's animated thought experiment: Should a self-driving car prioritize passengers or pedestrians in an unavoidable crash? This modern version of the "trolley problem" reveals why programming ethics into AI is fundamentally difficult—different cultures, ages, and philosophies disagree on the "right" answer. There is no universal moral code to program.
+
+**Ethical dilemmas you'll explore:**
+- **The trolley problem:** Kill one to save five, or do nothing?
+- **Who decides?** Engineers? Governments? Car buyers? Passengers?
+- **Utilitarian vs. deontological ethics:** Greatest good vs. absolute rules
+- **The measurement problem:** Can you quantify a life's value?
+- **Real-world implications:** MIT's Moral Machine collected 40 million responses worldwide—with wildly different results across cultures
+
+**Why this matters for your projects:** Any AI that makes decisions (hiring, lending, medical diagnosis, criminal justice) faces these same ethical questions. You need frameworks to navigate them.
 
 https://www.youtube.com/watch?v=AaU6tI2pb3M
 
@@ -4177,7 +4214,18 @@ https://www.youtube.com/watch?v=AaU6tI2pb3M
 
 *"Coded Bias"* featuring Joy Buolamwini (15 minutes excerpt)
 
-MIT researcher Joy Buolamwini demonstrates facial recognition bias and its real-world consequences.
+MIT researcher Joy Buolamwini discovered that facial recognition systems—from IBM, Microsoft, and Amazon—had error rates up to 34% higher for darker-skinned women compared to lighter-skinned men. This groundbreaking research led to real policy changes. Watch as she demonstrates the failure live on camera, then traces how biased training data gets baked into widely-deployed systems affecting millions.
+
+**Shocking findings revealed:**
+- Commercial facial recognition fails to detect dark-skinned faces—but works perfectly on white masks
+- Police departments using these systems for criminal identification (with devastating consequences)
+- How training data bias happens: ImageNet dataset skewed toward lighter skin tones
+- Gender classification systems that only recognize binary male/female (erasing non-binary identities)
+- Amazon's Rekognition falsely matched 28 Congress members to mugshots (disproportionately people of color)
+
+**Real-world impact:** Joy's research led IBM, Microsoft, and Amazon to halt facial recognition sales to police. This is AI ethics in action—research changing policy.
+
+**Critical lesson:** Technical excellence means nothing if your training data is biased. Diverse datasets and diverse teams are not "nice-to-haves"—they're technical requirements.
 
 **After watching, confirm you understand:**
 
@@ -6628,6 +6676,20 @@ for r in results:
 
 **Required Viewing:**
 
+These two videos bridge the gap between no-code Teachable Machine and production Python code:
+
+**Video 1: "Integrating Teachable Machine with Python" (10 min)**
+- Step-by-step walkthrough of loading your exported .h5 model in Python
+- Image preprocessing requirements (224x224 pixels, normalization)
+- Making predictions with model.predict() and interpreting probability outputs
+- Common errors and how to debug them (shape mismatches, file paths)
+
+**Video 2: "TensorFlow Basics by Google" (8 min)**
+- What TensorFlow is and why it powers most AI applications
+- Understanding tensors (multi-dimensional arrays)
+- How Keras simplifies TensorFlow with a user-friendly API
+- GPU acceleration basics (why training on GPUs is 100x faster)
+
 | Video | Duration | Link |
 |-------|----------|------|
 | Integrating Teachable Machine with Python | 10 min | https://www.youtube.com/watch?v=kwcillcWOg0 |
@@ -7057,6 +7119,27 @@ plt.show()
 ---
 
 **Required Viewing:**
+
+The "big three" Python libraries for data science—every data scientist uses these daily:
+
+**Video 1: "NumPy in 15 Minutes" (15 min)**
+- NumPy arrays vs. Python lists (why arrays are 100x faster for math)
+- Creating arrays: np.array(), np.zeros(), np.arange(), np.linspace()
+- Essential operations: reshape, slicing, broadcasting, vectorized math
+- Why all ML libraries (TensorFlow, PyTorch, scikit-learn) are built on NumPy
+
+**Video 2: "Pandas Tutorial" (10 min)**
+- Loading CSVs with pd.read_csv() (the most common data source)
+- DataFrames: think Excel spreadsheet but programmable
+- Essential commands: .head(), .describe(), .info(), .shape
+- Filtering data with boolean indexing: df[df['age'] > 18]
+- Grouping and aggregating: df.groupby('category').mean()
+
+**Video 3: "Matplotlib Basics" (8 min)**
+- Creating plots in 5 lines of code: plt.plot(x, y) + plt.show()
+- Common plot types: line, scatter, bar, histogram, box plot
+- Customization: titles, labels, colors, legends, figure size
+- Why visualizing data before building models prevents costly mistakes
 
 | Video | Duration | Link |
 |-------|----------|------|
@@ -8060,6 +8143,23 @@ df['Score_Capped'] = df['Score'].clip(lower_bound, upper_bound)
 ---
 
 **Required Viewing:**
+
+Master the most important data science skill—cleaning messy real-world data:
+
+**Video 1: "Pandas in 10 Minutes" (15 min)**
+- Quick refresher on Pandas fundamentals
+- Loading, exploring, and manipulating DataFrames
+- Essential methods every data scientist uses daily
+- Perfect warm-up before diving into data cleaning
+
+**Video 2: "Data Cleaning with Pandas" (12 min)**
+- Handling missing values: when to fill vs. drop
+- Detecting and removing duplicates that skew analysis
+- Identifying outliers with IQR method and z-scores
+- Data type conversions (strings to numbers, dates to datetime)
+- Real examples: messy CSV → clean dataset ready for ML
+
+**Why this matters:** Data scientists spend 60-80% of their time cleaning data. These videos teach the techniques used at every tech company.
 
 | Video | Duration | Link |
 |-------|----------|------|
@@ -9660,6 +9760,24 @@ By the end of this session, you will be able to:
 
 **Required Viewing:**
 
+Get comfortable with scikit-learn—the most popular ML library in Python:
+
+**Video 1: "Scikit-learn Tutorial" (20 min)**
+- Complete workflow: load data → split → train → evaluate → predict
+- Understanding train_test_split() and why it prevents cheating
+- Introduction to multiple model types (linear regression, decision trees, random forests)
+- Cross-validation: testing model robustness across different data splits
+- Hands-on coding along with real datasets
+
+**Video 2: "ML Models Explained" (12 min)**
+- Visual explanations of how different algorithms work
+- When to use regression vs. classification vs. clustering
+- Understanding model complexity: simple models (linear) vs. complex models (neural networks)
+- The bias-variance tradeoff visualized
+- How to choose the right algorithm for your problem
+
+**Why watch both:** Video 1 shows you HOW to code it, Video 2 shows you WHY it works. Understanding both makes you a better ML practitioner.
+
 | Video | Duration | Link |
 |-------|----------|------|
 | Scikit-learn Tutorial | 20 min | https://www.youtube.com/watch?v=0B5eIE_1vpU |
@@ -11213,6 +11331,30 @@ By the end of this session, you will be able to:
 ---
 
 **Required Viewing:**
+
+Three complementary perspectives on neural networks—watch all three for complete understanding:
+
+**Video 1: "But what is a Neural Network?" by 3Blue1Brown (19 min)**
+- THE definitive visual explanation (millions of views for a reason)
+- Watch neurons activate in real-time as data flows through the network
+- Understand backpropagation through beautiful animated calculus
+- See how weights and biases adjust during training
+- MNIST digit recognition explained from first principles
+- **This is the most important video in the entire curriculum—watch it twice!**
+
+**Video 2: "Neural Networks Explained" (20 min)**
+- Biological neuron vs. artificial neuron comparison
+- Layer types: input, hidden, output (and what each does)
+- Activation functions visualized: sigmoid, ReLU, tanh
+- Training process: forward pass → loss calculation → backward pass
+- Why "deep" learning? Deeper networks learn hierarchical features
+
+**Video 3: "How Deep Learning Works" (10 min)**
+- Real-world applications: image recognition, language translation, medical diagnosis
+- Why deep learning took off in 2012 (AlexNet moment)
+- The three ingredients: big data + powerful GPUs + better algorithms
+- Limitations and current challenges in the field
+- Career opportunities and future directions
 
 | Video | Duration | Description |
 |-------|----------|-------------|
