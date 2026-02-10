@@ -1188,7 +1188,13 @@ When you use an AI, you are asking the model to make a **prediction** based on n
 
 *"How does artificial intelligence learn?"* by TED-Ed (5 minutes)
 
-This video provides a clear explanation of how AI systems learn from data. Pay attention to the examples given.
+This TED-Ed video breaks down the learning process into simple, relatable examples. You'll see how AI recognizes patterns by analyzing thousands of examples - similar to how you learn to identify objects. The video uses everyday analogies (like teaching a child to recognize animals) to explain complex concepts like training data, feature extraction, and classification.
+
+**Key takeaways you'll gain:**
+- How AI uses pattern recognition to make decisions
+- Why AI needs large amounts of data to learn effectively
+- The difference between training (learning) and inference (applying what was learned)
+- Real-world examples of AI learning in action
 
 https://www.youtube.com/watch?v=0yCJMt9Mx9c
 
@@ -2001,7 +2007,13 @@ Deployed models can degrade as the world changes. Continuous monitoring catches 
 
 *"Machine Learning Explained"* by Google Cloud (10 minutes)
 
-This video provides a clear explanation of the ML pipeline with real-world examples.
+Google Cloud's introduction to machine learning walks you through the complete ML workflow using practical examples from Google's own products. You'll see how ML powers Google Translate, YouTube recommendations, and Search autocomplete. The video clearly shows the difference between giving computers explicit instructions versus letting them learn patterns from data.
+
+**What you'll learn:**
+- The 5 steps of the ML pipeline: collect data → prepare data → train model → evaluate → deploy
+- Why feature engineering (choosing the right inputs) is critical to model success
+- How to know if your model is working well (evaluation metrics)
+- Real examples of ML solving problems that rule-based programming cannot
 
 https://www.youtube.com/watch?v=HcqpanDadyQ
 
@@ -13638,6 +13650,16 @@ By the end of this session, you will be able to:
 
 ---
 
+**What is Streamlit?**
+
+Streamlit is a Python framework that turns data scripts into shareable web apps in minutes. No front-end experience required! It's perfect for quickly demonstrating your ML models with an interactive interface.
+
+**Why use Streamlit for your demo:**
+- ✅ Pure Python - no HTML, CSS, or JavaScript needed
+- ✅ Real-time updates as users interact with widgets
+- ✅ Beautiful UI out of the box
+- ✅ Easy deployment to Streamlit Cloud (free)
+
 **Create app.py:**
 
 ```python
@@ -14005,7 +14027,8 @@ def predict_outcome(features):
 
 ---
 
-```markdown
+**Example README.md structure for your project:**
+
 # Project Title
 
 ## Problem Statement
@@ -14055,7 +14078,6 @@ print(result)
 
 ## Author
 Your Name - AI Fundamentals Certification Program
-```
 
 ---
 
