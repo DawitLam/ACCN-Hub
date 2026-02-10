@@ -808,7 +808,8 @@ Fireship's 3-minute speed-run covers AI from 1950 to present day, then CrashCour
 
 **Why this matters:** Recognizing these patterns helps you set realistic expectations and avoid past mistakes.
 
-https://www.youtube.com/watch?v=PbL9vr4Q2LU
+https://www.youtube.com/watch?v=ad79nYk2keg
+https://www.youtube.com/watch?v=7R52wiUgxZI
 
 **After watching, confirm you understand:**
 
@@ -4257,6 +4258,8 @@ MIT researcher Joy Buolamwini discovered that facial recognition systems—from 
 **Real-world impact:** Joy's research led IBM, Microsoft, and Amazon to halt facial recognition sales to police. This is AI ethics in action—research changing policy.
 
 **Critical lesson:** Technical excellence means nothing if your training data is biased. Diverse datasets and diverse teams are not "nice-to-haves"—they're technical requirements.
+
+https://www.youtube.com/watch?v=UG_X_7g63rY
 
 **After watching, confirm you understand:**
 
@@ -12004,8 +12007,8 @@ Three complementary perspectives on neural networks—watch all three for comple
 - Limitations and current challenges in the field
 - Career opportunities and future directions
 
-| Video | Duration | Description |
-|-------|----------|-------------|
+| Video | Duration | Link |
+|-------|----------|------|
 | "But what is a Neural Network?" | 19 min | https://www.youtube.com/watch?v=aircAruvnKk |
 | "Neural Networks Explained" | 20 min | https://www.youtube.com/watch?v=CqOfi41LfDw |
 | "How Deep Learning Works" | 10 min | https://www.youtube.com/watch?v=ILsA4nyG7I0 |
