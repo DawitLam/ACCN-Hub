@@ -1210,7 +1210,13 @@ https://www.youtube.com/watch?v=0yCJMt9Mx9c
 
 *"How Machines Learn"* by CGP Grey (10 minutes)
 
-A non-technical explanation of the AI workflow that we discussed above. This video uses helpful visualizations to show how machines learn from examples.
+CGP Grey's signature stick-figure animation style makes machine learning incredibly intuitive. Watch as he uses the example of teaching a bot to identify cats—showing how millions of examples gradually improve accuracy. The video brilliantly illustrates why AI needs so much data and why "learning" isn't magic, but pattern recognition at massive scale.
+
+**Visual concepts you'll grasp:**
+- The training loop: try → measure → adjust → repeat (thousands of times)
+- Why more diverse training data = better real-world performance
+- How overfitting happens (memorizing instead of learning patterns)
+- The fundamental limitation: AI can only learn what's in the training data
 
 https://www.youtube.com/watch?v=R9OHn5ZF4Uo
 
@@ -1572,7 +1578,14 @@ https://www.youtube.com/watch?v=ZJixNvx9BAc
 
 *"The Biggest Misconceptions About AI"* by Two Minute Papers (10 minutes)
 
-A research-backed look at common misconceptions about AI capabilities and limitations.
+Computer scientist Károly Zsolnai-Fehér debunks the most common AI myths using actual research papers and experiments. This channel reviews cutting-edge AI research and separates Hollywood hype from scientific reality. You'll see demonstrations of what AI can and cannot do, with citations to peer-reviewed studies.
+
+**Myths debunked:**
+- **Myth:** "AI is conscious" → **Reality:** AI processes patterns; consciousness requires subjective experience
+- **Myth:** "AI is objective" → **Reality:** AI inherits biases from training data
+- **Myth:** "AI will replace all jobs" → **Reality:** AI augments humans; it struggles with common sense and creativity
+- **Myth:** "AI understands language" → **Reality:** AI matches patterns in text; it doesn't comprehend meaning
+- Why setting realistic expectations helps you build better AI systems
 
 https://www.youtube.com/watch?v=f4e-EnLAo5w
 
@@ -2520,7 +2533,13 @@ https://www.youtube.com/watch?v=1FZ0A1QCMWc
 
 *"Transfer Learning Explained"* by Arxiv Insights (10 minutes)
 
-Learn how transfer learning enables rapid AI development with limited data.
+Arxiv Insights uses stunning visuals to explain transfer learning—the "secret weapon" that lets you build powerful AI models with just hundreds of images instead of millions. The video breaks down how models like ImageNet (trained on 14 million images) can be adapted to recognize your custom objects by reusing their learned features.
+
+**You'll discover:**
+- Why transfer learning is like teaching a doctor a new specialty vs. training someone from scratch
+- How the "feature pyramid" works: early layers detect edges, middle layers detect textures, final layers detect objects
+- Real examples: Google Photos, medical imaging, autonomous vehicles—all use transfer learning
+- When to fine-tune vs. when to freeze layers (practical decision framework)
 
 https://www.youtube.com/watch?v=BqqfQnyjmgg
 
@@ -4171,6 +4190,16 @@ MIT researcher Joy Buolamwini demonstrates facial recognition bias and its real-
 **Video 3: AI Ethics Explained**
 
 *"AI Ethics Explained"* by IBM (10 minutes)
+
+IBM's AI ethics team outlines the five pillars of responsible AI development used by major tech companies: Explainability, Fairness, Robustness, Transparency, and Privacy. This isn't abstract philosophy—these are concrete principles you'll apply when building your own projects. The video includes real case studies of AI ethics in action and failure.
+
+**Practical frameworks you'll learn:**
+- **Explainability:** Can you explain WHY your model made a decision? (Critical for healthcare, finance, legal)
+- **Fairness:** How to detect and mitigate bias across different demographic groups
+- **Robustness:** Ensuring AI performs reliably even with unexpected inputs
+- **Transparency:** Documenting model limitations and disclosing AI use to users
+- **Privacy:** Protecting sensitive data and respecting user consent
+- Why diverse development teams catch ethical issues earlier
 
 https://www.youtube.com/watch?v=1c4KTvsxbNY
 
