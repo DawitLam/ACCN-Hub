@@ -10962,216 +10962,790 @@ knn_grid.fit(X_train, y_train)
 
 ---
 
-## Session 7.4: Model Deployment Basics (15 minutes)
+## Session 7.4: MLOps - Production Machine Learning (60 minutes)
 
 ---
 
-💡 **Deployment = Making Your Model REAL:**
+💡 **MLOps = The Bridge from Notebooks to Production:**
 
-Training a model in a notebook is practice. **Deployment** is when it becomes a real app people can use:
+Building a model in Jupyter is just the beginning. **MLOps (Machine Learning Operations)** is the practice of deploying, monitoring, and maintaining ML models in production—just like professional data scientists at Spotify, Netflix, and TikTok.
 
-**Where Your Models Can Run:**
+**What is MLOps?**
 
-**On Your Phone (Local):**
-- Face ID: Runs model locally (no internet needed)
-- Google Lens: Pre-downloaded models
-- Snapchat Filters: On-device processing
-- Live Photo captions: iPhone processes locally
+MLOps combines Machine Learning + DevOps to create reliable, scalable ML systems:
 
-**In The Cloud (Server):**
-- Spotify recommendations: Server predicts, sends to app
-- Netflix "Continue Watching": Cloud-based model
-- Instagram Explore: Server-side algorithm
-- YouTube autoplay: Predictions from YouTube servers
+```
+TRADITIONAL SOFTWARE               MLOPS CHALLENGES
+═══════════════════════             ═══════════════════════
+Code → Test → Deploy                Code + Data + Model → Test → Deploy
+Version control: Git               Version control: Git + DVC (data!)
+Deploy once, works forever         Models degrade over time (retrain!)
+Bugs are deterministic             Models can be non-deterministic
+Unit tests catch errors            Need performance monitoring
+```
 
-🎯 **How YOU Can Deploy:**
+**Why MLOps Matters:**
 
-**Free Hosting for Student Projects:**
-- **Streamlit Cloud**: Deploy web apps for FREE
-  - Your grade predictor becomes a website
-  - Share link on college applications!
-
-- **Discord Bot**: Run model on your server
-  - Auto-moderate spam
-  - Answer questions
-  - Fun interactive features
-
-- **Chrome Extension**: Run model in browser
-  - Grade calculator that works anywhere
-  - Social media engagement predictor
-  - Study time tracker
-
-- **GitHub Pages**: Static site with model
-  - Portfolio showcase
-  - Interactive demos
-  - Resume/college app links
-
-**Real Student Deployment Examples:**
-- Grade predictor deployed on Streamlit → Shared with classmates
-- Discord moderation bot → Runs 24/7 on free Replit
-- Music mood classifier → Chrome extension for Spotify
-- College acceptance estimator → Website on GitHub Pages
-- Gaming stats tracker → Python script on Raspberry Pi
-
-**Why Deployment Matters for YOUR Future:**
-- "I built a model" → Cool, but just homework
-- "Here's a LINK to my working app" → Portfolio gold for college/jobs!
-- Deployed projects >> Code on GitHub for applications
-- Shows you can build REAL things, not just complete assignments
+| Without MLOps | With MLOps |
+|---------------|------------|
+| Model stuck in notebook | Model serving millions of users |
+| "Works on my machine" | Containerized (Docker) - works everywhere |
+| No tracking experiments | MLflow logs every experiment |
+| Manual retraining | Automated pipelines |
+| Model performance unknown | Real-time monitoring dashboards |
+| One model version | A/B testing multiple versions |
 
 ---
 
-### Section 1: Introduction and Objectives
+### Section 1: Docker - Containerize Your ML Models
 
 ---
 
-**Session Overview**
+**What is Docker?**
 
-A model is only useful if it can be used in the real world. In this brief session, you will learn how to save trained models and create simple prediction functions that could be used in applications.
+Docker packages your entire ML environment (code + libraries + dependencies) into a "container" that runs identically everywhere—your laptop, cloud server, anywhere.
 
-**Learning Objectives**
+**The Problem Docker Solves:**
 
-By the end of this session, you will be able to:
+```
+Your laptop: Python 3.10, TensorFlow 2.15, works perfectly ✅
+Friend's laptop: Python 3.8, TensorFlow 2.10, crashes ❌
+Production server: Python 3.9, missing libraries, fails ❌
+```
 
-1. Save a trained model to a file
-2. Load a saved model for predictions
-3. Create a user-friendly prediction function
+**Docker's Solution:**
 
----
-
-### Section 2: Saving and Loading Models
-
----
-
-**Why Save Models?**
-
-- Training takes time — do not repeat it!
-- Deploy to production systems
-- Share with others
-- Version control your models
-
----
-
-**Using Joblib (Recommended):**
-
-```python
-import joblib
-
-# Train a model
-from sklearn.ensemble import RandomForestClassifier
-
-model = RandomForestClassifier(n_estimators=100, random_state=42)
-model.fit(X_train, y_train)
-
-# Save model to file
-joblib.dump(model, 'student_pass_predictor.pkl')
-print("Model saved successfully!")
-
-# Later... load the model
-loaded_model = joblib.load('student_pass_predictor.pkl')
-
-# Verify it works
-test_accuracy = loaded_model.score(X_test, y_test)
-print(f"Loaded model accuracy: {test_accuracy:.2%}")
+```
+Docker container: EXACT environment frozen in time
+- Runs on ANY computer
+- Same Python version, same libraries, same everything
+- Share with teammates, deploy to cloud—just works!
 ```
 
 ---
 
-### Section 3: Creating a Prediction Function
+**Create a Dockerfile for ML Model:**
+
+```dockerfile
+# Dockerfile - defines your ML environment
+
+# Start with Python base image
+FROM python:3.10-slim
+
+# Set working directory
+WORKDIR /app
+
+# Copy requirements file
+COPY requirements.txt .
+
+# Install Python dependencies
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy model and code
+COPY student_predictor.pkl .
+COPY app.py .
+
+# Expose port for web API
+EXPOSE 8000
+
+# Run the application
+CMD ["python", "app.py"]
+```
+
+**requirements.txt:**
+
+```
+scikit-learn==1.3.0
+joblib==1.3.2
+fastapi==0.104.1
+uvicorn==0.24.0
+pandas==2.1.3
+numpy==1.26.2
+```
+
+**Build and Run Docker Container:**
+
+```bash
+# Build the Docker image
+docker build -t student-predictor:v1 .
+
+# Run the container
+docker run -p 8000:8000 student-predictor:v1
+
+# Your model is now running in an isolated environment!
+# Access at: http://localhost:8000
+```
 
 ---
 
-**Simple Prediction App:**
+### Section 2: FastAPI - Serve Models as REST APIs
+
+---
+
+**What is FastAPI?**
+
+FastAPI turns your ML model into a web service that any app (mobile, web, Discord bot) can call:
+
+```
+Mobile App → HTTP Request → FastAPI → Your Model → Prediction → Response
+```
+
+**Create a Model API:**
 
 ```python
-def predict_student_outcome(study_hours, attendance, previous_score, practice_tests):
+# app.py - FastAPI web service
+
+from fastapi import FastAPI
+from pydantic import BaseModel
+import joblib
+import numpy as np
+
+# Initialize FastAPI app
+app = FastAPI(title="Student Performance Predictor")
+
+# Load trained model (once at startup)
+model = joblib.load('student_predictor.pkl')
+
+# Define input schema
+class StudentData(BaseModel):
+    study_hours: float
+    attendance: float
+    previous_score: float
+    practice_tests: int
+
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "study_hours": 7.5,
+                "attendance": 92.0,
+                "previous_score": 85.0,
+                "practice_tests": 4
+            }
+        }
+
+# Define output schema
+class PredictionResponse(BaseModel):
+    prediction: str
+    probability: float
+    advice: str
+
+@app.get("/")
+def home():
+    """Health check endpoint"""
+    return {"message": "Student Predictor API is running!", "version": "1.0"}
+
+@app.post("/predict", response_model=PredictionResponse)
+def predict(data: StudentData):
     """
-    Predict if a student will pass or fail.
-    
-    Parameters:
-    -----------
-    study_hours : float
-        Hours studied per week
-    attendance : float
-        Attendance percentage (0-100)
-    previous_score : float
-        Previous test score (0-100)
-    practice_tests : int
-        Number of practice tests completed
-    
-    Returns:
-    --------
-    dict : Prediction results with advice
+    Predict student pass/fail outcome
     """
-    # Load the trained model
-    model = joblib.load('student_pass_predictor.pkl')
-    
-    # Prepare input
-    features = [[study_hours, attendance, previous_score, practice_tests]]
-    
+    # Prepare features
+    features = np.array([[
+        data.study_hours,
+        data.attendance,
+        data.previous_score,
+        data.practice_tests
+    ]])
+
     # Make prediction
     prediction = model.predict(features)[0]
-    probabilities = model.predict_proba(features)[0]
-    
-    # Generate result
+    probability = model.predict_proba(features)[0]
+
+    # Generate response
     if prediction == 1:
         result = "PASS"
-        confidence = probabilities[1]
-        advice = generate_pass_advice(confidence)
+        prob = probability[1]
+        advice = generate_advice(prob, data)
     else:
         result = "FAIL"
-        confidence = probabilities[0]
-        advice = generate_fail_advice(study_hours, attendance, practice_tests)
-    
-    return {
-        'prediction': result,
-        'confidence': f"{confidence:.1%}",
-        'advice': advice
-    }
+        prob = probability[0]
+        advice = generate_advice(prob, data)
 
-def generate_pass_advice(confidence):
-    if confidence >= 0.9:
-        return "Excellent preparation! Keep up the great work."
-    elif confidence >= 0.7:
-        return "You're on track. Continue your current study habits."
+    return PredictionResponse(
+        prediction=result,
+        probability=round(prob, 3),
+        advice=advice
+    )
+
+def generate_advice(prob, data):
+    """Generate personalized advice"""
+    if prob >= 0.9:
+        return "Excellent! Keep up the great work."
+    elif prob >= 0.7:
+        return "On track. Maintain current study habits."
     else:
-        return "Predicted to pass, but study more to be safe."
+        suggestions = []
+        if data.study_hours < 5:
+            suggestions.append("Increase study time to 5+ hours/week")
+        if data.attendance < 80:
+            suggestions.append("Improve attendance to 80%+")
+        if data.practice_tests < 3:
+            suggestions.append("Complete at least 3 practice tests")
+        return "; ".join(suggestions) if suggestions else "Seek instructor help"
 
-def generate_fail_advice(study_hours, attendance, practice_tests):
-    suggestions = []
-    if study_hours < 5:
-        suggestions.append("Increase study time to at least 5 hours/week")
-    if attendance < 80:
-        suggestions.append("Improve attendance to at least 80%")
-    if practice_tests < 3:
-        suggestions.append("Complete at least 3 practice tests")
-    
-    return "; ".join(suggestions) if suggestions else "Seek help from instructor"
+# Run with: uvicorn app:app --reload
+```
+
+**Test the API:**
+
+```python
+# Option 1: Command line with curl
+curl -X POST "http://localhost:8000/predict" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "study_hours": 7.5,
+    "attendance": 92.0,
+    "previous_score": 85.0,
+    "practice_tests": 4
+  }'
+
+# Option 2: Python requests library
+import requests
+
+data = {
+    "study_hours": 7.5,
+    "attendance": 92.0,
+    "previous_score": 85.0,
+    "practice_tests": 4
+}
+
+response = requests.post("http://localhost:8000/predict", json=data)
+print(response.json())
+# Output: {"prediction": "PASS", "probability": 0.923, "advice": "Excellent! Keep up the great work."}
+
+# Option 3: Interactive docs (built-in!)
+# Visit: http://localhost:8000/docs
+# FastAPI auto-generates interactive API documentation!
 ```
 
 ---
 
-**Test the Prediction Function:**
+### Section 3: MLflow - Track Experiments Like a Pro
+
+---
+
+**What is MLflow?**
+
+MLflow tracks all your ML experiments so you never lose track of what worked:
+
+```
+WITHOUT MLFLOW:                    WITH MLFLOW:
+═══════════════════                ═══════════════════
+notebook_v1.ipynb                  Experiment 1: RandomForest
+notebook_v2_final.ipynb              - Accuracy: 0.87
+notebook_v2_FINAL_FINAL.ipynb        - Parameters: n_estimators=100
+model_best_maybe.pkl                 - Runtime: 2.3s
+                                     - Model saved: models/rf_v1.pkl
+❌ Which was best???
+❌ What parameters did I use???    Experiment 2: XGBoost
+❌ Can't reproduce results           - Accuracy: 0.91 ⭐ BEST
+                                     - Parameters: max_depth=5, lr=0.1
+                                     - Runtime: 5.1s
+                                     - Model saved: models/xgb_v1.pkl
+
+                                   ✅ Every experiment logged
+                                   ✅ Easily compare results
+                                   ✅ Reproducible science
+```
+
+**Install and Start MLflow:**
+
+```bash
+# Install MLflow
+pip install mlflow
+
+# Start MLflow tracking server
+mlflow ui
+
+# Opens at: http://localhost:5000
+# Beautiful dashboard to view all experiments!
+```
+
+**Track Experiments with MLflow:**
 
 ```python
-# Test Case 1: Strong student
-result1 = predict_student_outcome(
-    study_hours=7,
-    attendance=95,
-    previous_score=85,
-    practice_tests=5
-)
-print("Student 1:", result1)
+import mlflow
+import mlflow.sklearn
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score, f1_score
 
-# Test Case 2: At-risk student
-result2 = predict_student_outcome(
-    study_hours=2,
-    attendance=60,
-    previous_score=55,
-    practice_tests=1
-)
-print("Student 2:", result2)
+# Set experiment name
+mlflow.set_experiment("Student Performance Prediction")
+
+# Start an MLflow run
+with mlflow.start_run(run_name="RandomForest_v1"):
+
+    # Log parameters
+    n_estimators = 100
+    max_depth = 10
+    mlflow.log_param("model_type", "RandomForest")
+    mlflow.log_param("n_estimators", n_estimators)
+    mlflow.log_param("max_depth", max_depth)
+    mlflow.log_param("dataset_size", len(X_train))
+
+    # Train model
+    model = RandomForestClassifier(
+        n_estimators=n_estimators,
+        max_depth=max_depth,
+        random_state=42
+    )
+    model.fit(X_train, y_train)
+
+    # Evaluate
+    y_pred = model.predict(X_test)
+    accuracy = accuracy_score(y_test, y_pred)
+    f1 = f1_score(y_test, y_pred)
+
+    # Log metrics
+    mlflow.log_metric("accuracy", accuracy)
+    mlflow.log_metric("f1_score", f1)
+    mlflow.log_metric("test_samples", len(X_test))
+
+    # Log model
+    mlflow.sklearn.log_model(model, "model")
+
+    print(f"✅ Logged run with accuracy: {accuracy:.3f}")
+
+# Compare experiments in MLflow UI!
+# See parameters, metrics, models all in one place
 ```
+
+**Compare Multiple Models:**
+
+```python
+models_to_test = [
+    ("RandomForest", RandomForestClassifier(n_estimators=100)),
+    ("GradientBoosting", GradientBoostingClassifier(n_estimators=100)),
+    ("LogisticRegression", LogisticRegression(max_iter=1000)),
+    ("SVC", SVC(probability=True))
+]
+
+mlflow.set_experiment("Model Comparison")
+
+for model_name, model in models_to_test:
+    with mlflow.start_run(run_name=model_name):
+        mlflow.log_param("model_type", model_name)
+
+        model.fit(X_train, y_train)
+        y_pred = model.predict(X_test)
+
+        accuracy = accuracy_score(y_test, y_pred)
+        mlflow.log_metric("accuracy", accuracy)
+        mlflow.sklearn.log_model(model, "model")
+
+        print(f"{model_name}: {accuracy:.3f}")
+
+# MLflow UI now shows all 4 models side-by-side!
+# Instantly see which performed best
+```
+
+---
+
+### Section 4: Model Versioning with Git + DVC
+
+---
+
+**The Challenge:**
+
+```
+Git is great for code, but ML models are HUGE:
+- student_model.pkl: 2 MB ✅ OK for Git
+- image_classifier.h5: 500 MB ❌ Too big for Git!
+- training_data.csv: 2 GB ❌ WAY too big for Git!
+```
+
+**Solution: DVC (Data Version Control)**
+
+DVC works like Git but for data and models:
+
+```bash
+# Initialize DVC in your repo
+git init
+dvc init
+
+# Track large model file with DVC (not Git)
+dvc add models/student_predictor.pkl
+
+# DVC creates a tiny .dvc pointer file
+git add models/student_predictor.pkl.dvc
+git commit -m "Add model v1.0"
+
+# Push model to remote storage (S3, Google Drive, etc.)
+dvc remote add -d storage gdrive://YOUR_FOLDER_ID
+dvc push
+
+# Teammates can pull the model
+dvc pull
+```
+
+**Version Your Models:**
+
+```bash
+# Train v1
+python train.py
+dvc add models/model.pkl
+git add models/model.pkl.dvc
+git commit -m "Model v1: baseline RandomForest"
+git tag v1.0
+
+# Train v2 (improved)
+python train_improved.py
+dvc add models/model.pkl  # Overwrites
+git add models/model.pkl.dvc
+git commit -m "Model v2: tuned hyperparameters"
+git tag v2.0
+
+# Rollback to v1 if v2 fails in production
+git checkout v1.0
+dvc checkout  # Downloads v1 model
+```
+
+---
+
+### Section 5: Model Monitoring in Production
+
+---
+
+**Why Monitor?**
+
+Models degrade over time due to:
+- **Data drift**: Real-world data changes (COVID changed consumer behavior!)
+- **Concept drift**: Relationships change (TikTok trends shift weekly)
+- **Software bugs**: API changes, broken data pipelines
+- **Adversarial attacks**: Users gaming your system
+
+**What to Monitor:**
+
+```python
+# monitor.py - Track model performance in production
+
+import time
+from datetime import datetime
+import pandas as pd
+
+class ModelMonitor:
+    def __init__(self, model_name):
+        self.model_name = model_name
+        self.predictions_log = []
+
+    def log_prediction(self, features, prediction, actual=None):
+        """Log every prediction for analysis"""
+        log_entry = {
+            'timestamp': datetime.now(),
+            'features': features,
+            'prediction': prediction,
+            'actual': actual if actual else None
+        }
+        self.predictions_log.append(log_entry)
+
+    def check_data_drift(self, recent_data, training_data):
+        """Compare recent data to training distribution"""
+        # Calculate feature statistics
+        recent_mean = recent_data.mean()
+        training_mean = training_data.mean()
+
+        # Check for significant drift
+        drift_threshold = 0.1  # 10% change
+        for feature in recent_data.columns:
+            change = abs(recent_mean[feature] - training_mean[feature]) / training_mean[feature]
+            if change > drift_threshold:
+                print(f"⚠️ DRIFT ALERT: {feature} changed by {change:.1%}")
+                # Trigger retraining pipeline!
+
+    def calculate_metrics(self):
+        """Analyze recent performance"""
+        df = pd.DataFrame(self.predictions_log)
+
+        # Filter to predictions with actual outcomes
+        df_labeled = df[df['actual'].notna()]
+
+        if len(df_labeled) > 0:
+            accuracy = (df_labeled['prediction'] == df_labeled['actual']).mean()
+            print(f"Recent accuracy: {accuracy:.3f}")
+
+            if accuracy < 0.75:
+                print("⚠️ PERFORMANCE ALERT: Accuracy dropped below threshold!")
+                # Send alert email, trigger retraining, etc.
+
+        return {
+            'total_predictions': len(df),
+            'labeled_predictions': len(df_labeled),
+            'recent_accuracy': accuracy if len(df_labeled) > 0 else None
+        }
+
+# Use in production
+monitor = ModelMonitor("student_predictor_v2")
+
+# Every prediction gets logged
+prediction = model.predict(features)
+monitor.log_prediction(features, prediction)
+
+# Later, when actual outcome is known
+monitor.log_prediction(features, prediction, actual=1)  # Student passed!
+
+# Daily monitoring report
+stats = monitor.calculate_metrics()
+print(stats)
+```
+
+---
+
+### Section 6: A/B Testing Models
+
+---
+
+**What is A/B Testing?**
+
+Deploy two model versions simultaneously and compare which performs better with real users:
+
+```
+50% of users → Model A (current champion)
+50% of users → Model B (new challenger)
+
+After 1 week:
+Model A: 87% accuracy, 0.3s latency
+Model B: 91% accuracy, 0.5s latency
+
+Decision: Model B wins! (Better accuracy worth slower speed)
+```
+
+**Simple A/B Testing Implementation:**
+
+```python
+import random
+
+class ABTestingRouter:
+    def __init__(self, model_a, model_b, split=0.5):
+        self.model_a = model_a  # Current production model
+        self.model_b = model_b  # New experimental model
+        self.split = split       # 50% traffic to each
+        self.results_a = []
+        self.results_b = []
+
+    def predict(self, features, user_id):
+        """Route user to Model A or B randomly"""
+
+        # Consistent assignment: same user always gets same model
+        assignment = hash(user_id) % 100 < (self.split * 100)
+
+        if assignment:
+            # User assigned to Model B (new model)
+            prediction = self.model_b.predict(features)
+            self.results_b.append({
+                'prediction': prediction,
+                'user_id': user_id,
+                'model': 'B'
+            })
+        else:
+            # User assigned to Model A (current model)
+            prediction = self.model_a.predict(features)
+            self.results_a.append({
+                'prediction': prediction,
+                'user_id': user_id,
+                'model': 'A'
+            })
+
+        return prediction
+
+    def analyze_results(self):
+        """Compare Model A vs Model B performance"""
+        print(f"Model A: {len(self.results_a)} predictions")
+        print(f"Model B: {len(self.results_b)} predictions")
+
+        # In production, calculate accuracy, latency, user engagement, etc.
+        # Winner becomes new production model!
+
+# Usage
+model_a = joblib.load('model_v1.pkl')  # Current
+model_b = joblib.load('model_v2.pkl')  # New
+
+router = ABTestingRouter(model_a, model_b, split=0.5)
+
+# Route predictions
+for user_id in user_ids:
+    prediction = router.predict(features[user_id], user_id)
+
+# After sufficient data collection
+router.analyze_results()
+```
+
+---
+
+### Section 7: Deployment Platforms
+
+---
+
+**Free Platforms for Student Projects:**
+
+| Platform | Best For | Difficulty |
+|----------|----------|------------|
+| **Streamlit Cloud** | Interactive ML apps | ⭐ Easy |
+| **Heroku** | Web APIs (FastAPI) | ⭐⭐ Medium |
+| **Google Cloud Run** | Docker containers | ⭐⭐ Medium |
+| **Hugging Face Spaces** | ML demos | ⭐ Easy |
+| **Replit** | Quick prototypes | ⭐ Easy |
+| **Railway** | Full-stack apps | ⭐⭐ Medium |
+
+**Deploy FastAPI to Heroku (Free):**
+
+```bash
+# 1. Create Procfile
+echo "web: uvicorn app:app --host=0.0.0.0 --port=${PORT:-5000}" > Procfile
+
+# 2. Create runtime.txt
+echo "python-3.10.12" > runtime.txt
+
+# 3. Deploy
+heroku login
+heroku create student-predictor-api
+git push heroku main
+
+# Your API is now live!
+# https://student-predictor-api.herokuapp.com/predict
+```
+
+---
+
+### Section 8: Real-World MLOps Example
+
+---
+
+**Putting It All Together: Netflix Recommendation System**
+
+```
+1. TRAINING (Offline):
+   - Train model on billions of user interactions
+   - Track experiments with MLflow
+   - Version model with DVC
+   - Containerize with Docker
+
+2. DEPLOYMENT:
+   - Deploy model to Kubernetes cluster (1000s of servers)
+   - Serve via FastAPI endpoints
+   - A/B test new algorithm vs. current
+
+3. MONITORING:
+   - Track prediction latency (must be <100ms)
+   - Monitor data drift (user behavior changes)
+   - Measure business metrics (watch time, retention)
+
+4. RETRAINING:
+   - Retrain daily on fresh data
+   - Automatically deploy if performance improves
+   - Rollback if errors spike
+
+5. ITERATION:
+   - New model ideas tested via A/B tests
+   - Winners promoted to production
+   - Losers archived for analysis
+```
+
+**This is how Spotify, TikTok, Amazon, and Google all deploy ML!**
+
+---
+
+### Section 9: Knowledge Check
+
+---
+
+[QUIZ]
+
+**Question 1:** What problem does Docker solve for ML deployment?
+
+- A) Makes models more accurate
+- B) Ensures consistent environment across different computers
+- C) Speeds up training
+- D) Reduces model size
+
+**Answer: B**
+
+**Question 2:** What is MLflow used for?
+
+- A) Training models faster
+- B) Tracking experiments and model versions
+- C) Deploying models to production
+- D) Cleaning data
+
+**Answer: B**
+
+**Question 3:** Why do production models need monitoring?
+
+- A) Models can degrade over time due to data drift
+- B) To track business metrics
+- C) To detect bugs and errors
+- D) All of the above
+
+**Answer: D**
+
+**Question 4:** What is A/B testing in ML?
+
+- A) Testing model on two datasets
+- B) Comparing two models in production with real users
+- C) Training two models simultaneously
+- D) Using two programming languages
+
+**Answer: B**
+
+[/QUIZ]
+
+---
+
+### Section 10: Hands-On Mini-Project
+
+---
+
+**Build and Deploy Your First ML API:**
+
+**Tasks:**
+1. Create a FastAPI endpoint for your Day 7 classification model
+2. Write a Dockerfile to containerize it
+3. Test locally with Docker
+4. (Bonus) Deploy to Streamlit/Heroku and share the link!
+
+**Deliverable:**
+- GitHub repo with:
+  - `app.py` (FastAPI code)
+  - `Dockerfile`
+  - `requirements.txt`
+  - `README.md` (with deployment instructions)
+
+---
+
+### MLOps Resources
+
+---
+
+| Resource | Link |
+|----------|------|
+| **Docker Tutorial** | https://docs.docker.com/get-started/ |
+| **FastAPI Documentation** | https://fastapi.tiangolo.com/ |
+| **MLflow Quickstart** | https://mlflow.org/docs/latest/quickstart.html |
+| **DVC Tutorial** | https://dvc.org/doc/start |
+| **Made With ML (MLOps Guide)** | https://madewithml.com/ |
+
+**Video: MLOps Explained** (20 min)
+https://www.youtube.com/watch?v=Nd3vhXJLjV8
+
+Learn how top tech companies deploy ML models to production, including real-world MLOps workflows, monitoring strategies, and deployment best practices.
+
+---
+
+**🎉 You now understand MLOps!**
+
+You've learned the same deployment techniques used by Spotify, Netflix, and TikTok to serve ML models to millions of users. This is the difference between "I built a model" and "I deployed a production ML system!"
+
+**MLOps skills employers want:**
+✅ Docker containerization
+✅ FastAPI model serving
+✅ MLflow experiment tracking
+✅ Model monitoring and drift detection
+✅ A/B testing and evaluation
+✅ Version control for models and data
+
+**Add to your resume:**
+- "Deployed ML models using Docker and FastAPI"
+- "Tracked experiments with MLflow and DVC"
+- "Implemented model monitoring and A/B testing"
 
 ---
 
@@ -13140,7 +13714,630 @@ class_names = ['T-shirt', 'Trouser', 'Pullover', 'Dress', 'Coat',
 
 **Minimum Score Required:** 80%
 
-**Day 9 Preview: Natural Language Processing — teach computers to understand text!**
+**Day 9 Preview: Build your capstone AI project and apply everything you've learned!**
+
+---
+
+## Session 8.5: Introduction to Generative AI and Large Language Models (60 minutes)
+
+---
+
+💡 **Why Generative AI is THE Game Changer:**
+
+In 2026, Generative AI isn't just "the future"—it's the PRESENT. ChatGPT, Claude, Midjourney, and Gemini have fundamentally changed how we work, create, and learn. Every tech company is racing to integrate LLMs:
+
+**What Generative AI Powers TODAY:**
+- **ChatGPT**: Write essays, debug code, plan trips, explain concepts
+- **Claude**: Long-form analysis, code review, complex reasoning
+- **GitHub Copilot**: AI pair programmer (writes 40% of code at companies!)
+- **Midjourney/DALL-E**: Create professional artwork from text prompts
+- **Google Bard**: Search + generate in one interface
+- **Microsoft Copilot**: Integrated into Office Suite (Word, Excel, PowerPoint)
+- **Notion AI**: Automated note-taking and document generation
+- **Grammarly**: AI-powered writing assistant
+
+🎯 **What YOU Can Build With GenAI:**
+
+**School Projects:**
+- **AI Study Buddy**: Custom tutor that explains concepts in YOUR style
+- **Essay Outline Generator**: Input topic → Get structured outline + sources
+- **Code Homework Helper**: Debug errors, explain concepts
+- **Language Learning Partner**: Practice conversations in any language
+- **Research Assistant**: Summarize papers, extract key findings
+
+**Personal Apps:**
+- **Custom Chatbot**: Train on YOUR data (personal journal, notes)
+- **Creative Writing Partner**: Co-author stories, generate character ideas
+- **Email/Message Drafter**: Professional communication helper
+- **Social Media Caption Generator**: Never run out of Instagram captions!
+- **Coding Assistant**: Explain any code snippet, suggest improvements
+
+**Portfolio Projects (Impress Colleges!):**
+- **Subject-Specific Tutor**: Math, history, science—customized AI teacher
+- **Accessibility Tool**: Convert text to simplified language for learning disabilities
+- **Mental Health Chatbot**: Safe space for venting (with crisis resources)
+- **College Essay Brainstormer**: Ethical AI-assisted essay development
+- **Study Schedule Optimizer**: AI generates personalized study plans
+
+🌟 **The GenAI Revolution (What Makes it Different):**
+
+**Traditional AI:** Classify, predict, recognize (what we learned Days 1-8)
+- Input: Image → Output: "This is a cat" (fixed categories)
+- Example: Teachable Machine, MNIST digit classifier
+
+**Generative AI:** CREATE new content that never existed
+- Input: Text prompt → Output: Essay, code, image, music, video
+- Example: "Write a Python function to sort a list" → Generates working code!
+
+**Why LLMs Changed Everything:**
+- **General intelligence**: One model handles 1000s of tasks
+- **Zero-shot learning**: Performs tasks it was never explicitly trained on
+- **Few-shot learning**: Show 2-3 examples, it learns new tasks instantly
+- **Reasoning chains**: Can think through multi-step problems
+- **Creative generation**: Writes poems, generates ideas, invents stories
+
+---
+
+### Section 1: What Are Large Language Models (LLMs)?
+
+---
+
+**The Architecture:**
+
+```
+HOW ChatGPT/Claude/Gemini WORK
+═══════════════════════════════
+
+Input Text: "Explain quantum computing"
+       ↓
+  Tokenization (break into pieces)
+       ↓
+  Embedding (convert to numbers)
+       ↓
+  Transformer Layers (billions of parameters!)
+   - Self-Attention Mechanism
+   - Feed-Forward Networks
+   - Layer Normalization
+       ↓
+  Probability Distribution (next word predictions)
+       ↓
+  Sampling Strategy (pick most likely words)
+       ↓
+Output: "Quantum computing uses quantum bits (qubits)..."
+```
+
+---
+
+**Key Concepts:**
+
+| Term | Definition | Example |
+|------|------------|---------|
+| **Token** | Smallest unit of text | Word or subword ("un-break-able" = 3 tokens) |
+| **Context Window** | How much text model can "remember" | GPT-4: 128K tokens (~96K words, ~300 pages!) |
+| **Temperature** | Creativity setting (0-1) | 0 = deterministic, 1 = creative/random |
+| **Top-p (Nucleus Sampling)** | Alternative creativity control | Consider only top % of likely words |
+| **Prompt** | Your input instruction | "Explain X like I'm 5" |
+| **Completion** | Model's generated response | The output text |
+| **Fine-tuning** | Customizing model on specific data | Train ChatGPT on YOUR documents |
+| **Embeddings** | Numerical representation of meaning | "king" - "man" + "woman" ≈ "queen" |
+
+---
+
+### Section 2: Prompt Engineering — The New Programming Language
+
+---
+
+**Prompt engineering is THE skill for the GenAI era. Companies are hiring "Prompt Engineers" at $200K-$335K salaries!**
+
+**The Anatomy of a Great Prompt:**
+
+```markdown
+# Basic Prompt (Weak)
+"Write about AI"
+
+# Optimized Prompt (Strong)
+**Role:** You are an expert computer science professor.
+**Task:** Explain artificial intelligence to high school students.
+**Context:** They've learned basic programming but no AI yet.
+**Format:** Use analogies, give 3 real-world examples, keep it under 200 words.
+**Tone:** Conversational but educational.
+```
+
+**Output quality:** 10x better with optimized prompts!
+
+---
+
+**Proven Prompt Engineering Techniques:**
+
+**1. Role Playing:**
+```
+"You are a Python expert. Review this code for bugs:"
+[paste code]
+```
+
+**2. Few-Shot Learning (Give Examples):**
+```
+Convert these sentences to formal English:
+- "gonna" → "going to"
+- "wanna" → "want to"
+- "kinda" → "kind of"
+
+Now convert: "I'm gonna wanna see that movie"
+```
+
+**3. Chain-of-Thought (Think Step-by-Step):**
+```
+Solve this math problem. Show your work step-by-step:
+If a train travels 60 mph for 2.5 hours, how far did it go?
+```
+
+**4. Self-Consistency (Ask Multiple Times):**
+```
+Generate 5 different essay outlines for: "Impact of social media on teens"
+Then tell me which is strongest and why.
+```
+
+**5. Tree-of-Thought (Explore Options):**
+```
+I need to decide between 3 colleges. For each option, analyze:
+- Academic reputation
+- Cost
+- Location
+- Career outcomes
+Then recommend which I should choose and explain your reasoning.
+```
+
+---
+
+### Section 3: Hands-On — Building Your First AI Chatbot
+
+---
+
+**We'll use OpenAI's API to build a custom chatbot!**
+
+**Option 1: OpenAI API (requires API key)**
+
+```python
+# Install the library
+!pip install openai
+
+import openai
+import os
+
+# Set your API key (get free trial credits from OpenAI)
+# NEVER hardcode API keys! Use environment variables
+openai.api_key = os.getenv("OPENAI_API_KEY")  # Or enter key
+
+def chat_with_ai(prompt, temperature=0.7):
+    """
+    Send a prompt to GPT and get a response.
+
+    temperature: 0 = deterministic, 1 = creative
+    """
+    response = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo",  # Or gpt-4 (more expensive but better)
+        messages=[
+            {"role": "system", "content": "You are a helpful AI tutor for high school students studying AI."},
+            {"role": "user", "content": prompt}
+        ],
+        temperature=temperature,
+        max_tokens=500  # Limit response length
+    )
+
+    return response.choices[0].message.content
+
+# Test it out!
+question = "Explain neural networks using a cooking analogy"
+answer = chat_with_ai(question)
+print(answer)
+```
+
+---
+
+**Build a Custom Tutor Bot:**
+
+```python
+def study_buddy():
+    """Interactive AI study helper"""
+
+    print("🤖 AI Study Buddy activated! Ask me anything about AI.")
+    print("Type 'quit' to exit.\n")
+
+    # Conversation history (so AI remembers context)
+    conversation_history = [
+        {"role": "system", "content": """You are a patient, encouraging AI tutor.
+        Explain concepts simply, use analogies, and ask follow-up questions to check understanding.
+        If the student seems confused, break it down further."""}
+    ]
+
+    while True:
+        user_input = input("You: ")
+
+        if user_input.lower() in ['quit', 'exit', 'bye']:
+            print("👋 Happy studying!")
+            break
+
+        # Add user message to history
+        conversation_history.append({"role": "user", "content": user_input})
+
+        # Get AI response with full conversation context
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=conversation_history,
+            temperature=0.7,
+            max_tokens=300
+        )
+
+        ai_message = response.choices[0].message.content
+
+        # Add AI response to history
+        conversation_history.append({"role": "assistant", "content": ai_message})
+
+        print(f"\n🤖 Tutor: {ai_message}\n")
+
+# Run it!
+study_buddy()
+```
+
+**Example conversation:**
+```
+You: What is backpropagation?
+
+🤖 Tutor: Backpropagation is how neural networks learn from mistakes!
+Think of it like improving at basketball:
+
+1. You shoot (forward pass)
+2. You miss (calculate error)
+3. You adjust your form based on what went wrong (backward pass)
+4. You practice this thousands of times (training)
+
+In neural networks, backprop calculates how much each weight contributed
+to the error, then adjusts them to reduce future errors.
+
+Want me to explain the math behind it, or is the concept clear?
+
+You: Yes, show me the math
+
+🤖 Tutor: Let's break down the math step-by-step...
+```
+
+---
+
+**Option 2: HuggingFace Transformers (Free, No API Key!):**
+
+```python
+# Install transformers library
+!pip install transformers torch
+
+from transformers import pipeline
+
+# Load a free conversational model
+chatbot = pipeline("conversational", model="microsoft/DialoGPT-medium")
+
+def simple_chatbot():
+    """Free chatbot using HuggingFace"""
+    from transformers import Conversation
+
+    print("🤖 AI Chatbot (powered by HuggingFace)")
+    print("Type 'quit' to exit.\n")
+
+    conversation = Conversation()
+
+    while True:
+        user_input = input("You: ")
+
+        if user_input.lower() in ['quit', 'exit']:
+            print("👋 Goodbye!")
+            break
+
+        conversation.add_user_input(user_input)
+        conversation = chatbot(conversation)
+
+        print(f"🤖 Bot: {conversation.generated_responses[-1]}\n")
+
+# Run it!
+simple_chatbot()
+```
+
+---
+
+### Section 4: Understanding Embeddings — The Secret Sauce
+
+---
+
+**Embeddings = How AI Understands Meaning**
+
+Words are converted to vectors (lists of numbers) that capture semantic meaning:
+
+```python
+# Using OpenAI's embedding model
+def get_embedding(text):
+    """Convert text to numerical vector"""
+    response = openai.Embedding.create(
+        input=text,
+        model="text-embedding-ada-002"
+    )
+    return response['data'][0]['embedding']
+
+# Compare similarity between texts
+from sklearn.metrics.pairwise import cosine_similarity
+import numpy as np
+
+texts = [
+    "I love playing basketball",
+    "I enjoy sports like soccer and tennis",
+    "Python is a programming language",
+    "I like coding in Java"
+]
+
+# Get embeddings for all texts
+embeddings = [get_embedding(text) for text in texts]
+
+# Calculate similarity matrix
+similarity_matrix = cosine_similarity(embeddings)
+
+print("Similarity Scores:")
+for i, text1 in enumerate(texts):
+    for j, text2 in enumerate(texts):
+        if i < j:  # Only print unique pairs
+            score = similarity_matrix[i][j]
+            print(f"\n'{text1}' vs '{text2}': {score:.3f}")
+```
+
+**Output:**
+```
+'I love playing basketball' vs 'I enjoy sports like soccer and tennis': 0.842
+'I love playing basketball' vs 'Python is a programming language': 0.245
+'I love playing basketball' vs 'I like coding in Java': 0.267
+'I enjoy sports like soccer and tennis' vs 'Python is a programming language': 0.198
+'I enjoy sports like soccer and tennis' vs 'I like coding in Java': 0.221
+'Python is a programming language' vs 'I like coding in Java': 0.896
+```
+
+**Notice:** Similar meaning = higher score! This powers semantic search.
+
+---
+
+**Build a Simple Semantic Search Engine:**
+
+```python
+def semantic_search(query, documents):
+    """
+    Find most relevant documents using embeddings.
+    Better than keyword search!
+    """
+    # Get embedding for query
+    query_embedding = get_embedding(query)
+
+    # Get embeddings for all documents
+    doc_embeddings = [get_embedding(doc) for doc in documents]
+
+    # Calculate similarity scores
+    similarities = cosine_similarity([query_embedding], doc_embeddings)[0]
+
+    # Rank documents by relevance
+    ranked_indices = np.argsort(similarities)[::-1]  # Descending order
+
+    print(f"Search results for: '{query}'\n")
+    for rank, idx in enumerate(ranked_indices, 1):
+        score = similarities[idx]
+        print(f"{rank}. (Score: {score:.3f}) {documents[idx]}")
+
+# Example: Search your study notes
+study_notes = [
+    "Neural networks are inspired by the human brain and consist of interconnected nodes.",
+    "Supervised learning requires labeled training data with input-output pairs.",
+    "Convolutional neural networks use filters to detect patterns in images.",
+    "Transfer learning allows reusing pre-trained models for new tasks.",
+    "Backpropagation adjusts weights by calculating gradients of the loss function."
+]
+
+# Search query
+query = "How does the brain relate to AI?"
+semantic_search(query, study_notes)
+```
+
+**Output:**
+```
+Search results for: 'How does the brain relate to AI?'
+
+1. (Score: 0.891) Neural networks are inspired by the human brain and consist of interconnected nodes.
+2. (Score: 0.723) Convolutional neural networks use filters to detect patterns in images.
+3. (Score: 0.654) Transfer learning allows reusing pre-trained models for new tasks.
+4. (Score: 0.612) Backpropagation adjusts weights by calculating gradients of the loss function.
+5. (Score: 0.598) Supervised learning requires labeled training data with input-output pairs.
+```
+
+The top result is most relevant—even though the query didn't use the word "neural networks"!
+
+---
+
+### Section 5: Ethics of Generative AI — Critical Considerations
+
+---
+
+**⚠️ The Double-Edged Sword:**
+
+Generative AI brings immense power—and immense responsibility.
+
+**Major Ethical Concerns:**
+
+**1. Hallucinations (Making Up Facts):**
+- LLMs confidently generate false information
+- Example: ChatGPT inventing fake legal cases, research papers, historical events
+- **Your responsibility:** Always verify factual claims, especially for homework/research!
+
+**2. Bias Amplification:**
+- Models trained on internet data inherit societal biases
+- Gender bias: "Doctor" → male, "Nurse" → female
+- Racial bias: Resume screening, criminal sentencing predictions
+- **Your responsibility:** Be aware of bias, diversify your sources
+
+**3. Plagiarism & Academic Integrity:**
+- Is AI-generated text "your work"?
+- Colleges are updating honor codes
+- **Your responsibility:** Disclose AI use, never pass off AI writing as your own
+
+**4. Misinformation at Scale:**
+- Generate fake news articles, deepfake images, impersonation
+- Election interference, conspiracy theories, scams
+- **Your responsibility:** Don't create or spread AI-generated misinformation
+
+**5. Job Displacement:**
+- Will LLMs replace writers, programmers, artists?
+- Especially affects creative/knowledge work
+- **Your responsibility:** Learn to work WITH AI, not be replaced by it
+
+**6. Environmental Impact:**
+- Training GPT-3: 1,287 MWh of electricity (= 552 tons of CO2)
+- Each ChatGPT query uses energy
+- **Your responsibility:** Use AI thoughtfully, not wastefully
+
+**7. Privacy & Data Leakage:**
+- LLMs trained on scraped web data (without permission)
+- Can leak private information from training data
+- **Your responsibility:** Don't input sensitive personal information
+
+---
+
+**Best Practices for Responsible GenAI Use:**
+
+✅ **DO:**
+- Use AI as a brainstorming partner, not a replacement for thinking
+- Verify facts with authoritative sources
+- Cite when AI significantly contributed to your work
+- Use AI to learn concepts faster (explaining, tutoring)
+- Build AI tools that help people (accessibility, education, health)
+
+❌ **DON'T:**
+- Submit AI-generated essays without disclosure
+- Trust AI for life-or-death decisions (medical, legal, safety)
+- Use AI to create harmful content (misinformation, harassment, scams)
+- Input confidential information into public AI tools
+- Assume AI output is always correct
+
+---
+
+### Section 6: Knowledge Check
+
+---
+
+[QUIZ]
+
+**Question 1:** What is the key innovation that powers LLMs like ChatGPT?
+
+- A) Convolutional layers
+- B) Transformer architecture with self-attention
+- C) Decision trees
+- D) K-means clustering
+
+**Answer: B**
+
+**Question 2:** What is "temperature" in text generation?
+
+- A) The physical temperature of the GPU
+- B) A setting that controls creativity/randomness of outputs
+- C) The speed of text generation
+- D) The accuracy of the model
+
+**Answer: B**
+
+**Question 3:** What are embeddings used for?
+
+- A) Compressing images
+- B) Converting text to numerical vectors that capture semantic meaning
+- C) Training neural networks faster
+- D) Reducing model size
+
+**Answer: B**
+
+**Question 4:** Which of these is an ethical concern with LLMs?
+
+- A) Hallucinations (generating false information)
+- B) Amplifying societal biases
+- C) Potential for academic dishonesty
+- D) All of the above
+
+**Answer: D**
+
+[/QUIZ]
+
+---
+
+### Section 7: Hands-On Project — Build Your Own Application
+
+---
+
+**Choose ONE project to build:**
+
+**Option A: AI Study Assistant**
+- Custom chatbot trained on your class notes
+- Answers questions about your specific course content
+- Bonus: Add quiz generation feature
+
+**Option B: Semantic Search for Personal Documents**
+- Upload your notes, essays, saved articles
+- Search by meaning, not just keywords
+- Find information faster than Ctrl+F
+
+**Option C: Creative Writing Partner**
+- Story plot generator
+- Character development helper
+- Dialogue suggestion system
+
+**Option D: Code Explanation Tool**
+- Paste any code snippet
+- Get line-by-line explanation
+- Suggest improvements and catch bugs
+
+---
+
+**Deliverables:**
+- Working Python notebook with your chatbot/tool
+- 3-5 example interactions showing it works
+- 200-word reflection: What did you build? How could you improve it? What ethical considerations apply?
+
+---
+
+### Section 8: Additional Resources
+
+---
+
+**Free LLM APIs to Explore:**
+- **OpenAI**: $5 free trial credits → https://platform.openai.com/
+- **HuggingFace**: Free models → https://huggingface.co/models
+- **Google Gemini**: Free API access → https://ai.google.dev/
+- **Anthropic Claude**: API access (limited free tier) → https://anthropic.com/
+
+**Learn More:**
+- **Prompt Engineering Guide**: https://www.promptingguide.ai/
+- **OpenAI Cookbook**: https://github.com/openai/openai-cookbook
+- **LangChain** (Framework for LLM apps): https://python.langchain.com/
+
+**Video Resources:**
+
+| Video | Duration | Link |
+|-------|----------|------|
+| "Intro to Large Language Models" by Andrej Karpathy | 60 min | https://www.youtube.com/watch?v=zjkBMFhNj_g |
+| "ChatGPT Prompt Engineering Course" by DeepLearning.AI | 1 hour | https://www.deeplearning.ai/short-courses/chatgpt-prompt-engineering-for-developers/ |
+
+These videos provide deeper technical understanding of LLM architecture and practical prompt engineering techniques from industry experts.
+
+---
+
+**🎉 Congratulations!**
+
+You now understand the technology behind ChatGPT, Claude, and every other LLM. You've built your own AI chatbot and learned prompt engineering—the essential skill for the GenAI era.
+
+**This session gave you:**
+✅ Understanding of transformer architecture and how LLMs work
+✅ Hands-on experience with OpenAI/HuggingFace APIs
+✅ Prompt engineering techniques used by professionals
+✅ Semantic search with embeddings
+✅ Critical awareness of ethical implications
+✅ Portfolio project: YOUR OWN AI chatbot
+
+**You're now equipped to build with the most powerful AI technology of 2026!**
 
 ---
 
