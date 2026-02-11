@@ -107,17 +107,20 @@ app.get('*', (req, res) => {
 // Error handling middleware (must be last)
 app.use(errorHandler);
 
-// Start server
-const PORT = process.env.PORT || 3000;
+// Initialize database connection
+connectDB();
 
-connectDB().then(() => {
+// Export app for Vercel serverless
+module.exports = app;
+
+// Start server (only for local development, not Vercel)
+if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
+  const PORT = process.env.PORT || 3000;
   app.listen(PORT, () => {
     logger.info(`Server started on port ${PORT}`);
-    if (process.env.NODE_ENV === 'development') {
-      logger.info(`Access at http://localhost:${PORT}`);
-    }
+    logger.info(`Access at http://localhost:${PORT}`);
   });
-});
+}
 
 // Handle unhandled promise rejections
 process.on('unhandledRejection', (err) => {
