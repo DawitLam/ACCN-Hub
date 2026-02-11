@@ -91,12 +91,24 @@ cp .env.example .env
 ```
 
 4. Configure environment variables in `.env`:
-```
-MONGODB_URI=mongodb://localhost:27017/accn-hub
-JWT_SECRET=your-secret-key
-OPENAI_API_KEY=your-openai-key
+
+**For local curriculum viewing (no database):**
+```bash
+NODE_ENV=development
 PORT=3000
+MONGODB_OPTIONAL=true
 ```
+
+**For full LMS features (requires MongoDB):**
+```bash
+NODE_ENV=development
+PORT=3000
+MONGODB_URI=mongodb://localhost:27017/accn-hub
+JWT_SECRET=your-secret-key-generate-random
+SESSION_SECRET=your-session-secret
+```
+
+See [.env.example](.env.example) for complete configuration options.
 
 5. Start the development server:
 ```bash
@@ -107,6 +119,36 @@ npm run dev
 ```
 http://localhost:3000
 ```
+
+## Deployment
+
+ACCN Hub supports flexible deployment with two modes:
+
+### 🎓 Curriculum Viewer Mode
+- Simple curriculum content viewing
+- No database required
+- Quick deployment to any static hosting
+- Perfect for sharing course materials
+
+### 🎯 Full LMS Mode
+- Complete learning management system
+- User accounts, progress tracking, certificates
+- Requires MongoDB Atlas (free tier available)
+- Full-featured production deployment
+
+### Supported Platforms:
+- ✅ **Vercel** - Recommended for static + serverless
+- ✅ **Railway** - Recommended for full Node.js apps
+- ✅ **Render** - Free tier with full-stack support
+- ✅ **Heroku** - Enterprise-grade hosting
+
+### Quick Deploy:
+See [DEPLOYMENT.md](DEPLOYMENT.md) for complete step-by-step guides including:
+- MongoDB Atlas setup (free tier)
+- Platform-specific deployment instructions
+- Environment configuration
+- Troubleshooting tips
+- Custom domain setup
 
 ## Development Phases
 
