@@ -4,12 +4,44 @@
     {
       "src": "api/index.js",
       "use": "@vercel/node"
+    },
+    {
+      "src": "frontend/**",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "AI_CERTIFICATION_CURRICULUM.md",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "curriculum/**",
+      "use": "@vercel/static"
     }
   ],
   "routes": [
     {
-      "src": "/(.*)",
+      "src": "/api/(.*)",
       "dest": "api/index.js"
+    },
+    {
+      "src": "/AI_CERTIFICATION_CURRICULUM.md",
+      "dest": "AI_CERTIFICATION_CURRICULUM.md"
+    },
+    {
+      "src": "/curriculum/(.*)",
+      "dest": "curriculum/$1"
+    },
+    {
+      "src": "/frontend/(.*)",
+      "dest": "frontend/$1"
+    },
+    {
+      "src": "/",
+      "dest": "frontend/curriculum-viewer.html"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "frontend/$1"
     }
   ],
   "env": {
