@@ -37,7 +37,7 @@ app.use((req, res, next) => {
   // Content Security Policy for AI course resources
   res.setHeader('Content-Security-Policy', 
     "default-src 'self'; " +
-    "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.youtube.com https://www.google.com https://colab.research.google.com; " +
+    "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://www.youtube.com https://www.google.com https://colab.research.google.com; " +
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; " +
     "font-src 'self' https://fonts.gstatic.com; " +
     "img-src 'self' data: https: http:; " +
@@ -65,11 +65,16 @@ app.use('/api/auth/login', authRateLimiter);
 app.use('/api/auth/register', authRateLimiter);
 app.use('/api', apiRateLimiter);
 
+// Redirect root to the main learning hub page
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '../learning-hub-complete.html'));
+});
+
+// Serve static files from project root
+app.use(express.static(path.join(__dirname, '..')));
+
 // Serve static files from frontend
 app.use(express.static(path.join(__dirname, '../frontend')));
-
-// Serve curriculum files from root directory
-app.use(express.static(path.join(__dirname, '..')));
 
 // Routes
 app.use('/api/auth', authRoutes);

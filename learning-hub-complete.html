@@ -148,6 +148,10 @@
             transition: all 0.3s ease;
             font-size: 0.95rem;
             color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.5rem;
         }
 
         .session-item:hover {
@@ -563,6 +567,88 @@
             color: var(--text-muted);
             opacity: 0.6;
         }
+
+        .course-home-btn {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: linear-gradient(135deg, var(--primary-teal), var(--secondary-teal));
+            color: var(--text-primary);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .course-home-btn:hover {
+            background: var(--hover-bg);
+            border-color: var(--accent-green);
+        }
+
+        .completion-circle {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid var(--text-muted);
+            flex-shrink: 0;
+        }
+
+        .completion-circle.completed {
+            background: var(--accent-green);
+            border-color: var(--accent-green);
+        }
+
+        .section-nav-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem 1.5rem;
+            background: var(--card-bg);
+            border-radius: 12px;
+            border: 1px solid var(--card-border);
+            margin-bottom: 1.5rem;
+            gap: 1rem;
+        }
+
+        .section-dots {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .section-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            opacity: 0.4;
+        }
+
+        .section-dot.active {
+            background: var(--accent-green);
+            opacity: 1;
+            transform: scale(1.2);
+        }
+
+        .section-dot.completed {
+            background: var(--accent-green);
+            opacity: 0.7;
+        }
+
+        .section-counter {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            white-space: nowrap;
+        }
+
+        .section-nav-bar .nav-btn {
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+            white-space: nowrap;
+        }
     </style>
 </head>
 <body>
@@ -570,15 +656,19 @@
         <aside class="sidebar">
             <div class="sidebar-header">
                 <h1>🎓 AI Learning Hub</h1>
-                <p>ACCN Programs - 10-Day Certification</p>
+                <p>ACCN Programs v2.0</p>
             </div>
             
             <div class="progress-summary">
-                <div>Progress: <span id="progress-text">0 of 260 sections</span></div>
+                <div><span id="progress-text">0 of 40 sessions completed</span></div>
                 <div class="progress-bar">
                     <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
                 </div>
                 <div class="progress-text" id="progress-percentage">0% Complete</div>
+            </div>
+
+            <div style="padding: 0.75rem 1rem;">
+                <button class="course-home-btn" onclick="showWelcome()">🏠 Course Home</button>
             </div>
 
             <div class="curriculum-nav" id="curriculumNav">
@@ -1213,42 +1303,27 @@
         function renderCurriculum() {
             const nav = document.getElementById('curriculumNav');
             let html = '';
-            let sectionCount = 0;
 
             Object.entries(curriculum).forEach(([dayName, sessions], dayIndex) => {
+                const isCurrentDay = currentSection && currentSection.dayIndex === dayIndex;
                 html += `
                     <div class="day-group">
                         <div class="day-header" onclick="toggleDay(${dayIndex})">
                             <div>${dayName}</div>
-                            <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.25rem;">
-                                ${sessions.length} sessions
-                            </div>
+                            <span id="day-arrow-${dayIndex}">${isCurrentDay || dayIndex === 0 ? '▼' : '▶'}</span>
                         </div>
-                        <div class="session-list" id="day-sessions-${dayIndex}">
+                        <div class="session-list ${isCurrentDay || dayIndex === 0 ? 'expanded' : ''}" id="day-sessions-${dayIndex}">
                 `;
 
                 sessions.forEach((session, sessionIndex) => {
-                    const sessionNum = session.sessionNumber;
+                    const isActive = currentSection && currentSection.dayIndex === dayIndex && currentSection.sessionIndex === sessionIndex;
+                    const isComplete = isSessionCompleted(dayIndex, sessionIndex);
                     html += `
-                        <div class="session-item" onclick="toggleSession(${dayIndex}, ${sessionIndex})">
-                            ${session.title}
+                        <div class="session-item ${isActive ? 'active' : ''}" onclick="loadSession(${dayIndex}, ${sessionIndex})">
+                            <span>${session.title}</span>
+                            <span class="completion-circle ${isComplete ? 'completed' : ''}"></span>
                         </div>
-                        <div class="section-list" id="session-sections-${dayIndex}-${sessionIndex}">
                     `;
-
-                    session.sections.forEach((sectionName, sectionIndex) => {
-                        sectionCount++;
-                        const sectionId = `${dayIndex}-${sessionIndex}-${sectionIndex}`;
-                        const isCompleted = completedSections.has(sectionId);
-                        html += `
-                            <div class="section-item ${isCompleted ? 'completed' : ''}" 
-                                 onclick="loadSection(${dayIndex}, ${sessionIndex}, ${sectionIndex})">
-                                ${sectionName}
-                            </div>
-                        `;
-                    });
-
-                    html += `</div>`;
                 });
 
                 html += `</div></div>`;
@@ -1259,12 +1334,34 @@
 
         function toggleDay(dayIndex) {
             const sessionList = document.getElementById(`day-sessions-${dayIndex}`);
-            sessionList.classList.toggle('expanded');
+            const arrow = document.getElementById(`day-arrow-${dayIndex}`);
+            if (sessionList.classList.contains('expanded')) {
+                sessionList.classList.remove('expanded');
+                if (arrow) arrow.textContent = '▶';
+            } else {
+                sessionList.classList.add('expanded');
+                if (arrow) arrow.textContent = '▼';
+            }
         }
 
-        function toggleSession(dayIndex, sessionIndex) {
-            const sectionList = document.getElementById(`session-sections-${dayIndex}-${sessionIndex}`);
-            sectionList.classList.toggle('expanded');
+        function isSessionCompleted(dayIndex, sessionIndex) {
+            const days = Object.keys(curriculum);
+            const session = curriculum[days[dayIndex]][sessionIndex];
+            return session.sections.every((_, sectionIndex) =>
+                completedSections.has(`${dayIndex}-${sessionIndex}-${sectionIndex}`)
+            );
+        }
+
+        function loadSession(dayIndex, sessionIndex) {
+            loadSection(dayIndex, sessionIndex, 0);
+        }
+
+        function showWelcome() {
+            currentSection = null;
+            document.querySelectorAll('.session-item').forEach(el => el.classList.remove('active'));
+            renderCurriculum();
+            const container = document.getElementById('lessonContainer');
+            location.reload();
         }
 
         async function loadSection(dayIndex, sessionIndex, sectionIndex) {
@@ -1274,9 +1371,21 @@
             const sectionName = session.sections[sectionIndex];
             const sectionId = `${dayIndex}-${sessionIndex}-${sectionIndex}`;
 
-            // Update active states
-            document.querySelectorAll('.section-item').forEach(el => el.classList.remove('active'));
-            event.currentTarget.classList.add('active');
+            // Update active states in sidebar
+            document.querySelectorAll('.session-item').forEach(el => el.classList.remove('active'));
+            const allSessionItems = document.querySelectorAll('.session-item');
+            let targetIdx = 0;
+            const dayKeys = Object.keys(curriculum);
+            for (let d = 0; d < dayIndex; d++) {
+                targetIdx += curriculum[dayKeys[d]].length;
+            }
+            targetIdx += sessionIndex;
+            if (allSessionItems[targetIdx]) {
+                allSessionItems[targetIdx].classList.add('active');
+            }
+            // Expand the current day
+            const daySessionList = document.getElementById(`day-sessions-${dayIndex}`);
+            if (daySessionList) daySessionList.classList.add('expanded');
 
             const container = document.getElementById('lessonContainer');
             container.innerHTML = '<div class="loading">📚 Loading section content...</div>';
@@ -1718,6 +1827,18 @@
 
         function displaySection(title, content, sessionTitle, dayName) {
             const container = document.getElementById('lessonContainer');
+            const { dayIndex, sessionIndex, sectionIndex } = currentSection;
+            const days = Object.keys(curriculum);
+            const session = curriculum[days[dayIndex]][sessionIndex];
+            const totalSections = session.sections.length;
+
+            let dotsHtml = '';
+            for (let i = 0; i < totalSections; i++) {
+                const isActive = i === sectionIndex;
+                const isCompleted = completedSections.has(`${dayIndex}-${sessionIndex}-${i}`);
+                dotsHtml += `<span class="section-dot ${isActive ? 'active' : ''} ${isCompleted ? 'completed' : ''}" onclick="loadSection(${dayIndex}, ${sessionIndex}, ${i})"></span>`;
+            }
+
             container.innerHTML = `
                 <div class="lesson-header">
                     <h1>${title}</h1>
@@ -1726,17 +1847,24 @@
                         <span>📚 ${sessionTitle}</span>
                     </div>
                 </div>
+                <div class="section-nav-bar">
+                    <button class="nav-btn" onclick="previousSection()" id="prevBtn">◄ Prev Section</button>
+                    <div class="section-dots">${dotsHtml}</div>
+                    <span class="section-counter">${sectionIndex + 1} / ${totalSections}</span>
+                    <button class="nav-btn" onclick="nextSection()" id="nextBtn">Next Section ►</button>
+                </div>
                 <div class="lesson-content">
                     ${content}
                 </div>
                 <div class="lesson-navigation">
-                    <button class="nav-btn" onclick="previousSection()" id="prevBtn">← Previous</button>
+                    <button class="nav-btn" onclick="previousSection()">◄ Prev Section</button>
                     <button class="nav-btn" onclick="markComplete()">Mark Complete ✓</button>
-                    <button class="nav-btn" onclick="nextSection()" id="nextBtn">Next →</button>
+                    <button class="nav-btn" onclick="nextSection()">Next Section ►</button>
                 </div>
             `;
 
             updateNavigationButtons();
+            renderCurriculum();
         }
 
         function markComplete() {
@@ -1789,27 +1917,7 @@
         }
 
         function loadSectionByIndices(dayIndex, sessionIndex, sectionIndex) {
-            const sectionItems = document.querySelectorAll('.section-item');
-            let targetIndex = 0;
-
-            const days = Object.keys(curriculum);
-            for (let d = 0; d < dayIndex; d++) {
-                const sessions = curriculum[days[d]];
-                for (let s = 0; s < sessions.length; s++) {
-                    targetIndex += sessions[s].sections.length;
-                }
-            }
-
-            const sessions = curriculum[days[dayIndex]];
-            for (let s = 0; s < sessionIndex; s++) {
-                targetIndex += sessions[s].sections.length;
-            }
-
-            targetIndex += sectionIndex;
-
-            if (sectionItems[targetIndex]) {
-                sectionItems[targetIndex].click();
-            }
+            loadSection(dayIndex, sessionIndex, sectionIndex);
         }
 
         function updateNavigationButtons() {
@@ -1832,17 +1940,21 @@
         }
 
         function updateProgress() {
-            let totalSections = 0;
-            Object.values(curriculum).forEach(sessions => {
-                sessions.forEach(session => {
-                    totalSections += session.sections.length;
+            let totalSessions = 0;
+            let completedSessionCount = 0;
+
+            Object.entries(curriculum).forEach(([dayName, sessions], dayIndex) => {
+                sessions.forEach((session, sessionIndex) => {
+                    totalSessions++;
+                    if (isSessionCompleted(dayIndex, sessionIndex)) {
+                        completedSessionCount++;
+                    }
                 });
             });
 
-            const completed = completedSections.size;
-            const percentage = Math.round((completed / totalSections) * 100);
+            const percentage = totalSessions > 0 ? Math.round((completedSessionCount / totalSessions) * 100) : 0;
 
-            document.getElementById('progress-text').textContent = `${completed} of ${totalSections} sections`;
+            document.getElementById('progress-text').textContent = `${completedSessionCount} of ${totalSessions} sessions completed`;
             document.getElementById('progress-fill').style.width = `${percentage}%`;
             document.getElementById('progress-percentage').textContent = `${percentage}% Complete`;
         }
