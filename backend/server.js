@@ -65,9 +65,9 @@ app.use('/api/auth/login', authRateLimiter);
 app.use('/api/auth/register', authRateLimiter);
 app.use('/api', apiRateLimiter);
 
-// Redirect root to the main learning hub page
+// Serve homepage at root
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '../frontend/curriculum-viewer.html'));
+  res.sendFile(path.join(__dirname, '../frontend/home.html'));
 });
 
 // Serve static files from project root
