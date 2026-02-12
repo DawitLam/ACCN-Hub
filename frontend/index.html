@@ -3,216 +3,488 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ACCN Hub - Learning Platform</title>
-    <link rel="stylesheet" href="css/main.css">
-    <link rel="stylesheet" href="css/student.css">
-    <link rel="stylesheet" href="css/instructor.css">
-    <link rel="stylesheet" href="css/code-editor.css">
-    
-    <!-- Pyodide for in-browser Python execution -->
-    <script src="https://cdn.jsdelivr.net/pyodide/v0.24.1/full/pyodide.js"></script>
+    <title>ACCN Learning Hub | Empowering Future Innovators</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #0f7b74;
+            --primary-dark: #0b4b4b;
+            --accent: #34d399;
+            --accent-light: #5eead4;
+            --bg-dark: #0a0f1a;
+            --bg-card: #111827;
+            --bg-card-hover: #1a2332;
+            --text-primary: #f0fdf4;
+            --text-secondary: rgba(240, 253, 244, 0.75);
+            --text-muted: rgba(240, 253, 244, 0.5);
+            --border: rgba(52, 211, 153, 0.15);
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        body {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Roboto', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        /* Header / Hero */
+        .hero {
+            background: linear-gradient(145deg, var(--primary-dark) 0%, #0d3d3d 50%, var(--bg-dark) 100%);
+            padding: 3rem 2rem 4rem;
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 50%, rgba(52, 211, 153, 0.05) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 30%, rgba(15, 123, 116, 0.08) 0%, transparent 40%);
+            pointer-events: none;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero-logo {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 1rem;
+        }
+
+        .hero h1 {
+            font-size: 3.2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--text-primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto 2rem;
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--accent);
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Main Content */
+        .main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 2rem 4rem;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-header h2 {
+            font-size: 2rem;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .section-header p {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+        }
+
+        /* Course Cards Grid */
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+            gap: 2rem;
+        }
+
+        .course-card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .course-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow), 0 0 40px rgba(52, 211, 153, 0.08);
+            border-color: rgba(52, 211, 153, 0.3);
+        }
+
+        .course-banner {
+            height: 180px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .course-banner-ai {
+            background: linear-gradient(135deg, #0f7b74 0%, #0b4b4b 50%, #064e3b 100%);
+        }
+
+        .course-banner-mech {
+            background: linear-gradient(135deg, #1e3a5f 0%, #0d2137 50%, #1a1a2e 100%);
+        }
+
+        .course-banner-icon {
+            font-size: 4rem;
+            opacity: 0.9;
+        }
+
+        .course-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            padding: 0.3rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-live {
+            background: rgba(16, 185, 129, 0.2);
+            color: #34d399;
+            border: 1px solid rgba(52, 211, 153, 0.3);
+        }
+
+        .badge-new {
+            background: rgba(59, 130, 246, 0.2);
+            color: #60a5fa;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+
+        .course-body {
+            padding: 1.5rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .course-category {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+        }
+
+        .course-title {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
+            line-height: 1.3;
+        }
+
+        .course-description {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            margin-bottom: 1.25rem;
+            flex: 1;
+        }
+
+        .course-meta {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 1.25rem;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .course-topics {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .topic-tag {
+            padding: 0.25rem 0.6rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            background: rgba(52, 211, 153, 0.08);
+            color: var(--accent-light);
+            border: 1px solid rgba(52, 211, 153, 0.12);
+        }
+
+        .topic-tag-mech {
+            background: rgba(59, 130, 246, 0.08);
+            color: #93c5fd;
+            border: 1px solid rgba(59, 130, 246, 0.12);
+        }
+
+        .course-footer {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .course-cta {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: gap 0.3s ease;
+        }
+
+        .course-card:hover .course-cta {
+            gap: 0.75rem;
+        }
+
+        .course-level {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            padding: 0.25rem 0.6rem;
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 4px;
+        }
+
+        /* Coming Soon Section */
+        .coming-soon {
+            margin-top: 4rem;
+            text-align: center;
+            padding: 3rem 2rem;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 16px;
+            border: 1px dashed var(--border);
+        }
+
+        .coming-soon h3 {
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .coming-soon p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            border-top: 1px solid var(--border);
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        .footer a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+
+            .hero-stats {
+                gap: 1.5rem;
+            }
+
+            .courses-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .main {
+                padding: 2rem 1rem;
+            }
+        }
+    </style>
 </head>
 <body>
-    <!-- Navigation Header -->
-    <header class="main-header">
-        <div class="container">
-            <div class="logo-section">
-                <img src="assets/images/accn-logo.png" alt="ACCN Hub Logo" class="logo">
-                <div class="brand-info">
-                    <h1>ACCN Hub</h1>
-                    <p>Empowering Future Innovators</p>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-logo">ACCN Learning Hub</div>
+            <h1>ACCN Learning Hub</h1>
+            <p>Empowering future innovators through hands-on STEM education. Build real skills in AI, engineering, programming, and more.</p>
+
+            <div class="hero-stats">
+                <div class="stat">
+                    <span class="stat-number">2</span>
+                    <span class="stat-label">Courses</span>
                 </div>
-            </div>
-            <nav class="main-nav" id="mainNav">
-                <!-- Navigation will be populated based on user role -->
-            </nav>
-            <div class="user-section" id="userSection">
-                <!-- User info will be populated after login -->
+                <div class="stat">
+                    <span class="stat-number">65+</span>
+                    <span class="stat-label">Hours of Content</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">17</span>
+                    <span class="stat-label">Weeks Total</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">Free</span>
+                    <span class="stat-label">Open Access</span>
+                </div>
             </div>
         </div>
-    </header>
+    </section>
 
-    <!-- Main Content Area -->
-    <main class="main-content container">
-        <!-- Login/Register Section (shown when not logged in) -->
-        <section id="auth-section" class="content-section active">
-            <div class="auth-container">
-                <div class="auth-card">
-                    <h2>Welcome to ACCN Hub</h2>
-                    <p>Sign in to access your courses and continue your learning journey</p>
-                    
-                    <div class="auth-tabs">
-                        <button class="tab-btn active" onclick="showAuthTab('login')">Sign In</button>
-                        <button class="tab-btn" onclick="showAuthTab('register')">Create Account</button>
-                    </div>
-
-                    <!-- Login Form -->
-                    <div id="login-form" class="auth-form active">
-                        <form onsubmit="handleLogin(event)">
-                            <div class="form-group">
-                                <label for="login-email">Email Address</label>
-                                <input type="email" id="login-email" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="login-password">Password</label>
-                                <input type="password" id="login-password" required>
-                            </div>
-                            <button type="submit" class="btn btn-primary">Sign In</button>
-                            <div class="form-footer">
-                                <a href="#" onclick="showForgotPassword()">Forgot password?</a>
-                            </div>
-                        </form>
-                    </div>
-
-                    <!-- Register Form -->
-                    <div id="register-form" class="auth-form">
-                        <form onsubmit="handleRegister(event)">
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label for="register-firstname">First Name</label>
-                                    <input type="text" id="register-firstname" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="register-lastname">Last Name</label>
-                                    <input type="text" id="register-lastname" required>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="register-email">Email Address</label>
-                                <input type="email" id="register-email" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="register-password">Password</label>
-                                <input type="password" id="register-password" required minlength="8">
-                                <small style="color: #666; font-size: 0.85em; display: block; margin-top: 4px;">
-                                    Must be at least 8 characters with uppercase, lowercase, and number
-                                </small>
-                            </div>
-                            <div class="form-group">
-                                <label for="register-confirm">Confirm Password</label>
-                                <input type="password" id="register-confirm" required minlength="8">
-                            </div>
-                            <div class="form-group">
-                                <label for="register-role">I am a:</label>
-                                <select id="register-role" required>
-                                    <option value="student">Student</option>
-                                    <option value="instructor">Instructor</option>
-                                </select>
-                            </div>
-                            <button type="submit" class="btn btn-primary">Create Account</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Student Dashboard (shown after student login) -->
-        <section id="student-dashboard" class="content-section">
-            <div class="welcome-banner">
-                <h2>Welcome back, <span id="student-name"></span>! 👋</h2>
-                <p>Continue your learning journey</p>
-            </div>
-
-            <div class="dashboard-stats">
-                <div class="stat-card">
-                    <div class="stat-icon">📚</div>
-                    <div class="stat-info">
-                        <h3 id="enrolled-count">0</h3>
-                        <p>Courses Enrolled</p>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">✅</div>
-                    <div class="stat-info">
-                        <h3 id="completed-count">0</h3>
-                        <p>Lessons Completed</p>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">⭐</div>
-                    <div class="stat-info">
-                        <h3 id="points-count">0</h3>
-                        <p>Points Earned</p>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">🏆</div>
-                    <div class="stat-info">
-                        <h3 id="achievements-count">0</h3>
-                        <p>Achievements</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="courses-section">
-                <h3>My Courses</h3>
-                <div id="student-courses" class="courses-grid">
-                    <!-- Courses will be populated here -->
-                </div>
-            </div>
-        </section>
-
-        <!-- Instructor Dashboard (shown after instructor login) -->
-        <section id="instructor-dashboard" class="content-section">
-            <div class="welcome-banner">
-                <h2>Instructor Dashboard</h2>
-                <p>Manage your courses and track student progress</p>
-            </div>
-
-            <div class="instructor-actions">
-                <button class="btn btn-primary" onclick="showCreateCourse()">➕ Create New Course</button>
-                <button class="btn btn-secondary" onclick="showUploadLesson()">📄 Upload Lesson Content</button>
-            </div>
-
-            <div class="courses-section">
-                <h3>My Courses</h3>
-                <div id="instructor-courses" class="courses-grid">
-                    <!-- Courses will be populated here -->
-                </div>
-            </div>
-        </section>
-
-        <!-- Course Browser -->
-        <section id="browse-courses" class="content-section">
+    <!-- Courses Section -->
+    <main class="main">
+        <div class="section-header">
             <h2>Available Courses</h2>
-            <div class="track-filters">
-                <button class="filter-btn active" onclick="filterCourses('all')">All</button>
-                <button class="filter-btn" onclick="filterCourses('Mechanical')">Mechanical</button>
-                <button class="filter-btn" onclick="filterCourses('Electrical')">Electrical</button>
-                <button class="filter-btn" onclick="filterCourses('Coding')">Coding</button>
-                <button class="filter-btn" onclick="filterCourses('CAD')">CAD</button>
-            </div>
-            <div id="all-courses" class="courses-grid">
-                <!-- All courses will be populated here -->
-            </div>
-        </section>
+            <p>Choose a course to start your learning journey</p>
+        </div>
 
-        <!-- Lesson Viewer -->
-        <section id="lesson-viewer" class="content-section">
-            <div class="lesson-container">
-                <button class="btn btn-back" onclick="backToCourse()">← Back to Course</button>
-                <div id="lesson-content">
-                    <!-- Lesson content will be loaded here -->
+        <div class="courses-grid">
+
+            <!-- AI Fundamentals Course -->
+            <a href="frontend/curriculum-viewer.html" class="course-card">
+                <div class="course-banner course-banner-ai">
+                    <span class="course-banner-icon">🧠</span>
+                    <span class="course-badge badge-live">Live</span>
                 </div>
-            </div>
-        </section>
+                <div class="course-body">
+                    <div class="course-category">Artificial Intelligence</div>
+                    <h3 class="course-title">AI Fundamentals Certification Program</h3>
+                    <p class="course-description">
+                        A comprehensive 10-day intensive program covering AI fundamentals, Python programming, machine learning, neural networks, and project development. Earn an industry-aligned certification.
+                    </p>
+                    <div class="course-meta">
+                        <span class="meta-item">📅 10 Days</span>
+                        <span class="meta-item">⏱️ 30 Hours</span>
+                        <span class="meta-item">📚 39 Sessions</span>
+                        <span class="meta-item">📜 Certificate</span>
+                    </div>
+                    <div class="course-topics">
+                        <span class="topic-tag">Python</span>
+                        <span class="topic-tag">Machine Learning</span>
+                        <span class="topic-tag">Neural Networks</span>
+                        <span class="topic-tag">TensorFlow</span>
+                        <span class="topic-tag">AI Ethics</span>
+                        <span class="topic-tag">Data Science</span>
+                    </div>
+                </div>
+                <div class="course-footer">
+                    <span class="course-cta">Start Learning →</span>
+                    <span class="course-level">Beginner to Intermediate</span>
+                </div>
+            </a>
+
+            <!-- Mechanical Engineering Course -->
+            <a href="https://accn-umoja-robotics-7712.github.io/Umoja-Mechanical-Curriculum-/" target="_blank" class="course-card">
+                <div class="course-banner course-banner-mech">
+                    <span class="course-banner-icon">⚙️</span>
+                    <span class="course-badge badge-live">Live</span>
+                </div>
+                <div class="course-body">
+                    <div class="course-category" style="color: #60a5fa;">Mechanical Engineering</div>
+                    <h3 class="course-title">Umoja 7712 FRC Mechanical Engineering Curriculum</h3>
+                    <p class="course-description">
+                        A 7-week hands-on program designed for FRC robotics teams. Master CAD design, drivetrain systems, manufacturing processes, and competition-ready robot assembly.
+                    </p>
+                    <div class="course-meta">
+                        <span class="meta-item">📅 7 Weeks</span>
+                        <span class="meta-item">⏱️ 35 Hours</span>
+                        <span class="meta-item">📚 7 Sessions</span>
+                        <span class="meta-item">🔧 Hands-On</span>
+                    </div>
+                    <div class="course-topics">
+                        <span class="topic-tag topic-tag-mech">CAD / SolidWorks</span>
+                        <span class="topic-tag topic-tag-mech">Drivetrain</span>
+                        <span class="topic-tag topic-tag-mech">Manufacturing</span>
+                        <span class="topic-tag topic-tag-mech">Mechanisms</span>
+                        <span class="topic-tag topic-tag-mech">FRC Competition</span>
+                    </div>
+                </div>
+                <div class="course-footer">
+                    <span class="course-cta" style="color: #60a5fa;">Start Learning →</span>
+                    <span class="course-level">Beginner</span>
+                </div>
+            </a>
+
+        </div>
+
+        <!-- Coming Soon -->
+        <div class="coming-soon">
+            <h3>🚀 More Courses Coming Soon</h3>
+            <p>Programming, Electrical Engineering, and more courses are being developed. Stay tuned!</p>
+        </div>
     </main>
 
     <!-- Footer -->
-    <footer class="main-footer">
-        <div class="container">
-            <p>&copy; 2025 ACCN Umoja Robotics Team 7712. All rights reserved.</p>
-            <p>Building the future, one lesson at a time</p>
-        </div>
+    <footer class="footer">
+        <p>© 2026 ACCN Learning Hub — <a href="https://github.com/ACCN-Umoja-Robotics-7712">GitHub</a></p>
     </footer>
 
-    <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <script src="js/code-editor.js"></script>
-    <script src="js/security.js"></script>
-    <script src="js/auth.js"></script>
-    <script src="js/student-dashboard.js"></script>
-    <script src="js/instructor-dashboard.js"></script>
-    <script src="js/lesson-viewer.js"></script>
 </body>
 </html>

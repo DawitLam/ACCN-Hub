@@ -104,9 +104,9 @@ app.get('/curriculum/:filename', (req, res) => {
   res.sendFile(path.join(__dirname, '../curriculum', req.params.filename));
 });
 
-// Serve frontend for all other routes
+// Serve homepage for all other routes
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../frontend/index.html'));
+  res.sendFile(path.join(__dirname, '../frontend/home.html'));
 });
 
 // Error handling middleware (must be last)

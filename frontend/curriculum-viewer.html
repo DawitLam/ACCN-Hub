@@ -214,6 +214,29 @@
             margin-top: 0.25rem;
         }
 
+        .back-to-hub {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 1.25rem 1.75rem 0;
+            padding: 0.6rem 1rem;
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--text-muted);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .back-to-hub:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+            border-color: var(--accent-purple);
+        }
+
         .course-overview-btn {
             margin: 1.25rem 1.75rem;
             padding: 0.875rem 1.25rem;
@@ -1799,6 +1822,8 @@
     <div class="container">
         <!-- Sidebar Navigation -->
         <aside class="sidebar" role="navigation" aria-label="Course navigation">
+            <a href="/" class="back-to-hub">← Back to ACCN Hub</a>
+
             <div class="sidebar-header">
                 <h1>AI Learning Hub</h1>
                 <p>ACCN Programs v2.0</p>
