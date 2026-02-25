@@ -1,0 +1,38 @@
+# Ignore drafts and temporary files
+*draft*
+*Draft*
+*DRAFT*
+*temp*
+*Temp*
+*tmp*
+*.tmp
+*backup*
+*Backup*
+*.bak
+*.old
+*test*
+*Test*
+
+# Ignore system files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Ignore IDE files
+.vscode/
+*.swp
+*.swo
+*~
+
+# Ignore AI/Copilot references (if any exist)
+*copilot*
+*Copilot*
+*ai-*
+*AI-*
+
+# Ignore node_modules and development files
+LMS/
+node_modules/
+npm-debug.log
+yarn-error.log
+*.lock
