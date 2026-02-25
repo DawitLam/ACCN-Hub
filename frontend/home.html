@@ -300,6 +300,7 @@
 
         .banner-ai   { background: linear-gradient(135deg, #2d1b69 0%, #1a0f4a 60%, #0d1b3e 100%); }
         .banner-mech { background: linear-gradient(135deg, #1a2e4a 0%, #0d1f35 60%, #091628 100%); }
+        .banner-py   { background: linear-gradient(135deg, #2a1e00 0%, #1f1600 60%, #1a2d4a 100%); }
         .banner-code { background: linear-gradient(135deg, #1a3a2a 0%, #0d2e1e 60%, #091a12 100%); }
         .banner-elec { background: linear-gradient(135deg, #3a1a1a 0%, #2e0d0d 60%, #1a0909 100%); }
 
@@ -334,6 +335,7 @@
 
         .bar-ai   { background: linear-gradient(90deg, var(--purple), var(--cyan)); }
         .bar-mech { background: linear-gradient(90deg, var(--cyan), #3b82f6); }
+        .bar-py   { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
         .bar-code { background: linear-gradient(90deg, var(--green), var(--cyan)); }
         .bar-elec { background: linear-gradient(90deg, var(--orange), var(--pink)); }
 
@@ -354,6 +356,7 @@
 
         .cat-ai   { color: var(--purple-light); }
         .cat-mech { color: var(--cyan-light); }
+        .cat-py   { color: #fbbf24; }
         .cat-code { color: #6ee7b7; }
         .cat-elec { color: var(--orange-light); }
 
@@ -404,6 +407,7 @@
 
         .tag-ai   { background: rgba(124,58,237,0.1); color: var(--purple-light); border: 1px solid rgba(124,58,237,0.18); }
         .tag-mech { background: rgba(6,182,212,0.1);  color: var(--cyan-light);   border: 1px solid rgba(6,182,212,0.18); }
+        .tag-py   { background: rgba(245,158,11,0.1); color: #fbbf24;             border: 1px solid rgba(245,158,11,0.2); }
         .tag-code { background: rgba(16,185,129,0.1); color: #6ee7b7;             border: 1px solid rgba(16,185,129,0.18); }
         .tag-elec { background: rgba(249,115,22,0.1); color: var(--orange-light); border: 1px solid rgba(249,115,22,0.18); }
 
@@ -426,6 +430,7 @@
 
         .cta-ai   { color: var(--purple-light); }
         .cta-mech { color: var(--cyan-light); }
+        .cta-py   { color: #fbbf24; }
         .cta-soon { color: var(--text-muted); }
 
         .course-card:hover .card-cta { gap: 0.65rem; }
@@ -542,15 +547,15 @@
 
             <div class="hero-stats">
                 <div class="stat">
-                    <span class="stat-number">2</span>
+                    <span class="stat-number">3</span>
                     <span class="stat-label">Live Courses</span>
                 </div>
                 <div class="stat">
-                    <span class="stat-number">74</span>
+                    <span class="stat-number">104</span>
                     <span class="stat-label">Sessions</span>
                 </div>
                 <div class="stat">
-                    <span class="stat-number">65+</span>
+                    <span class="stat-number">95+</span>
                     <span class="stat-label">Hours</span>
                 </div>
                 <div class="stat">
@@ -603,6 +608,39 @@
                 </div>
             </a>
 
+            <!-- Introduction to Python -->
+            <a href="python-viewer.html" class="course-card">
+                <div class="card-banner banner-py">
+                    <span class="card-icon">🐍</span>
+                    <span class="card-badge badge-new">New</span>
+                </div>
+                <div class="accent-bar bar-py"></div>
+                <div class="card-body">
+                    <div class="card-category cat-py">Programming</div>
+                    <h3 class="card-title">Introduction to Python</h3>
+                    <p class="card-desc">
+                        Zero to coder in 6 weeks. Write real programs, work with data, and build projects that connect to your community — taught through examples that reflect your world.
+                    </p>
+                    <div class="card-meta">
+                        <span class="meta-chip">📅 6 Weeks</span>
+                        <span class="meta-chip">⏱️ 30 Hours</span>
+                        <span class="meta-chip">📚 30 Sessions</span>
+                        <span class="meta-chip">💡 No Experience Needed</span>
+                    </div>
+                    <div class="card-tags">
+                        <span class="tag tag-py">Variables &amp; Loops</span>
+                        <span class="tag tag-py">Functions</span>
+                        <span class="tag tag-py">Data Structures</span>
+                        <span class="tag tag-py">File I/O</span>
+                        <span class="tag tag-py">Real Projects</span>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <span class="card-cta cta-py">Start Learning →</span>
+                    <span class="card-level">Beginner Friendly</span>
+                </div>
+            </a>
+
             <!-- Mechanical Engineering -->
             <a href="mechanical-viewer.html" class="course-card">
                 <div class="card-banner banner-mech">
@@ -645,11 +683,11 @@
             <h3>More courses dropping soon 🚀</h3>
             <p>We're building out the full ACCN curriculum. Here's what's coming next:</p>
             <div class="coming-up-pills">
-                <span class="pill">💻 Programming & Software</span>
                 <span class="pill">⚡ Electrical Engineering</span>
                 <span class="pill">🤖 Robot Controls (WPILib)</span>
                 <span class="pill">🏗️ Structural Design</span>
                 <span class="pill">📐 Applied Math for Robotics</span>
+                <span class="pill">🌐 Web Development</span>
             </div>
         </div>
     </div>
